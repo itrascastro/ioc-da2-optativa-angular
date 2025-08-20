@@ -1,0 +1,126 @@
+# Configuració del Curs Angular IOC
+title: "Fonaments d'Angular i Calculadora"
+description: "Curs complet d'Angular amb exemples pràctics - IOC"
+author: "IOC"
+email: "itrascastro@gmail.com"
+
+# URL de base
+url: "https://itrascastro.github.io" # Canviar per la URL real
+baseurl: "/Angular" # Nom del repositori
+
+# Configuració Jekyll
+markdown: kramdown
+highlighter: rouge
+sass:
+  sass_dir: _sass
+  style: compressed
+
+# Plugins
+plugins:
+  - jekyll-feed
+  - jekyll-sitemap
+  - jekyll-seo-tag
+  - jekyll-toc
+
+# Configuració del tema
+theme: minima
+
+# Configuració de col·leccions per les unitats
+collections:
+  unitats:
+    output: true
+    permalink: /:collection/:name/
+
+# Configuració per GitHub Pages
+repository: itrascastro/Angular
+github:
+  username: itrascastro
+
+# Variables globals del curs
+curs:
+  nom: "Curs Angular"
+  version: "2024"
+  total_unitats: 4
+  total_blocs: 8
+  
+  unitats:
+    - nom: "Introducció a Angular"
+      numero: 1
+      descripcio: "Descobreix Angular i configura l'entorn de desenvolupament per crear la primera aplicació"
+      introduccio: "En aquesta primera unitat començaràs el teu viatge amb Angular. Aprendràs què és Angular, com configurar l'entorn de desenvolupament i crearàs el teu primer projecte: una aplicació calculadora. Aquesta calculadora servirà com a base per aprendre els conceptes fonamentals del framework i evolucionar cap a una aplicació més complexa en les següents unitats."
+      blocs:
+        - { nom: "Introducció a Angular", numero: 1, url: "/unitat-1/bloc-1/", descripcio: "Descobriràs què és Angular, les seves característiques principals i avantatges. Configuraràs l'entorn de desenvolupament amb Node.js, npm i Angular CLI. Crearàs el teu primer projecte calculadora i verificaràs que tot funciona correctament." }
+        - { nom: "Components", numero: 2, url: "/unitat-1/bloc-2/", descripcio: "Aprendràs a crear components Angular per construir la interfície de la calculadora. Veuràs com estructurar components, gestionar propietats i events, i crear una interfície d'usuari interactiva i funcional." }
+    - nom: "Components Avançats"
+      numero: 2
+      descripcio: "Desenvolupa funcionalitats avançades amb components interactius i navegació"
+      blocs:
+        - { nom: "Favorits App", numero: 3, url: "/unitat-2/bloc-3/", descripcio: "Implementació de funcions avançades: històric de càlculs i operacions favorites" }
+        - { nom: "Routing", numero: 4, url: "/unitat-2/bloc-4/", descripcio: "Sistema de navegació entre pàgines i gestió d'URLs amb Angular Router" }
+    - nom: "Aplicació Avançada"
+      numero: 3
+      descripcio: "Arquitectura escalable i gestió d'estat per aplicacions complexes"
+      blocs:
+        - { nom: "Arquitectura", numero: 5, url: "/unitat-3/bloc-5/", descripcio: "Patrons d'arquitectura, organització de codi i bones pràctiques per aplicacions grans" }
+        - { nom: "Serveis", numero: 6, url: "/unitat-3/bloc-6/", descripcio: "Creació de serveis per gestió d'estat, comunicació entre components i persistència de dades" }
+    - nom: "Desplegament"
+      numero: 4
+      descripcio: "Testing, optimització i desplegament de l'aplicació Angular en producció"
+      blocs:
+        - { nom: "Testing", numero: 7, url: "/unitat-4/bloc-7/", descripcio: "Testing unitari i d'integració per garantir la qualitat de l'aplicació calculadora" }
+        - { nom: "Deploy", numero: 8, url: "/unitat-4/bloc-8/", descripcio: "Construcció, optimització i desplegament de l'aplicació en servidors de producció" }
+
+# Configuració Kramdown per millor rendering
+kramdown:
+  input: GFM
+  syntax_highlighter: rouge
+  syntax_highlighter_opts:
+    default_lang: html
+    css_class: 'highlight'
+    block:
+      line_numbers: true
+
+# Configuració TOC (Table of Contents)
+toc:
+  min_level: 2
+  max_level: 4
+  no_toc_section_class: no_toc
+
+# Exclusions
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - vendor/bundle/
+  - vendor/cache/
+  - vendor/gems/
+  - vendor/ruby/
+  - README.md
+  - package*.json
+
+# Configuració per desenvolupament local
+livereload: true
+incremental: true
+
+# SEO i meta tags
+lang: ca
+locale: ca_ES
+
+# Social media (opcional)
+twitter_username: IOC_cat
+github_username: itrascastro
+
+# Configuració adicional per millor navegació
+defaults:
+  - scope:
+      path: ""
+      type: "pages"
+    values:
+      layout: "default"
+  - scope:
+      path: "unitat-*"
+      type: "pages"
+    values:
+      layout: "bloc"
+      sidebar: true
+      toc: true

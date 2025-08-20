@@ -1,0 +1,173 @@
+// Variables globals SCSS
+
+// Colors principals
+:root {
+  // Colors primaris
+  --primary-color: #007acc;
+  --primary-light: #3399cc;
+  --primary-dark: #005599;
+  --primary-hover: #0066b3;
+  
+  // Colors secundaris
+  --secondary-color: #6c757d;
+  --secondary-light: #a6b5c4;
+  --secondary-dark: #495057;
+  
+  // Colors d'accent
+  --accent-color: #17a2b8;
+  --accent-light: #5dced8;
+  --accent-dark: #117a8b;
+  
+  // Colors semàntics
+  --success-color: #28a745;
+  --success-light: #71dd8a;
+  --success-dark: #1e7e34;
+  
+  --warning-color: #ffc107;
+  --warning-light: #ffe066;
+  --warning-dark: #d39e00;
+  
+  --error-color: #dc3545;
+  --error-light: #f1919c;
+  --error-dark: #bd2130;
+  
+  --info-color: #17a2b8;
+  --info-light: #7dd3fc;
+  --info-dark: #0c5460;
+  
+  // Colors neutres
+  --white: #ffffff;
+  --gray-50: #f8f9fa;
+  --gray-100: #f1f3f4;
+  --gray-200: #e9ecef;
+  --gray-300: #dee2e6;
+  --gray-400: #ced4da;
+  --gray-500: #adb5bd;
+  --gray-600: #6c757d;
+  --gray-700: #495057;
+  --gray-800: #343a40;
+  --gray-900: #212529;
+  --black: #000000;
+  
+  // Fons i text
+  --bg-color: #{#ffffff};
+  --bg-alt: #{#f8f9fa};
+  --text-color: #{#212529};
+  --text-muted: #{#6c757d};
+  --text-light: #{#868e96};
+  
+  // Borders i ombres
+  --border-color: #{#dee2e6};
+  --border-radius: 8px;
+  --border-radius-sm: 4px;
+  --border-radius-lg: 12px;
+  --border-width: 1px;
+  
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1), 0 4px 6px rgba(0, 0, 0, 0.05);
+  --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.1), 0 10px 10px rgba(0, 0, 0, 0.04);
+}
+
+// Mode fosc
+[data-theme="dark"] {
+  --bg-color: #{#1a1d23};
+  --bg-alt: #{#2d3748};
+  --text-color: #{#f7fafc};
+  --text-muted: #{#a0aec0};
+  --text-light: #{#cbd5e0};
+  --border-color: #{#4a5568};
+  
+  --gray-50: #{#2d3748};
+  --gray-100: #{#4a5568};
+  --gray-200: #{#718096};
+  --gray-300: #{#a0aec0};
+  
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.2);
+  --shadow: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.2);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.3), 0 2px 4px rgba(0, 0, 0, 0.2);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.3), 0 4px 6px rgba(0, 0, 0, 0.2);
+  --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.3), 0 10px 10px rgba(0, 0, 0, 0.2);
+}
+
+// Tipografia
+:root {
+  --font-family-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Noto Sans', sans-serif;
+  --font-family-mono: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', 'Courier New', monospace;
+  
+  // Mides de font
+  --font-size-xs: 0.75rem;    // 12px
+  --font-size-sm: 0.875rem;   // 14px
+  --font-size-base: 1rem;     // 16px
+  --font-size-lg: 1.125rem;   // 18px
+  --font-size-xl: 1.25rem;    // 20px
+  --font-size-2xl: 1.5rem;    // 24px
+  --font-size-3xl: 1.875rem;  // 30px
+  --font-size-4xl: 2.25rem;   // 36px
+  --font-size-5xl: 3rem;      // 48px
+  
+  // Pesos de font
+  --font-weight-light: 300;
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  
+  // Alçades de línia
+  --line-height-tight: 1.25;
+  --line-height-snug: 1.375;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.625;
+  --line-height-loose: 2;
+}
+
+// Espaiats
+:root {
+  --spacing-0: 0;
+  --spacing-1: 0.25rem;   // 4px
+  --spacing-2: 0.5rem;    // 8px
+  --spacing-3: 0.75rem;   // 12px
+  --spacing-4: 1rem;      // 16px
+  --spacing-5: 1.25rem;   // 20px
+  --spacing-6: 1.5rem;    // 24px
+  --spacing-8: 2rem;      // 32px
+  --spacing-10: 2.5rem;   // 40px
+  --spacing-12: 3rem;     // 48px
+  --spacing-16: 4rem;     // 64px
+  --spacing-20: 5rem;     // 80px
+  --spacing-24: 6rem;     // 96px
+  --spacing-32: 8rem;     // 128px
+}
+
+// Breakpoints per responsive
+$breakpoints: (
+  'xs': 0,
+  'sm': 576px,
+  'md': 768px,
+  'lg': 992px,
+  'xl': 1200px,
+  'xxl': 1400px
+);
+
+// Layout específic
+:root {
+  --header-height: 80px;
+  --sidebar-width: 280px;
+  --sidebar-width-collapsed: 60px;
+  --max-content-width: 1200px;
+  
+  // Transitions
+  --transition-fast: 0.15s ease;
+  --transition-base: 0.25s ease;
+  --transition-slow: 0.35s ease;
+  
+  // Z-index layers
+  --z-dropdown: 1000;
+  --z-sticky: 1020;
+  --z-fixed: 1030;
+  --z-modal-backdrop: 1040;
+  --z-modal: 1050;
+  --z-popover: 1060;
+  --z-tooltip: 1070;
+}

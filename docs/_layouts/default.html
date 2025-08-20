@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="{{ site.lang | default: 'ca' }}">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    
+    <title>{% if page.title %}{{ page.title }} | {% endif %}{{ site.title }}</title>
+    <meta name="description" content="{{ page.excerpt | default: site.description | strip_html | normalize_whitespace | truncate: 160 | escape }}">
+    
+    <!-- SEO Tags -->
+    {% seo %}
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
+    <link rel="canonical" href="{{ page.url | replace:'index.html','' | absolute_url }}">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="{{ '/assets/images/favicon.ico' | relative_url }}">
+    
+    <!-- RSS Feed -->
+    {% feed_meta %}
+</head>
+
+<body class="{{ page.layout }}-layout">
+    <!-- Skip to content for accessibility -->
+    <a class="skip-link" href="#main-content">Salta al contingut principal</a>
+    
+    <!-- Header fix -->
+    <header class="header" role="banner">
+        <h1>{% if page.title %}{{ page.title }}{% else %}{{ site.title }}{% endif %}</h1>
+        <div class="header-controls">
+            <div class="nav-dropdown" id="nav-dropdown">
+                <button class="nav-dropdown-btn" id="nav-dropdown-btn">Navegació</button>
+                <div class="nav-dropdown-content" id="nav-dropdown-content">
+                    <a href="{{ '/' | relative_url }}" class="nav-dropdown-item {% if page.url == '/' %}current{% endif %}">Índex del Curs</a>
+                    {% for unitat in site.curs.unitats %}
+                        {% for bloc in unitat.blocs %}
+                            <a href="{{ bloc.url | relative_url }}" class="nav-dropdown-item {% if page.url == bloc.url %}current{% endif %}">
+                                Bloc {{ bloc.numero }}: {{ bloc.nom }}
+                            </a>
+                        {% endfor %}
+                    {% endfor %}
+                </div>
+            </div>
+            <button class="theme-toggle" id="theme-toggle">Mode Fosc</button>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Sidebar Navegació -->
+        {% if page.sidebar %}
+        <aside class="sidebar">
+            <!-- Contingut d'aquest Bloc -->
+            <div class="sidebar-section">
+                <h3>Contingut del Bloc</h3>
+                {% include toc.html %}
+            </div>
+        </aside>
+        {% endif %}
+
+        <main class="main-content" role="main" id="main-content">
+            
+            <!-- Navegació horizontal -->
+            {% if page.breadcrumb != false %}
+            <nav class="horizontal-nav" aria-label="Navegació de ruta">
+                <div class="horizontal-nav-list">
+                    <a href="{{ '/' | relative_url }}" class="horizontal-nav-item">Inici</a>
+                    
+                    {% if page.unitat %}
+                        {% assign current_unitat = null %}
+                        {% for unitat in site.curs.unitats %}
+                            {% if unitat.numero == page.unitat %}
+                                {% assign current_unitat = unitat %}
+                                {% break %}
+                            {% endif %}
+                        {% endfor %}
+                        
+                        {% if current_unitat %}
+                            <span class="horizontal-nav-separator"> &gt; </span>
+                            <a href="{{ '/unitat-' | append: page.unitat | append: '/' | relative_url }}" class="horizontal-nav-item">
+                                Unitat {{ current_unitat.numero }}: {{ current_unitat.nom }}
+                            </a>
+                        {% endif %}
+                        
+                        {% if page.bloc and current_unitat %}
+                            {% assign current_bloc = null %}
+                            {% for bloc in current_unitat.blocs %}
+                                {% if bloc.numero == page.bloc %}
+                                    {% assign current_bloc = bloc %}
+                                    {% break %}
+                                {% endif %}
+                            {% endfor %}
+                            
+                            {% if current_bloc %}
+                                <span class="horizontal-nav-separator"> &gt; </span>
+                                <span class="horizontal-nav-item current">
+                                    Bloc {{ page.unitat }}.{{ current_bloc.numero }}: {{ current_bloc.nom }}
+                                </span>
+                            {% endif %}
+                        {% endif %}
+                    {% else %}
+                        {% if page.title and page.title != site.title %}
+                            <span class="horizontal-nav-separator"> &gt; </span>
+                            <span class="horizontal-nav-item current">
+                                {{ page.title }}
+                            </span>
+                        {% endif %}
+                    {% endif %}
+                </div>
+            </nav>
+            {% endif %}
+            
+            <!-- Contingut de la Pàgina -->
+            <article class="page-content">
+                <div class="content-body">
+                    {{ content }}
+                </div>
+            </article>
+            
+            <!-- Navegació entre pàgines -->
+            {% if page.layout == 'bloc' %}
+            <nav class="page-navigation" role="navigation" aria-label="Navegació entre blocs">
+                <div class="nav-links-container">
+                    {% assign current_bloc = page.bloc_numero | plus: 0 %}
+                    {% assign prev_bloc = current_bloc | minus: 1 %}
+                    {% assign next_bloc = current_bloc | plus: 1 %}
+                    
+                    <div class="nav-link-wrapper">
+                        {% if prev_bloc > 0 %}
+                            {% for unitat in site.curs.unitats %}
+                                {% for bloc in unitat.blocs %}
+                                    {% if bloc.numero == prev_bloc %}
+                                    <a href="{{ bloc.url | relative_url }}" class="nav-link nav-link-prev">
+                                        <span class="nav-direction">← Anterior</span>
+                                        <span class="nav-title">{{ bloc.nom }}</span>
+                                    </a>
+                                    {% break %}
+                                    {% endif %}
+                                {% endfor %}
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                    
+                    <div class="nav-link-wrapper">
+                        {% if next_bloc <= site.curs.total_blocs %}
+                            {% for unitat in site.curs.unitats %}
+                                {% for bloc in unitat.blocs %}
+                                    {% if bloc.numero == next_bloc %}
+                                    <a href="{{ bloc.url | relative_url }}" class="nav-link nav-link-next">
+                                        <span class="nav-direction">Següent →</span>
+                                        <span class="nav-title">{{ bloc.nom }}</span>
+                                    </a>
+                                    {% break %}
+                                    {% endif %}
+                                {% endfor %}
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                </div>
+            </nav>
+            {% endif %}
+        </main>
+    </div>
+
+    <!-- Footer fix -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-info">
+                <strong>{{ site.title }}</strong> - Material didàctic desenvolupat per l'{{ site.author }}
+            </div>
+            <div class="footer-progress">
+                <span class="progress-text" id="footer-progress-text">0 de 5</span>
+                <div class="progress-bar-footer">
+                    <div class="progress-fill-footer" id="footer-progress-fill"></div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts INLINE per compatibilitat Jekyll -->
+    <script>
+        // Gestió del dropdown de navegació
+        function initializeNavDropdown() {
+            const dropdown = document.getElementById('nav-dropdown');
+            const btn = document.getElementById('nav-dropdown-btn');
+            
+            if (!dropdown || !btn) return;
+            
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                dropdown.classList.toggle('open');
+            });
+            
+            // Tancar en clicar fora
+            document.addEventListener('click', function() {
+                dropdown.classList.remove('open');
+            });
+            
+            // Evitar tancar en clicar dins del dropdown
+            dropdown.addEventListener('click', function(e) {
+                e.stopPropagation();
+            });
+        }
+
+        // Footer progrés ESTÀTIC - NO DINÀMIC
+        function initializeFooterProgress() {
+            const progressText = document.getElementById('footer-progress-text');
+            const progressFill = document.getElementById('footer-progress-fill');
+            
+            if (progressText && progressFill) {
+                progressText.textContent = '0 de 5';
+                progressFill.style.width = '0%';
+            }
+        }
+
+        // Gestió del tema fosc/clar
+        function initializeThemeToggle() {
+            const themeToggle = document.getElementById('theme-toggle');
+            const body = document.body;
+            
+            if (!themeToggle) return;
+            
+            // Cargar tema guardat
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            body.setAttribute('data-theme', savedTheme);
+            themeToggle.textContent = savedTheme === 'dark' ? 'Mode Clar' : 'Mode Fosc';
+            
+            themeToggle.addEventListener('click', function() {
+                const currentTheme = body.getAttribute('data-theme');
+                const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+                
+                body.setAttribute('data-theme', newTheme);
+                localStorage.setItem('theme', newTheme);
+                themeToggle.textContent = newTheme === 'dark' ? 'Mode Clar' : 'Mode Fosc';
+            });
+        }
+
+        // Funcions d'inicialització
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeThemeToggle();
+            initializeNavDropdown();
+            initializeFooterProgress();
+        });
+
+        // Assegurar posició 0,0 inicial
+        window.addEventListener('load', function() {
+            window.scrollTo(0, 0);
+        });
+
+        // Navegació suau amb offset per header fix
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href').substring(1);
+                const target = document.getElementById(targetId);
+                
+                if (target) {
+                    const headerHeight = 70;
+                    const additionalOffset = 20;
+                    const targetPosition = target.getBoundingClientRect().top + window.scrollY - headerHeight - additionalOffset;
+                    
+                    window.scrollTo({
+                        top: targetPosition,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

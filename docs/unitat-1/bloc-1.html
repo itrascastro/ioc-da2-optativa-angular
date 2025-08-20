@@ -1,0 +1,89 @@
+---
+layout: default
+title: "Bloc 1: Introducció a Angular"
+description: "Descobreix Angular, configura el teu entorn i crea el primer projecte"
+keywords: "Angular, TypeScript, desenvolupament web, framework"
+unitat: 1
+bloc: 1
+---
+
+<div class="section">
+    <h2 id="introduccio">Introducció a Angular</h2>
+    
+    <p><strong>Angular</strong> és un framework de desenvolupament per a aplicacions web escrit en TypeScript. Desenvolupat per Google, Angular permet crear aplicacions d'una sola pàgina (SPA) robustes i escalables.</p>
+
+    {% include info_box.html
+       contingut="<strong>Definició:</strong> Angular és un framework complet que proporciona una estructura i eines per desenvolupar aplicacions completes, mentre que una biblioteca com React només proporciona funcions específiques."
+    %}
+
+    <h3>Característiques Principals</h3>
+
+    <ul>
+        <li><strong>TypeScript:</strong> Llenguatge principal amb tipatge fort</li>
+        <li><strong>Components:</strong> Arquitectura basada en components reutilitzables</li>
+        <li><strong>CLI:</strong> Eina de línia de comandaments potent</li>
+        <li><strong>Ecosystem complet:</strong> Routing, HTTP client, forms integrats</li>
+    </ul>
+</div>
+
+<div class="section">
+    <h2 id="configuracio">Configuració de l'Entorn</h2>
+    
+    <p>Abans de començar, necessitem configurar el nostre entorn de desenvolupament.</p>
+
+    {% include warning_box.html
+       contingut="<strong>Prerequisit:</strong> Necessites tenir Node.js v18+ i npm v9+ instal·lats al sistema."
+    %}
+
+    <h3>Verificació del Sistema</h3>
+
+    {% include codi.html
+       llenguatge="bash"
+       contingut="node --version
+npm --version"
+    %}
+
+    <h3>Instal·lació d'Angular CLI</h3>
+
+    {% include codi.html
+       llenguatge="bash"
+       contingut="npm install -g @angular/cli
+ng version"
+    %}
+
+    {% include success_box.html
+       contingut="<strong>CLI instal·lat:</strong> Si la comanda ng version mostra informació d'Angular, l'eina està llesta per usar."
+    %}
+</div>
+
+<div class="section">
+    <h2 id="primer-projecte">Primer Projecte</h2>
+    
+    <p>Crearem una calculadora senzilla per aprendre els fonaments d'Angular.</p>
+
+    {% include codi.html
+       llenguatge="bash" 
+       contingut="ng new calculadora-angular
+cd calculadora-angular
+ng serve"
+    %}
+
+    {% include error-solucio.html
+       problema="Error: ng command not found després d'instal·lar Angular CLI."
+       solucio="Reinicia el terminal o executa source ~/.bashrc per actualitzar les variables d'entorn."
+    %}
+</div>
+
+<div class="section">
+    <h2 id="ia-development">Desenvolupament amb IA</h2>
+    
+    <p>Angular pot beneficiar-se de l'assistència d'intel·ligència artificial per accelerar el desenvolupament.</p>
+
+    {% include prompt-ai.html
+       contingut="Crea un component Angular per una calculadora amb input per números, botons per operacions i display per resultats."
+    %}
+
+    {% include suggeriment.html
+       contingut="Després de dominar la calculadora bàsica, amplia-la amb històric d'operacions i funcions científiques."
+    %}
+</div>

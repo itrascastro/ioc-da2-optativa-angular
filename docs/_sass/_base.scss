@@ -1,0 +1,369 @@
+// Estils base i reset
+
+// Reset CSS modern
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+// Remove default margin
+* {
+  margin: 0;
+}
+
+// HTML i body
+html {
+  @include smooth-scroll;
+  height: 100%;
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-normal);
+}
+
+body {
+  font-family: var(--font-family-sans);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-normal);
+  line-height: var(--line-height-normal);
+  color: var(--text-color);
+  background-color: var(--bg-color);
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  
+  // Millor renderitzat de fonts
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  
+  // Prevent layout shifts
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+// Millor line-height per textos llargs
+p,
+li,
+h1, h2, h3, h4, h5, h6 {
+  overflow-wrap: break-word;
+}
+
+// Headings
+h1, h2, h3, h4, h5, h6 {
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-tight);
+  margin-bottom: var(--spacing-4);
+  color: var(--text-color);
+  
+  // Scroll offset per anclatges
+  scroll-margin-top: calc(var(--header-height) + var(--spacing-4));
+}
+
+h1 {
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-bold);
+  
+  @include tablet-up {
+    font-size: var(--font-size-4xl);
+  }
+}
+
+h2 {
+  font-size: var(--font-size-2xl);
+  margin-top: var(--spacing-8);
+  
+  @include tablet-up {
+    font-size: var(--font-size-3xl);
+  }
+}
+
+h3 {
+  font-size: var(--font-size-xl);
+  margin-top: var(--spacing-6);
+  
+  @include tablet-up {
+    font-size: var(--font-size-2xl);
+  }
+}
+
+h4 {
+  font-size: var(--font-size-lg);
+  margin-top: var(--spacing-5);
+  
+  @include tablet-up {
+    font-size: var(--font-size-xl);
+  }
+}
+
+h5 {
+  font-size: var(--font-size-base);
+  margin-top: var(--spacing-4);
+  
+  @include tablet-up {
+    font-size: var(--font-size-lg);
+  }
+}
+
+h6 {
+  font-size: var(--font-size-sm);
+  margin-top: var(--spacing-4);
+  
+  @include tablet-up {
+    font-size: var(--font-size-base);
+  }
+}
+
+// Text elements
+p {
+  margin-bottom: var(--spacing-4);
+  
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+// Links
+a {
+  color: var(--primary-color);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+  text-decoration-thickness: 1px;
+  @include transition(color, text-decoration-color);
+  
+  &:hover {
+    color: var(--primary-hover);
+    text-decoration-color: var(--primary-hover);
+  }
+  
+  &:focus {
+    @include focus-visible;
+  }
+  
+  // Links dins de headings
+  h1 &, h2 &, h3 &, h4 &, h5 &, h6 & {
+    color: inherit;
+    text-decoration: none;
+    
+    &:hover {
+      color: var(--primary-color);
+      text-decoration: underline;
+    }
+  }
+}
+
+// Llistes
+ul, ol {
+  margin-bottom: var(--spacing-4);
+  padding-left: var(--spacing-6);
+}
+
+li {
+  margin-bottom: var(--spacing-2);
+  
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+// Text emphasitzat
+strong, b {
+  font-weight: var(--font-weight-semibold);
+}
+
+em, i {
+  font-style: italic;
+}
+
+mark {
+  background-color: var(--warning-color);
+  color: var(--gray-900);
+  padding: 0.125em 0.25em;
+  border-radius: var(--border-radius-sm);
+}
+
+// Text petit
+small {
+  font-size: var(--font-size-sm);
+  color: var(--text-muted);
+}
+
+// Cites
+blockquote {
+  margin: var(--spacing-6) 0;
+  padding: var(--spacing-4) var(--spacing-6);
+  border-left: 4px solid var(--primary-color);
+  background-color: var(--bg-alt);
+  border-radius: 0 var(--border-radius) var(--border-radius) 0;
+  
+  p:last-child {
+    margin-bottom: 0;
+  }
+  
+  cite {
+    display: block;
+    margin-top: var(--spacing-2);
+    font-size: var(--font-size-sm);
+    color: var(--text-muted);
+    
+    &::before {
+      content: '— ';
+    }
+  }
+}
+
+// Codi
+code {
+  font-family: var(--font-family-mono);
+  font-size: 0.875em;
+  background-color: var(--gray-100);
+  color: var(--error-color);
+  padding: 0.125em 0.25em;
+  border-radius: var(--border-radius-sm);
+  border: 1px solid var(--gray-200);
+}
+
+pre {
+  font-family: var(--font-family-mono);
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-relaxed);
+  background-color: var(--gray-50);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  padding: var(--spacing-4);
+  margin: var(--spacing-4) 0;
+  overflow-x: auto;
+  
+  code {
+    background: none;
+    border: none;
+    padding: 0;
+    color: inherit;
+    font-size: inherit;
+  }
+}
+
+// Línies horitzontals
+hr {
+  margin: var(--spacing-8) 0;
+  border: 0;
+  border-top: var(--border-width) solid var(--border-color);
+}
+
+// Imatges i media
+img {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--border-radius);
+}
+
+figure {
+  margin: var(--spacing-6) 0;
+  text-align: center;
+  
+  img {
+    margin-bottom: var(--spacing-2);
+  }
+  
+  figcaption {
+    font-size: var(--font-size-sm);
+    color: var(--text-muted);
+    font-style: italic;
+  }
+}
+
+// Taules
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: var(--spacing-6) 0;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  overflow: hidden;
+}
+
+th, td {
+  padding: var(--spacing-3) var(--spacing-4);
+  text-align: left;
+  border-bottom: 1px solid var(--border-color);
+}
+
+th {
+  background-color: var(--bg-alt);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-color);
+}
+
+tbody tr:hover {
+  background-color: var(--bg-alt);
+}
+
+// Formularis basics
+input, select, textarea, button {
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+}
+
+button {
+  cursor: pointer;
+  @include focus-visible;
+}
+
+// Skip link per accessibilitat
+.skip-link {
+  @include visually-hidden;
+  
+  &:focus {
+    position: absolute;
+    top: var(--spacing-2);
+    left: var(--spacing-2);
+    z-index: var(--z-tooltip);
+    padding: var(--spacing-2) var(--spacing-4);
+    background-color: var(--primary-color);
+    color: white;
+    text-decoration: none;
+    border-radius: var(--border-radius);
+    
+    // Revertir visually-hidden
+    width: auto !important;
+    height: auto !important;
+    margin: 0 !important;
+    overflow: visible !important;
+    clip: auto !important;
+    white-space: normal !important;
+  }
+}
+
+// Screen reader only
+.sr-only {
+  @include visually-hidden;
+}
+
+// Print styles
+@include print-only {
+  body {
+    font-size: 12pt;
+    line-height: 1.4;
+    color: #000;
+    background: #fff;
+  }
+  
+  a {
+    color: #000;
+    text-decoration: underline;
+  }
+  
+  // Mostrar URLs després dels enllaços
+  a[href]:after {
+    content: " (" attr(href) ")";
+    font-size: smaller;
+  }
+  
+  // Amagar elements innecessaris per impressió
+  .no-print,
+  .sidebar-left,
+  .sidebar-right,
+  .site-header nav,
+  .page-navigation {
+    display: none !important;
+  }
+}

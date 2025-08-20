@@ -1,0 +1,39 @@
+---
+layout: default
+---
+
+<!-- Layout HOME amb estructura jeràrquica educativa -->
+<div class="course-index">
+    
+    <!-- Contingut introductori del index.md -->
+    {{ content }}
+    
+    <!-- Índex de continguts estructurat -->
+    <div class="course-content">
+        {% for unitat in site.curs.unitats %}
+            <div class="unit-section">
+                <div class="unit-header">
+                    <h2 class="unit-title">
+                        <span class="unit-number">Unitat {{ unitat.numero }}</span>
+                        {{ unitat.nom }}
+                    </h2>
+                    <p class="unit-description">{{ unitat.descripcio }}</p>
+                </div>
+                
+                <div class="blocks-container">
+                    {% for bloc in unitat.blocs %}
+                        <div class="block-item">
+                            <a href="{{ bloc.url | relative_url }}" class="block-link">
+                                <div class="block-header">
+                                    <span class="block-number">{{ unitat.numero }}.{{ bloc.numero }}</span>
+                                    <h3 class="block-title">{{ bloc.nom }}</h3>
+                                </div>
+                                <p class="block-description">{{ bloc.descripcio }}</p>
+                            </a>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
