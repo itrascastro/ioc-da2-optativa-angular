@@ -36,3 +36,33 @@
   --comp-ai-hbg: var(--comp-header-bg);
 }
 
+/* Overrides de components en mode fosc */
+[data-theme="dark"] .responsive-table th { background-color: #2c2c2c; color: #e6edf3; }
+[data-theme="dark"] .responsive-table tr:hover { background-color: rgba(255,255,255,0.04); }
+
+[data-theme="dark"] .btn,
+[data-theme="dark"] .nav-dropdown-btn,
+[data-theme="dark"] .nav-button,
+[data-theme="dark"] .theme-toggle { background-color: #3a3a3a; color: #e6edf3; border: 1px solid #555; }
+[data-theme="dark"] .btn:hover,
+[data-theme="dark"] .nav-dropdown-btn:hover,
+[data-theme="dark"] .nav-button:hover,
+[data-theme="dark"] .theme-toggle:hover { background-color: #3a3a3a; }
+[data-theme="dark"] .btn:disabled,
+[data-theme="dark"] .nav-button:disabled { background-color: var(--color-border); color: #bbbbbb; }
+
+[data-theme="dark"] .nav-dropdown-item:hover,
+[data-theme="dark"] .nav-dropdown-item.current { background-color: #353535; color: #ffffff; }
+[data-theme="dark"] .skip-link { background: #4a4a4a; }
+
+/* Sidebar (Contingut del Bloc) en fosc */
+[data-theme="dark"] .sidebar-section { background-color: #222; border-color: #333; }
+[data-theme="dark"] .nav-link { background-color: #2a2a2a; color: #e6edf3; }
+[data-theme="dark"] .nav-link:hover { background-color: #353535; color: #ffffff; }
+[data-theme="dark"] .nav-link.current { background-color: #3d3d3d; color: #ffffff; font-weight: 600; }
+
+/* Portada i índex d'unitat en mode fosc */
+[data-theme="dark"] .unit-hero { background-color: #2c2c2c; color: #e6edf3; }
+[data-theme="dark"] .unit-header { background-color: #2a2a2a; color: #e6edf3; }
+[data-theme="dark"] .block-number { background-color: #3a3a3a; color: #ffffff; }
+[data-theme="dark"] .block-action:hover { background-color: #353535; }
