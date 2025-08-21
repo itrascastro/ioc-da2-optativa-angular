@@ -27,17 +27,20 @@
     <!-- RSS Feed -->
     {% feed_meta %}
 
+    <!-- Syntax Highlighting (Prism) -->
     <link id="prism-theme" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.css" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-typescript.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-bash.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-javascript.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-html.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-css.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-tsx.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-json.min.js"></script>
-<script src="{{ '/assets/js/code-block.js' | relative_url }}"></script>
-<link rel="stylesheet" href="{{ '/assets/css/code-block.css' | relative_url }}">
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-typescript.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-bash.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-javascript.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-html.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-css.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-tsx.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-json.min.js"></script>
+
+    <!-- Code Block Component -->
+    <link rel="stylesheet" href="{{ '/assets/css/code-block.css' | relative_url }}">
+    <script src="{{ '/assets/js/code-block.js' | relative_url }}"></script>
 
 </head>
 
@@ -197,110 +200,7 @@
         </div>
     </footer>
 
-    <!-- Scripts INLINE per compatibilitat Jekyll -->
-    <script>
-        // Gestió del dropdown de navegació
-        function initializeNavDropdown() {
-            const dropdown = document.getElementById('nav-dropdown');
-            const btn = document.getElementById('nav-dropdown-btn');
-            
-            if (!dropdown || !btn) return;
-            
-            btn.addEventListener('click', function(e) {
-                e.stopPropagation();
-                dropdown.classList.toggle('open');
-            });
-            
-            // Tancar en clicar fora
-            document.addEventListener('click', function() {
-                dropdown.classList.remove('open');
-            });
-            
-            // Evitar tancar en clicar dins del dropdown
-            dropdown.addEventListener('click', function(e) {
-                e.stopPropagation();
-            });
-        }
-
-        // Footer progrés ESTÀTIC - NO DINÀMIC
-        function initializeFooterProgress() {
-            const progressText = document.getElementById('footer-progress-text');
-            const progressFill = document.getElementById('footer-progress-fill');
-            
-            if (progressText && progressFill) {
-                progressText.textContent = '0 de 5';
-                progressFill.style.width = '0%';
-            }
-        }
-
-        // Gestió del tema fosc/clar
-        function initializeThemeToggle() {
-            const themeToggle = document.getElementById('theme-toggle');
-            const body = document.body;
-            const prismLink = document.getElementById('prism-theme');
-            
-            if (!themeToggle) return;
-            
-            // Cargar tema guardat
-            const savedTheme = localStorage.getItem('theme') || 'light';
-            body.setAttribute('data-theme', savedTheme);
-            themeToggle.textContent = savedTheme === 'dark' ? 'Mode Clar' : 'Mode Fosc';
-            setPrismTheme(savedTheme);
-            
-            themeToggle.addEventListener('click', function() {
-                const currentTheme = body.getAttribute('data-theme');
-                const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-                
-                body.setAttribute('data-theme', newTheme);
-                localStorage.setItem('theme', newTheme);
-                themeToggle.textContent = newTheme === 'dark' ? 'Mode Clar' : 'Mode Fosc';
-                setPrismTheme(newTheme);
-            });
-
-            function setPrismTheme(theme) {
-                if (!prismLink) return;
-                const base = 'https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/';
-                prismLink.href = theme === 'dark' ? `${base}prism-tomorrow.css` : `${base}prism.css`;
-            }
-        }
-
-        // Funcions d'inicialització
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('🚀 DOM carregat, inicialitzant components...');
-            initializeThemeToggle();
-            initializeNavDropdown();
-            initializeFooterProgress();
-            console.log('📋 Inicialitzant blocs de codi...');
-            // Sistema nou de blocs de codi s'auto-inicialitza
-            console.log('🎉 Inicialització completada');
-        });
-
-        // Assegurar posició 0,0 inicial
-        window.addEventListener('load', function() {
-            window.scrollTo(0, 0);
-        });
-
-        // Navegació suau amb offset per header fix
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const targetId = this.getAttribute('href').substring(1);
-                const target = document.getElementById(targetId);
-                
-                if (target) {
-                    const headerHeight = 70;
-                    const additionalOffset = 20;
-                    const targetPosition = target.getBoundingClientRect().top + window.scrollY - headerHeight - additionalOffset;
-                    
-                    window.scrollTo({
-                        top: targetPosition,
-                        behavior: 'smooth'
-                    });
-                }
-            });
-        });
-
-
-    </script>
+    <!-- Scripts del lloc -->
+    <script src="{{ '/assets/js/site.js' | relative_url }}" defer></script>
 </body>
 </html>
