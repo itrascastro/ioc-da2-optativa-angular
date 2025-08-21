@@ -1,0 +1,51 @@
+---
+layout: default
+title: "Unitat 3: Aplicació Avançada"
+description: "Tercera unitat del curs d'Angular - Arquitectura i serveis"
+sidebar: false
+breadcrumb: true
+unitat: 3
+---
+
+{% assign current_unitat = null %}
+{% for unitat in site.curs.unitats %}
+    {% if unitat.numero == page.unitat %}
+        {% assign current_unitat = unitat %}
+        {% break %}
+    {% endif %}
+{% endfor %}
+
+<div class="unit-page">
+    <div class="unit-hero">
+        <div class="unit-badge">Unitat {{ current_unitat.numero }}</div>
+        <h1 class="unit-title">{{ current_unitat.nom }}</h1>
+        <p class="unit-description">{{ current_unitat.descripcio }}</p>
+    </div>
+
+    {% if current_unitat.introduccio %}
+    <div class="unit-introduction">
+        <h2>Introducció als continguts</h2>
+        <p>{{ current_unitat.introduccio }}</p>
+    </div>
+    {% endif %}
+
+    <div class="unit-content">
+        <div class="blocks-grid">
+            {% for bloc in current_unitat.blocs %}
+                <div class="block-card">
+                    <div class="block-card-header">
+                        <span class="block-number">{{ page.unitat }}.{{ bloc.numero }}</span>
+                        <h3 class="block-title">{{ bloc.nom }}</h3>
+                    </div>
+                    <div class="block-summary">
+                        <h4 class="summary-title">Què aprendràs:</h4>
+                        <p class="block-description">{{ bloc.descripcio }}</p>
+                    </div>
+                    <a href="{{ bloc.url | relative_url }}" class="block-action">
+                        <span class="block-link-text">Començar bloc →</span>
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>

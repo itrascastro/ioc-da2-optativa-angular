@@ -31,9 +31,9 @@ unitat-X/
         <li>Element normal de la llista</li>
     </ul>
 
-    {% include codi.html
-       llenguatge="bash"
-       contingut="# Exemple de codi
+    {% include code-block.html
+       lang="bash"
+       code="# Exemple de codi
 npm install -g @angular/cli
 ng version"
     %}
@@ -81,10 +81,25 @@ ng version"
 
 ### 💻 Bloc de Codi:
 ```jekyll
-{% include codi.html
-   llenguatge="bash"
-   contingut="npm install
+{% include code-block.html
+   lang="bash"
+   code="npm install
 ng serve"
+%}
+```
+
+**Opcions avançades:**
+```jekyll
+{% include code-block.html
+   lang="typescript"
+   filename="src/app/component.ts"
+   highlight="1-3,5"
+   code="import { Component } from '@angular/core';
+
+@Component({
+  selector: 'app-my-component'
+})
+export class MyComponent { }"
 %}
 ```
 
@@ -96,11 +111,21 @@ ng serve"
 %}
 ```
 
-### 🔄 Problema i Solució:
+### ⚠️ Error:
 ```jekyll
-{% include error-solucio.html
-   problema="<strong>⚠️ Problema:</strong> Descripció del problema..."
-   solucio="<strong>✅ Solució:</strong> Descripció de la solució..."
+{% include error.html
+   contingut="Error: ng command not found després d'instal·lar Angular CLI."
+%}
+```
+
+### ✅ Solució:
+```jekyll
+{% include solucio.html
+   contingut="Reinicia el terminal o executa source ~/.bashrc per actualitzar les variables d'entorn."
+%}
+
+{% include solucio.html
+   contingut="Alternativament, tanca i obre un nou terminal completament."
 %}
 ```
 
@@ -108,6 +133,14 @@ ng serve"
 ```jekyll
 {% include suggeriment.html
    contingut="<strong>💡 Suggeriment:</strong> Text del suggeriment amb <code>exemples</code>..."
+%}
+```
+
+### ✅ Checklist:
+```jekyll
+{% include checklist.html
+   titol="Verificació del Projecte"
+   elements="El projecte es crea sense errors|L'aplicació s'executa correctament amb ng serve|Es pot accedir a l'aplicació des del navegador|La recàrrega automàtica funciona en fer canvis"
 %}
 ```
 
@@ -172,14 +205,19 @@ block: 1
         <li><strong>Components:</strong> Reutilitzables</li>
     </ul>
 
-    {% include codi.html
-       llenguatge="bash"
-       contingut="npm install -g @angular/cli
+    {% include code-block.html
+       lang="bash"
+       code="npm install -g @angular/cli
 ng version"
     %}
 
     {% include warning_box.html
        contingut="<strong>⚠️ Important:</strong> Necessites Node.js v18+"
+    %}
+    
+    {% include checklist.html
+       titol="Instal·lació de Node.js"
+       elements="Descarregar Node.js LTS des de nodejs.org|Executar l'instal·lador seguint les instruccions|Verificar la instal·lació amb node --version|Verificar npm amb npm --version"
     %}
 </div>
 

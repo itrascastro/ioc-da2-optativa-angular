@@ -4,7 +4,10 @@
 /* Llistes dins del contingut: espai i sagnat adequats */
 .content-body ul,
 .content-body ol { margin-left: 1.5rem; padding-left: 1.2rem; margin-bottom: 1rem; }
-.content-body li { margin-bottom: 0.5rem; }
+/* Espaiat de llistes més compacte entre elements */
+.content-body li { margin-bottom: 0.3rem; }
+/* Espaiat sota subtítols per evitar que les llistes quedin enganxades */
+.content-body h2, .content-body h3, .content-body h4 { margin: 0 0 0.6rem 0; }
 
 /* Codi inline (no afectat pels canvis) */
 .code-inline { background-color: var(--code-border); color: var(--code-accent); padding: 2px 6px; border-radius: 4px; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 0.9em; }

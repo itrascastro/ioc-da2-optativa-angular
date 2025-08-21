@@ -11,7 +11,7 @@
 /* Dropdown navegació */
 .nav-dropdown { position: relative; }
 .nav-dropdown-btn { background-color: var(--color-primary); color: white; border: none; padding: 10px 20px; border-radius: var(--border-radius); cursor: pointer; font-size: 0.9rem; font-weight: 500; transition: all 0.3s ease; }
-.nav-dropdown-btn:hover { background-color: var(--color-secondary); transform: none; box-shadow: none; }
+.nav-dropdown-btn:hover { background-color: var(--color-primary); transform: none; box-shadow: none; }
 .nav-dropdown-content { position: absolute; top: 100%; right: 0; background-color: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--border-radius); box-shadow: var(--shadow-medium); min-width: 200px; padding: 10px; display: none; margin-top: 5px; }
 .nav-dropdown.open .nav-dropdown-content { display: block; }
 .nav-dropdown-item { display: block; padding: 10px 12px; color: var(--color-text); text-decoration: none; font-size: 0.9rem; border-radius: 4px; transition: all 0.3s ease; margin-bottom: 4px; background-color: var(--color-surface-dark); }
@@ -20,9 +20,9 @@
 
 /* Estil unificat per tots els botons */
 .btn, .nav-button, .theme-toggle { background-color: var(--color-primary); color: white; border: none; padding: 10px 20px; border-radius: var(--border-radius); cursor: pointer; font-size: 0.9rem; font-weight: 500; transition: all 0.3s ease; text-decoration: none; display: inline-block; border: 1px solid transparent; }
-.btn:hover, .theme-toggle:hover { background-color: var(--color-accent); }
+.btn:hover, .theme-toggle:hover { background-color: var(--color-primary); box-shadow: none; transform: none; border: none; }
 .btn:disabled, .nav-button:disabled { background-color: var(--color-border); cursor: not-allowed; opacity: 0.6; transform: none; box-shadow: none; }
-.nav-button:hover { background-color: var(--color-accent); }
+.nav-button:hover { background-color: var(--color-primary); box-shadow: none; transform: none; border: none; }
 
 /* Navegació entre blocs */
 .block-navigation { margin-top: 2rem; padding-top: 1rem; border-top: 1px solid var(--color-border); }
@@ -39,4 +39,4 @@
 
 /* Botons: assegurar hover amb color clar i sense vora negre */
 .btn, .nav-button, .theme-toggle { border: none; }
-.btn:hover, .nav-button:hover, .theme-toggle:hover { border: none; color: white; }
+.btn:hover, .nav-button:hover, .theme-toggle:hover { border: none; color: white; box-shadow: none; transform: none; }

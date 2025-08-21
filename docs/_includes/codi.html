@@ -1,8 +1,0 @@
-<!-- Component: Bloc de codi SIMPLE igual que la plantilla de referència -->
-{% assign language = include.llenguatge | default: 'text' %}
-
-<div class="code-block" data-language="{{ language }}">{{ include.contingut | xml_escape }}</div>
-
-{% if include.explicacio %}
-<p>{{ include.explicacio }}</p>
-{% endif %}

@@ -22,8 +22,9 @@ docs/
 ├── _includes/           # Components reutilitzables
 │   ├── objectius.html   # Objectius d'aprenentatge
 │   ├── definicio.html   # Caixes de definició
-│   ├── codi.html        # Blocs de codi
-│   ├── error-solucio.html # Parelles error-solució
+│   ├── code-block.html  # Blocs de codi
+│   ├── error.html      # Errors i problemes
+│   ├── solucio.html    # Solucions alternatives
 │   ├── prompt-ai.html   # Prompts per IA
 │   ├── suggeriment.html # Suggeriments d'ampliació
 │   ├── toc.html         # Taula de continguts
@@ -67,26 +68,43 @@ docs/
 ### Blocs de Codi
 
 ```liquid
-{% include codi.html
-   llenguatge="typescript"
-   fitxer="src/app/component.ts"
-   titol="Component Example"
-   contingut="export class MyComponent { }"
-   explicacio="Exemple bàsic d'un component"
+{% include code-block.html
+   lang="typescript"
+   filename="src/app/component.ts"
+   code="export class MyComponent { }"
 %}
 ```
 
-### Error-Solució
+**Opcions avançades:**
 
 ```liquid
-{% include error-solucio.html
-   error_titol="Error de compilació"
-   error="Cannot find module 'rxjs'"
-   error_causa="Dependència no instal·lada"
-   solucio_titol="Instal·lar dependències"
-   solucio="Executa npm install per instal·lar les dependències"
-   solucio_passos='["npm install", "ng serve", "Verificar que funciona"]'
-   prevenció="Sempre executa npm install després de clonar un projecte"
+{% include code-block.html
+   lang="typescript"
+   filename="src/app/component.ts"
+   highlight="1-3,5"
+   code="import { Component } from '@angular/core';
+
+@Component({
+  selector: 'app-my-component',
+  template: '<h1>Hello World</h1>'
+})
+export class MyComponent { }"
+%}
+```
+
+### Error i Solució
+
+```liquid
+{% include error.html
+   contingut="Error de compilació: Cannot find module 'rxjs'. Dependència no instal·lada."
+%}
+
+{% include solucio.html
+   contingut="Executa <code>npm install</code> per instal·lar les dependències."
+%}
+
+{% include solucio.html
+   contingut="Alternativament, executa <code>npm ci</code> per una instal·lació més ràpida."
 %}
 ```
 

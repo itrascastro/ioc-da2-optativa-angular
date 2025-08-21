@@ -24,6 +24,39 @@ bloc: 1
         <li><strong>CLI:</strong> Eina de línia de comandaments potent</li>
         <li><strong>Ecosystem complet:</strong> Routing, HTTP client, forms integrats</li>
     </ul>
+
+    <h3>Comparació de Frameworks</h3>
+    
+    <table class="responsive-table">
+        <thead>
+            <tr>
+                <th>Framework</th>
+                <th>Tipus</th>
+                <th>Llenguatge</th>
+                <th>Arquitectura</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Angular</td>
+                <td>Framework complet</td>
+                <td>TypeScript</td>
+                <td>MVC + Components</td>
+            </tr>
+            <tr>
+                <td>React</td>
+                <td>Llibreria UI</td>
+                <td>JavaScript/JSX</td>
+                <td>Component-based</td>
+            </tr>
+            <tr>
+                <td>Vue.js</td>
+                <td>Framework progressiu</td>
+                <td>JavaScript</td>
+                <td>MVVM</td>
+            </tr>
+        </tbody>
+    </table>
 </div>
 
 <div class="section">
@@ -37,41 +70,143 @@ bloc: 1
 
     <h3>Verificació del Sistema</h3>
 
-    {% include codi.html
-       llenguatge="bash"
-       contingut="node --version
-npm --version"
-    %}
+    {% include code-block.html
+       lang="bash"
+       code="# Verificació completa del sistema de desenvolupament Angular
+echo '=== VERIFICACIÓ DEL SISTEMA ANGULAR ===' 
+echo 'Comprovant versions dels components necessaris...'
+
+# Node.js - requereix versió 18 o superior per Angular 17+
+echo -n 'Node.js: ' && node --version || echo 'ERROR: Node.js no instal·lat'
+
+# npm - gestor de paquets per defecte
+echo -n 'npm: ' && npm --version || echo 'ERROR: npm no disponible'
+
+# Verificar si Angular CLI està instal·lat globalment
+if command -v ng &> /dev/null; then
+    echo 'Angular CLI: Instal·lat correctament'
+    ng version --skip-git 2>/dev/null | grep -E '(Angular CLI|Package)' | head -3
+else
+    echo 'ADVERTÈNCIA: Angular CLI no instal·lat globalment'
+    echo 'Executar: npm install -g @angular/cli@latest'
+fi
+
+# Verificació opcional de TypeScript global (recomanat per desenvolupament)
+if command -v tsc &> /dev/null; then
+    echo -n 'TypeScript global: ' && tsc --version
+else
+    echo 'INFO: TypeScript global no instal·lat (opcional)'
+fi
+
+echo '=== VERIFICACIÓ COMPLETADA ===' 
+
+# Comandament d'instal·lació extremadament llarg per demostrar scroll horizontal perfecte en tots els navegadors i dispositius
+npm install --save @angular/core @angular/common @angular/forms @angular/router @angular/platform-browser @angular/platform-browser-dynamic @angular/animations @angular/material @angular/cdk @angular/flex-layout @angular/service-worker @angular/pwa rxjs zone.js typescript @types/node eslint prettier husky lint-staged jest @testing-library/angular @testing-library/jest-dom cypress webpack webpack-cli webpack-dev-server html-webpack-plugin css-loader sass-loader style-loader postcss-loader autoprefixer mini-css-extract-plugin terser-webpack-plugin optimize-css-assets-webpack-plugin compression-webpack-plugin bundle-analyzer webpack-merge dotenv-webpack --save-dev @angular-devkit/build-angular @angular/cli @types/jasmine jasmine-core karma karma-chrome-launcher karma-coverage karma-jasmine karma-jasmine-html-reporter @typescript-eslint/parser @typescript-eslint/eslint-plugin eslint-plugin-angular eslint-plugin-rxjs eslint-plugin-rxjs-angular
+
+# Aquesta línia és tan llarga que definitivament necessitarà scroll horizontal: Configuració completa d'Angular amb totes les dependències, eines de desenvolupament, linters, formatadors, eines de testing, bundlers, optimitzadors, compressors, analitzadors de bundle, loaders de webpack, plugins, extensions d'eslint, tipus de TypeScript i molt més per crear una aplicació Angular professional i escalable" %}
 
     <h3>Instal·lació d'Angular CLI</h3>
 
-    {% include codi.html
-       llenguatge="bash"
-       contingut="npm install -g @angular/cli
-ng version"
-    %}
+    {% include code-block.html
+       lang="bash"
+       code="# Instal·lació d'Angular CLI amb configuració completa
+npm install -g @angular/cli@latest
+
+# Verificar instal·lació i mostrar versions de tot l'ecosistema
+ng version
+
+# Configuració opcional del CLI per millorar experiència de desenvolupament
+ng config -g cli.analytics false  # Desactivar telemetria per privacitat
+ng config -g cli.warnings.versionMismatch false  # Evitar alertes de versions menors
+
+echo 'Angular CLI instal·lat i configurat correctament!'" %}
 
     {% include success_box.html
        contingut="<strong>CLI instal·lat:</strong> Si la comanda ng version mostra informació d'Angular, l'eina està llesta per usar."
     %}
+
+    <h3>Verificació de la Configuració</h3>
+
+    {% include checklist.html
+       titol="Passos de Verificació"
+       elements="Node.js instal·lat correctament|npm funciona sense errors|Angular CLI s'ha instal·lat globalment|La comanda ng version mostra informació|L'entorn està llest per desenvolupar"
+    %}
 </div>
 
 <div class="section">
-    <h2 id="primer-projecte">Primer Projecte</h2>
+    <h2 id="primer-projecte">Primer Projecte: Calculadora Angular Professional</h2>
+
+{% include code-block.html
+   lang="typescript"
+   code="
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css']
+})
+export class AppComponent {
+  title = 'Mi App Angular';
+}
+" %}
+
+
     
-    <p>Crearem una calculadora senzilla per aprendre els fonaments d'Angular.</p>
+    <p>Crearem una calculadora completa utilitzant les millors pràctiques d'Angular moderns amb arquitectura escalable.</p>
 
-    {% include codi.html
-       llenguatge="bash" 
-       contingut="ng new calculadora-angular
-cd calculadora-angular
-ng serve"
-    %}
+    <h4>1. Creació del Projecte amb Configuració Completa</h4>
 
-    {% include error-solucio.html
-       problema="Error: ng command not found després d'instal·lar Angular CLI."
-       solucio="Reinicia el terminal o executa source ~/.bashrc per actualitzar les variables d'entorn."
-    %}
+
+    <h4>3. Exemple de Component TypeScript Professional</h4>
+
+    <p>Aquest és un component Angular complet que mostra totes les funcionalitats modernes i bones pràctiques:</p>
+
+    
+
+    <h4>4. Configuració Angular.json amb Propietats Extenses</h4>
+
+    <p>Exemple de configuració angular.json amb opcions completes que demostra scroll horizontal:</p>
+
+    {% include code-block.html
+       lang="json"
+       code="{
+  \"version\": 1,
+  \"newProjectRoot\": \"projects\",
+  \"projects\": {
+    \"calculadora-angular\": {
+      \"projectType\": \"application\",
+      \"schematics\": {
+        \"@schematics/angular:component\": { \"style\": \"scss\", \"skipTests\": false, \"changeDetection\": \"OnPush\", \"viewEncapsulation\": \"Emulated\", \"displayBlock\": true },
+        \"@schematics/angular:directive\": { \"skipTests\": false, \"flat\": true, \"prefix\": \"app\", \"selector\": \"appPrefix\", \"exportFromModule\": true },
+        \"@schematics/angular:service\": { \"skipTests\": false, \"flat\": true, \"providedIn\": \"root\", \"module\": \"app\", \"export\": true }
+      },
+      \"root\": \"\",
+      \"sourceRoot\": \"src\",
+      \"prefix\": \"app\",
+      \"architect\": {
+        \"build\": {
+          \"builder\": \"@angular-devkit/build-angular:browser\",
+          \"options\": {
+            \"outputPath\": \"dist/calculadora-angular\",
+            \"index\": \"src/index.html\",
+            \"main\": \"src/main.ts\",
+            \"polyfills\": [\"zone.js\"],
+            \"tsConfig\": \"tsconfig.app.json\",
+            \"inlineStyleLanguage\": \"scss\",
+            \"assets\": [\"src/favicon.ico\", \"src/assets\", \"src/manifest.json\", \"src/robots.txt\", \"src/sitemap.xml\"],
+            \"styles\": [\"@angular/material/prebuilt-themes/indigo-pink.css\", \"src/styles/global.scss\", \"src/styles/components.scss\", \"src/styles/utilities.scss\", \"src/styles/themes.scss\"],
+            \"scripts\": [\"node_modules/chart.js/dist/chart.min.js\", \"node_modules/d3/dist/d3.min.js\", \"src/assets/js/analytics.js\", \"src/assets/js/utils.js\"],
+            \"allowedCommonJsDependencies\": [\"lodash\", \"moment\", \"rxjs\", \"chart.js\", \"d3\", \"mathjs\", \"big.js\", \"decimal.js\", \"numeral\"],
+            \"optimization\": { \"scripts\": true, \"styles\": true, \"fonts\": true },
+            \"sourceMap\": { \"scripts\": true, \"styles\": true, \"vendor\": true },
+            \"budgets\": [{ \"type\": \"initial\", \"maximumWarning\": \"2mb\", \"maximumError\": \"5mb\" }, { \"type\": \"anyComponentStyle\", \"maximumWarning\": \"6kb\", \"maximumError\": \"10kb\" }]
+          }
+        }
+      }
+    }
+  }
+}" %}
 </div>
 
 <div class="section">

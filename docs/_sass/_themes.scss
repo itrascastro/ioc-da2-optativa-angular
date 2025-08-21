@@ -55,6 +55,18 @@
 [data-theme="dark"] .nav-dropdown-item.current { background-color: #353535; color: #ffffff; }
 [data-theme="dark"] .skip-link { background: #4a4a4a; }
 
+/* Breadcrumb/horizontal nav: keep links blue in dark mode */
+[data-theme="dark"] .horizontal-nav .horizontal-nav-item {
+  color: #3498db;
+}
+[data-theme="dark"] .horizontal-nav .horizontal-nav-item:hover {
+  color: #7aa2e3;
+}
+/* Mantener el elemento actual (no enlace) en color de texto, no azul */
+[data-theme="dark"] .horizontal-nav .horizontal-nav-item.current {
+  color: var(--color-text);
+}
+
 /* Sidebar (Contingut del Bloc) en fosc */
 [data-theme="dark"] .sidebar-section { background-color: #222; border-color: #333; }
 [data-theme="dark"] .nav-link { background-color: #2a2a2a; color: #e6edf3; }

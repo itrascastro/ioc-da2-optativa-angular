@@ -6,7 +6,7 @@ email: "itrascastro@gmail.com"
 
 # URL de base
 url: "https://itrascastro.github.io" # Canviar per la URL real
-baseurl: "/Angular" # Nom del repositori
+baseurl: "" # Portable - funciona en qualsevol carpeta
 
 # Configuració Jekyll
 markdown: kramdown
