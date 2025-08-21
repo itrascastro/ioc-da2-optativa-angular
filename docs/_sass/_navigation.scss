@@ -20,9 +20,9 @@
 
 /* Estil unificat per tots els botons */
 .btn, .nav-button, .theme-toggle { background-color: var(--color-primary); color: white; border: none; padding: 10px 20px; border-radius: var(--border-radius); cursor: pointer; font-size: 0.9rem; font-weight: 500; transition: all 0.3s ease; text-decoration: none; display: inline-block; border: 1px solid transparent; }
-.btn:hover, .theme-toggle:hover { background-color: var(--color-secondary); }
+.btn:hover, .theme-toggle:hover { background-color: var(--color-accent); }
 .btn:disabled, .nav-button:disabled { background-color: var(--color-border); cursor: not-allowed; opacity: 0.6; transform: none; box-shadow: none; }
-.nav-button:hover { background-color: var(--color-secondary); }
+.nav-button:hover { background-color: var(--color-accent); }
 
 /* Navegació entre blocs */
 .block-navigation { margin-top: 2rem; padding-top: 1rem; border-top: 1px solid var(--color-border); }
@@ -32,8 +32,11 @@
 /* Navegació horizontal */
 .horizontal-nav { margin-bottom: 20px; padding: 15px 0; border-bottom: 1px solid var(--color-border); }
 .horizontal-nav-list { display: flex; align-items: center; flex-wrap: wrap; gap: 5px; }
-.horizontal-nav-item { color: var(--color-accent); text-decoration: none; font-weight: 500; transition: color 0.3s ease; }
-.horizontal-nav-item:hover { color: var(--color-primary); }
+.horizontal-nav .horizontal-nav-item { color: var(--color-accent); text-decoration: none; font-weight: 500; transition: color 0.3s ease; }
+.horizontal-nav .horizontal-nav-item:hover { color: var(--color-primary); }
 .horizontal-nav-item.current { color: var(--color-text); font-weight: 600; }
 .horizontal-nav-separator { color: var(--color-text-muted); margin: 0 5px; }
 
+/* Botons: assegurar hover amb color clar i sense vora negre */
+.btn, .nav-button, .theme-toggle { border: none; }
+.btn:hover, .nav-button:hover, .theme-toggle:hover { border: none; color: white; }

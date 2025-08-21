@@ -1,6 +1,11 @@
 /* Seccions */
 .section { background-color: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--border-radius); padding: 30px; margin-bottom: 30px; box-shadow: var(--shadow-light); }
 
+/* Llistes dins del contingut: espai i sagnat adequats */
+.content-body ul,
+.content-body ol { margin-left: 1.5rem; padding-left: 1.2rem; margin-bottom: 1rem; }
+.content-body li { margin-bottom: 0.5rem; }
+
 /* Codi inline (no afectat pels canvis) */
 .code-inline { background-color: var(--code-border); color: var(--code-accent); padding: 2px 6px; border-radius: 4px; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 0.9em; }
 
@@ -30,4 +35,3 @@
 .responsive-table th, .responsive-table td { padding: 12px 15px; text-align: left; border-bottom: 1px solid var(--color-border); }
 .responsive-table th { background-color: var(--color-primary); color: white; font-weight: 600; }
 .responsive-table tr:hover { background-color: rgba(52,152,219,0.05); }
-
