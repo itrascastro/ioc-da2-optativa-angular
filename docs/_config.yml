@@ -10,43 +10,39 @@ authors:
 
 # Informació completa del curs
 curs:
-  nom: "Angular"
-  version: "2024"
-  total_unitats: 4
-  total_blocs: 8
   
   unitats:
     - nom: "Unitat 1"
       numero: 1
       descripcio: "Primera unitat del curs"
       blocs:
-        - { nom: "Bloc 1", numero: 1, url: "/unitat-1/bloc-1/", descripcio: "Primer bloc de la unitat 1" }
-        - { nom: "Bloc 2", numero: 2, url: "/unitat-1/bloc-2/", descripcio: "Segon bloc de la unitat 1" }
+        - { nom: "Bloc 1", numero: 1, descripcio: "Primer bloc de la unitat 1" }
+        - { nom: "Bloc 2", numero: 2, descripcio: "Segon bloc de la unitat 1" }
     - nom: "Unitat 2"
       numero: 2
       descripcio: "Segona unitat del curs"
       blocs:
-        - { nom: "Bloc 3", numero: 3, url: "/unitat-2/bloc-3/", descripcio: "Primer bloc de la unitat 2" }
-        - { nom: "Bloc 4", numero: 4, url: "/unitat-2/bloc-4/", descripcio: "Segon bloc de la unitat 2" }
+        - { nom: "Bloc 3", numero: 3, descripcio: "Primer bloc de la unitat 2" }
+        - { nom: "Bloc 4", numero: 4, descripcio: "Segon bloc de la unitat 2" }
     - nom: "Unitat 3"
       numero: 3
       descripcio: "Tercera unitat del curs"
       blocs:
-        - { nom: "Bloc 5", numero: 5, url: "/unitat-3/bloc-5/", descripcio: "Primer bloc de la unitat 3" }
-        - { nom: "Bloc 6", numero: 6, url: "/unitat-3/bloc-6/", descripcio: "Segon bloc de la unitat 3" }
+        - { nom: "Bloc 5", numero: 5, descripcio: "Primer bloc de la unitat 3" }
+        - { nom: "Bloc 6", numero: 6, descripcio: "Segon bloc de la unitat 3" }
     - nom: "Unitat 4"
       numero: 4
       descripcio: "Quarta unitat del curs"
       blocs:
-        - { nom: "Bloc 7", numero: 7, url: "/unitat-4/bloc-7/", descripcio: "Primer bloc de la unitat 4" }
-        - { nom: "Bloc 8", numero: 8, url: "/unitat-4/bloc-8/", descripcio: "Segon bloc de la unitat 4" }
+        - { nom: "Bloc 7", numero: 7, descripcio: "Primer bloc de la unitat 4" }
+        - { nom: "Bloc 8", numero: 8, descripcio: "Segon bloc de la unitat 4" }
 
 # URLs de desplegament (CANVIAR per cada professor)
-url: "https://itrascastro.github.io"  # La vostra URL de GitHub Pages
-baseurl: ""                           # Portable - funciona en qualsevol carpeta
-repository: itrascastro/Angular       # El vostre repositori GitHub
+url: "https://itrascastro.github.io"                    # La vostra URL de GitHub Pages
+baseurl: ""                                             # Portable - funciona en qualsevol carpeta
+repository: itrascastro/ioc-da2-optativa-angular        # El vostre repositori GitHub
 github:
-  username: itrascastro               # El vostre usuari GitHub
+  username: itrascastro                                 # El vostre usuari GitHub
 
 # ==========================================
 # CONFIGURACIÓ JEKYLL - NO TOCAR
