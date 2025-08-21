@@ -79,10 +79,53 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     });
   });
+  
+  // Checklist accessible: click/teclat per canviar estat
+  document.querySelectorAll('.checklist .checklist-item').forEach(item => {
+    const box = item.querySelector('.checklist-checkbox');
+    const toggle = () => {
+      const checked = item.getAttribute('aria-checked') === 'true';
+      const next = !checked;
+      item.setAttribute('aria-checked', String(next));
+      if (box) {
+        box.classList.toggle('checked', next);
+      }
+      item.classList.toggle('checked', next);
+    };
+    item.addEventListener('click', (e) => {
+      // Evitar activar si el clic prové d'un enllaç intern
+      if ((e.target instanceof HTMLElement) && e.target.closest('a')) return;
+      toggle();
+    });
+    item.addEventListener('keydown', (e) => {
+      if (e.key === ' ' || e.key === 'Enter') {
+        e.preventDefault();
+        toggle();
+      }
+    });
+  });
+  
+  // Assignar id a H2 sense id per compatibilitzar amb TOC
+  const slugify = (text) => text
+    .toLowerCase()
+    .normalize('NFD').replace(/\p{Diacritic}+/gu, '')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+  document.querySelectorAll('.content-body h2').forEach(h2 => {
+    if (!h2.id) {
+      const base = slugify(h2.textContent || '');
+      let id = base;
+      let i = 1;
+      while (id && document.getElementById(id)) {
+        i += 1;
+        id = `${base}-${i}`;
+      }
+      if (id) h2.id = id;
+    }
+  });
 });
 
 // Assegurar posició 0,0 inicial
 window.addEventListener('load', function () {
   window.scrollTo(0, 0);
 });
-
