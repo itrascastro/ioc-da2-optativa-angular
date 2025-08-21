@@ -1,0 +1,38 @@
+/* Variables del mode fosc */
+[data-theme="dark"] {
+  --color-primary: #d3d3d3;
+  --color-secondary: #d3d3d3;
+  --color-accent: #d3d3d3;
+  --color-background: #333;
+  --color-surface: #444;
+  --color-surface-dark: #3a3a3a;
+  --color-border: #555;
+  --color-text: #d3d3d3;
+  --color-text-muted: #aaa;
+  --shadow-light: 0 2px 4px rgba(0, 0, 0, 0.2);
+  --shadow-medium: 0 4px 6px rgba(0, 0, 0, 0.3);
+
+  /* Variables de components (mode fosc) */
+  --comp-bg: #1e1e1e;
+  --comp-header-bg: #2c2c2c;
+  --comp-header-fg: #e6edf3;
+  --comp-border: #444444;
+  --comp-info: #7aa2e3;
+  --comp-success: #81c784;
+  --comp-warning: #e1b962;
+  --comp-error: #ef9a9a;
+  --comp-solution: #81c784;
+  --comp-suggestion: #7ec1bd;
+  /* IA en fosc */
+  --comp-ai: #84c5f0;
+
+  /* Fons de capçalera per tipus (fosc) – gamma grisos per coherència */
+  --comp-info-hbg: var(--comp-header-bg);
+  --comp-success-hbg: var(--comp-header-bg);
+  --comp-warning-hbg: var(--comp-header-bg);
+  --comp-error-hbg: var(--comp-header-bg);
+  --comp-solution-hbg: var(--comp-header-bg);
+  --comp-suggestion-hbg: var(--comp-header-bg);
+  --comp-ai-hbg: var(--comp-header-bg);
+}
+
