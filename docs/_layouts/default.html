@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     
-    <title>{% if page.title %}{{ page.title }} | {% endif %}{{ site.title }}</title>
-    <meta name="description" content="{{ page.excerpt | default: site.description | strip_html | normalize_whitespace | truncate: 160 | escape }}">
+    <title>{% if page.title %}{{ page.title }} | {% endif %}{{ site.module_title }} - IOC</title>
+    <meta name="description" content="{{ page.excerpt | default: 'Material educatiu' | strip_html | normalize_whitespace | truncate: 160 | escape }} - {{ site.organization }}">
     
     <!-- SEO Tags -->
     {% seo %}
@@ -51,7 +51,15 @@
     
     <!-- Header fix -->
     <header class="header" role="banner">
-        <h1>{% if page.title %}{{ page.title }}{% else %}{{ site.title }}{% endif %}</h1>
+        <div class="header-brand">
+            <img src="{{ '/assets/images/logo_IOC_light.jpg' | relative_url }}" 
+                 alt="Institut Obert de Catalunya" 
+                 class="logo logo-light">
+            <img src="{{ '/assets/images/logo_IOC_dark.png' | relative_url }}" 
+                 alt="Institut Obert de Catalunya" 
+                 class="logo logo-dark">
+            <h1>{% if page.title %}{{ page.title }}{% else %}{{ site.module_title }}{% endif %}</h1>
+        </div>
         <div class="header-controls">
             <div class="nav-dropdown" id="nav-dropdown">
                 <button class="nav-dropdown-btn" id="nav-dropdown-btn">Navegació</button>
@@ -123,7 +131,7 @@
                             {% endif %}
                         {% endif %}
                     {% else %}
-                        {% if page.title and page.title != site.title %}
+                        {% if page.title and page.title != site.module_title %}
                             <span class="horizontal-nav-separator"> &gt; </span>
                             <span class="horizontal-nav-item current">
                                 {{ page.title }}
@@ -190,7 +198,7 @@
     <footer class="footer">
         <div class="footer-content">
             <div class="footer-info">
-                <strong>{{ site.title }}</strong> - Material didàctic desenvolupat per l'{{ site.author }}
+                <strong>{{ site.module_title }}</strong> - Material didàctic desenvolupat per l'{{ site.organization }}
             </div>
             <div class="footer-progress">
                 <span class="progress-text" id="footer-progress-text">0 de 5</span>

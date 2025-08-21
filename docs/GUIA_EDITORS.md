@@ -243,4 +243,34 @@ ng version"
 **Errors de sintaxi:** Revisa aquesta guia
 
 ---
+
+## 🔄 Reutilitzar Aquest Sistema per Altres Mòduls
+
+**Per professors que vulguin adaptar aquest sistema per crear nous cursos IOC:**
+
+### Només cal canviar 3 variables al `_config.yml`:
+
+```yaml
+# 1. Canviar el cicle i mòdul
+cicle_modulo: "VOSTRE_CICLE_MODULO"    # Ex: "SMX_UF1", "DAW_M7", etc.
+
+# 2. Canviar el títol del curs
+module_title: "TÍTOL DEL VOSTRE CURS"  # Ex: "Sistemes Operatius Linux"
+
+# 3. Canviar l'autor
+authors: 
+  - "EL VOSTRE NOM"                     # Pot haver-hi múltiples autors
+```
+
+**Això és tot!** El sistema mostrarà automàticament:
+- El vostre cicle/mòdul entre claudàtors `[VOSTRE_CICLE_MODULO]`
+- El títol del vostre curs a totes les pàgines
+- El vostre nom com a autor
+- `Institut Obert de Catalunya` com a organització
+
+✅ **Sistema 100% portable** - Funciona en qualsevol URL de GitHub Pages  
+✅ **Migració completa** - Tot el contingut es transfereix automàticament  
+✅ **Configuració mínima** - Només 3 variables per personalitzar
+
+---
 **Recorda:** Només HTML + Components Jekyll. NO Markdown. NO CSS personalitzat.

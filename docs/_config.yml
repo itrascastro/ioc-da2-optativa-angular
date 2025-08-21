@@ -1,8 +1,13 @@
-# Configuració del Curs Angular IOC
-title: "Fonaments d'Angular i Calculadora"
-description: "Curs complet d'Angular amb exemples pràctics - IOC"
-author: "IOC"
-email: "itrascastro@gmail.com"
+# Sistema Jekyll Reutilitzable per Mòduls IOC
+
+# Informació específica del mòdul (CANVIAR per cada mòdul)
+cicle_modulo: "DA2_Optativa"
+module_title: "Fonaments d'Angular i Calculadora"
+authors: 
+  - "Ismael Trascastro"
+
+# Informació genèrica IOC (NO CANVIAR)
+organization: "Institut Obert de Catalunya"
 
 # URL de base
 url: "https://itrascastro.github.io" # Canviar per la URL real

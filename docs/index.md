@@ -1,6 +1,6 @@
 ---
 layout: home
-title: "Fonaments d'Angular i Calculadora"
+title: "Curs Angular - IOC"
 description: "Curs complet d'Angular amb exemples pràctics"
 sidebar: false
 breadcrumb: false

@@ -8,3 +8,117 @@
 @import "components";
 @import "pages";
 @import "themes";
+
+/* Logos IOC en el header */
+.header-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  
+  .logo {
+    height: 50px;
+    width: auto;
+    transition: opacity 0.3s ease;
+    
+    &.logo-light {
+      display: block;
+    }
+    
+    &.logo-dark {
+      display: none;
+    }
+  }
+  
+  h1 {
+    margin: 0;
+    flex: 1;
+  }
+}
+
+/* Mode fosc: canviar logo */
+[data-theme='dark'] .header-brand {
+  .logo-light {
+    display: none;
+  }
+  
+  .logo-dark {
+    display: block;
+  }
+}
+
+/* Responsive: logo més petit en pantalles petites */
+@media (max-width: 768px) {
+  .header-brand .logo {
+    height: 40px;
+  }
+  
+  .header-brand {
+    gap: 8px;
+  }
+}
+
+/* Informació acadèmica a la pàgina principal */
+.academic-info {
+  text-align: center;
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background: var(--bg-secondary, #f8f9fa);
+  border-radius: 8px;
+  border-left: 4px solid var(--primary-color, #007acc);
+  
+  .cicle-modulo {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--primary-color, #007acc);
+    margin-bottom: 0.5rem;
+    letter-spacing: 0.5px;
+  }
+  
+  .module-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--text-primary, #333);
+    margin: 0.5rem 0;
+    line-height: 1.2;
+  }
+  
+  .course-authors {
+    font-size: 1rem;
+    color: var(--text-secondary, #666);
+    font-style: italic;
+    
+    .author-label {
+      font-weight: 600;
+      font-style: normal;
+    }
+  }
+}
+
+/* Mode fosc per informació acadèmica */
+[data-theme='dark'] .academic-info {
+  background: var(--bg-secondary-dark, #2d3142);
+  
+  .module-title {
+    color: var(--text-primary-dark, #ffffff);
+  }
+  
+  .course-authors {
+    color: var(--text-secondary-dark, #b8c5d1);
+  }
+}
+
+/* Responsive per informació acadèmica */
+@media (max-width: 768px) {
+  .academic-info {
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    
+    .module-title {
+      font-size: 1.5rem;
+    }
+    
+    .cicle-modulo {
+      font-size: 1rem;
+    }
+  }
+}
