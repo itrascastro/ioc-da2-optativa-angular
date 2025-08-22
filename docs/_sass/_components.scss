@@ -52,6 +52,8 @@
   font-size: 12px;
 }
 .ai-header .copy-btn:hover { background-color: var(--color-surface-dark); }
+.ai-prompt .copy-btn:focus { outline: 2px solid #4fc3f7; outline-offset: 2px; }
+.ai-prompt .copy-btn.copied { background: #4caf50; color: #fff; }
 
 /* Checklists */
 .checklist { background-color: var(--comp-bg); border: 1px solid var(--comp-border); border-radius: var(--border-radius); padding: 20px; margin: 20px 0; box-shadow: var(--shadow-light); }
