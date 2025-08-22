@@ -7,17 +7,23 @@ layout: default
     
     <!-- Informació acadèmica IOC -->
     <div class="academic-info">
-        <div class="cicle-modulo">[{{ site.cicle_modulo }}]</div>
-        <h1 class="module-title">{{ site.module_title }}</h1>
-        <div class="course-authors">
-            {% if site.authors.size == 1 %}
-                <span class="author-label">Autor:</span> {{ site.authors[0] }}
-            {% else %}
-                <span class="author-label">Autors:</span> 
-                {% for author in site.authors %}
-                    {{ author }}{% unless forloop.last %}, {% endunless %}
-                {% endfor %}
-            {% endif %}
+        <div class="course-header">
+            <div class="course-title-section">
+                <span class="cicle-tag">{{ site.cicle_modulo }}</span>
+                <h1 class="module-title">{{ site.module_title }}</h1>
+            </div>
+            <div class="course-details">
+                <div class="author-info">
+                    {% if site.authors.size == 1 %}
+                        {{ site.authors[0] }}
+                    {% else %}
+                        {% for author in site.authors %}
+                            {{ author }}{% unless forloop.last %}, {% endunless %}
+                        {% endfor %}
+                    {% endif %}
+                </div>
+                <div class="institution">Institut Obert de Catalunya</div>
+            </div>
         </div>
     </div>
     
@@ -45,7 +51,6 @@ layout: default
                                     <span class="block-number">{{ unitat.numero }}.{{ bloc.numero }}</span>
                                     <h3 class="block-title">{{ bloc.nom }}</h3>
                                 </div>
-                                {# Descripcions ocultes a la portada per simplicitat #}
                             </a>
                         </div>
                     {% endfor %}

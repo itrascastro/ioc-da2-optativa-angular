@@ -59,66 +59,83 @@
 
 /* Informació acadèmica a la pàgina principal */
 .academic-info {
-  text-align: center;
   margin-bottom: 2rem;
-  padding: 1.5rem;
-  background: var(--bg-secondary, #f8f9fa);
-  border-radius: 8px;
-  border-left: 4px solid var(--primary-color, #007acc);
+  padding: 1.5rem 0;
+  border-bottom: 1px solid var(--color-border);
   
-  .cicle-modulo {
-    font-size: 1.1rem;
+  .course-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+  
+  .course-title-section {
+    flex: 1;
+  }
+  
+  .cicle-tag {
+    display: inline-block;
+    color: var(--color-primary);
+    font-size: 0.9rem;
     font-weight: 600;
-    color: var(--primary-color, #007acc);
-    margin-bottom: 0.5rem;
+    text-transform: uppercase;
     letter-spacing: 0.5px;
+    margin-bottom: 0.5rem;
   }
   
   .module-title {
-    font-size: 2rem;
+    font-size: 2.2rem;
     font-weight: 700;
-    color: var(--text-primary, #333);
-    margin: 0.5rem 0;
-    line-height: 1.2;
+    color: var(--color-text);
+    margin: 0;
+    line-height: 1.1;
   }
   
-  .course-authors {
+  .course-details {
+    text-align: right;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+  
+  .author-info {
     font-size: 1rem;
-    color: var(--text-secondary, #666);
-    font-style: italic;
-    
-    .author-label {
-      font-weight: 600;
-      font-style: normal;
-    }
-  }
-}
-
-/* Mode fosc per informació acadèmica */
-[data-theme='dark'] .academic-info {
-  background: var(--bg-secondary-dark, #2d3142);
-  
-  .module-title {
-    color: var(--text-primary-dark, #ffffff);
+    font-weight: 600;
+    color: var(--color-text);
   }
   
-  .course-authors {
-    color: var(--text-secondary-dark, #b8c5d1);
+  .institution {
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+    font-weight: 500;
   }
 }
 
 /* Responsive per informació acadèmica */
 @media (max-width: 768px) {
   .academic-info {
-    padding: 1rem;
-    margin-bottom: 1.5rem;
+    padding: 1rem 0;
     
-    .module-title {
-      font-size: 1.5rem;
+    .course-header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1rem;
+      padding: 0 15px;
     }
     
-    .cicle-modulo {
-      font-size: 1rem;
+    .course-details {
+      text-align: left;
+    }
+    
+    .module-title {
+      font-size: 1.8rem;
+    }
+    
+    .cicle-tag {
+      font-size: 0.8rem;
     }
   }
 }
