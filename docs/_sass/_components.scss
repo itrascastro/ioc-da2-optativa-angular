@@ -27,6 +27,24 @@
 .suggestion-header { background-color: var(--comp-suggestion-hbg); }
 .ai-header { background-color: var(--comp-ai-hbg); }
 
+/* Prompt IA amb textarea i botó còpia */
+.ai-prompt-body { display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: start; }
+.ai-prompt-textarea {
+  width: 100%;
+  min-height: 120px;
+  resize: vertical;
+  padding: 12px;
+  border: 1px solid var(--comp-border);
+  border-radius: 6px;
+  background: var(--color-background);
+  color: var(--color-text);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+.ai-prompt-actions { display: flex; gap: 8px; }
+.ai-prompt .copy-btn { height: 38px; align-self: start; }
+
 /* Checklists */
 .checklist { background-color: var(--comp-bg); border: 1px solid var(--comp-border); border-radius: var(--border-radius); padding: 20px; margin: 20px 0; box-shadow: var(--shadow-light); }
 .checklist-title { background-color: var(--comp-header-bg); color: var(--comp-header-fg); font-weight: 600; margin: -20px -20px 15px -20px; padding: 15px 20px; border-radius: var(--border-radius) var(--border-radius) 0 0; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid var(--comp-border); }

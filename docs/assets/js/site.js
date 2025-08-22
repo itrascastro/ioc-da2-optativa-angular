@@ -55,6 +55,7 @@ document.addEventListener('DOMContentLoaded', function () {
   initializeThemeToggle();
   initializeNavDropdown();
   initializeFooterProgress();
+  initializePromptCopy();
 
   // Smooth scroll amb offset per header fix
   document.querySelectorAll('a[href^="#"]').forEach(anchor => {
@@ -191,4 +192,50 @@ function initializeFooterProgress() {
     window.addEventListener('resize', update);
     window.addEventListener('hashchange', update);
   }
+}
+
+// Copiar prompt d'IA des d'una textarea amb botó copy
+function initializePromptCopy() {
+  document.querySelectorAll('.ai-prompt').forEach(box => {
+    const textarea = box.querySelector('.ai-prompt-textarea');
+    const copyBtn = box.querySelector('.copy-btn');
+    if (!textarea || !copyBtn) return;
+    const originalText = textarea.value;
+    copyBtn.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(textarea.value);
+        showPromptCopyFeedback(copyBtn, true);
+      } catch (err) {
+        try {
+          const t = document.createElement('textarea');
+          t.value = textarea.value;
+          t.style.position = 'fixed'; t.style.opacity = '0';
+          document.body.appendChild(t);
+          t.select();
+          const ok = document.execCommand('copy');
+          document.body.removeChild(t);
+          showPromptCopyFeedback(copyBtn, ok);
+        } catch (e) {
+          showPromptCopyFeedback(copyBtn, false);
+        }
+      }
+    });
+  });
+}
+
+function showPromptCopyFeedback(button, success) {
+  const original = button.innerHTML;
+  if (success) {
+    button.innerHTML = '<i class="bi bi-clipboard-check" aria-hidden="true"></i>';
+    button.classList.add('copied');
+    button.setAttribute('aria-label', 'Prompt copiat correctament');
+  } else {
+    button.innerHTML = '<i class="bi bi-x-circle" aria-hidden="true"></i>';
+    button.setAttribute('aria-label', 'Error en copiar el prompt');
+  }
+  setTimeout(() => {
+    button.innerHTML = '<i class="bi bi-clipboard" aria-hidden="true"></i>';
+    button.classList.remove('copied');
+    button.setAttribute('aria-label', 'Copiar prompt');
+  }, 2000);
 }
