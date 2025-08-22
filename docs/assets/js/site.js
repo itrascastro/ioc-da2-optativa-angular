@@ -197,18 +197,18 @@ function initializeFooterProgress() {
 // Copiar prompt d'IA des d'una textarea amb botó copy
 function initializePromptCopy() {
   document.querySelectorAll('.ai-prompt').forEach(box => {
-    const textarea = box.querySelector('.ai-prompt-textarea');
+    const content = box.querySelector('.ai-prompt-content');
     const copyBtn = box.querySelector('.copy-btn');
-    if (!textarea || !copyBtn) return;
-    const originalText = textarea.value;
+    if (!content || !copyBtn) return;
     copyBtn.addEventListener('click', async () => {
+      const text = content.innerText;
       try {
-        await navigator.clipboard.writeText(textarea.value);
+        await navigator.clipboard.writeText(text);
         showPromptCopyFeedback(copyBtn, true);
       } catch (err) {
         try {
           const t = document.createElement('textarea');
-          t.value = textarea.value;
+          t.value = text;
           t.style.position = 'fixed'; t.style.opacity = '0';
           document.body.appendChild(t);
           t.select();
