@@ -16,26 +16,26 @@ curs:
       numero: 1
       descripcio: "Primera unitat del curs"
       blocs:
-        - { nom: "Bloc 1", numero: 1, descripcio: "Primer bloc de la unitat 1" }
-        - { nom: "Bloc 2", numero: 2, descripcio: "Segon bloc de la unitat 1" }
+        - { nom: "Bloc 1", numero: 1, descripcio: "Primer bloc de la unitat 1", url: "/unitat-1/bloc-1.html" }
+        - { nom: "Bloc 2", numero: 2, descripcio: "Segon bloc de la unitat 1", url: "/unitat-1/bloc-2.html" }
     - nom: "Unitat 2"
       numero: 2
       descripcio: "Segona unitat del curs"
       blocs:
-        - { nom: "Bloc 3", numero: 3, descripcio: "Primer bloc de la unitat 2" }
-        - { nom: "Bloc 4", numero: 4, descripcio: "Segon bloc de la unitat 2" }
+        - { nom: "Bloc 3", numero: 3, descripcio: "Primer bloc de la unitat 2", url: "/unitat-2/bloc-3.html" }
+        - { nom: "Bloc 4", numero: 4, descripcio: "Segon bloc de la unitat 2", url: "/unitat-2/bloc-4.html" }
     - nom: "Unitat 3"
       numero: 3
       descripcio: "Tercera unitat del curs"
       blocs:
-        - { nom: "Bloc 5", numero: 5, descripcio: "Primer bloc de la unitat 3" }
-        - { nom: "Bloc 6", numero: 6, descripcio: "Segon bloc de la unitat 3" }
+        - { nom: "Bloc 5", numero: 5, descripcio: "Primer bloc de la unitat 3", url: "/unitat-3/bloc-5.html" }
+        - { nom: "Bloc 6", numero: 6, descripcio: "Segon bloc de la unitat 3", url: "/unitat-3/bloc-6.html" }
     - nom: "Unitat 4"
       numero: 4
       descripcio: "Quarta unitat del curs"
       blocs:
-        - { nom: "Bloc 7", numero: 7, descripcio: "Primer bloc de la unitat 4" }
-        - { nom: "Bloc 8", numero: 8, descripcio: "Segon bloc de la unitat 4" }
+        - { nom: "Bloc 7", numero: 7, descripcio: "Primer bloc de la unitat 4", url: "/unitat-4/bloc-7.html" }
+        - { nom: "Bloc 8", numero: 8, descripcio: "Segon bloc de la unitat 4", url: "/unitat-4/bloc-8.html" }
 
 # URLs de desplegament (CANVIAR per cada professor)
 url: "https://itrascastro.github.io"                    # La vostra URL de GitHub Pages
@@ -65,10 +65,10 @@ plugins:
   - jekyll-feed
   - jekyll-sitemap
   - jekyll-seo-tag
-  - jekyll-toc
 
 # Configuració del tema
-theme: minima
+# No usem tema extern; fem servir layouts propis
+# theme: minima
 
 # Configuració de col·leccions per les unitats
 collections:
@@ -95,10 +95,12 @@ toc:
 # SEO i idioma
 lang: ca
 locale: ca_ES
+timezone: Europe/Madrid
 
 # Configuració per desenvolupament local
-livereload: true
-incremental: true
+# Paràmetres de desenvolupament (activar via jekyll serve)
+# livereload: true
+# incremental: true
 
 # Social media (opcional)
 twitter_username: IOC_cat
@@ -130,3 +132,11 @@ exclude:
   - vendor/ruby/
   - README.md
   - package*.json
+  - _site
+  - .jekyll-cache
+  - .sass-cache
+  - .jekyll-metadata
+
+# Metadades SEO bàsiques
+title: "Angular — IOC"
+description: "Materials del curs Angular de l'IOC"
