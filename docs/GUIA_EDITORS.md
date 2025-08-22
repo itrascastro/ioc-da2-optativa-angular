@@ -1,4 +1,5 @@
 # 📝 Guia per Editors de Materials IOC
+{% raw %}
 
 ## 🎯 Objectiu
 Aquest document explica com crear i editar continguts educatius seguint l'arquitectura simplificada d'aquest sistema.
@@ -178,6 +179,122 @@ onclick="algo()"
 7. **Revisió tècnica**: Un tècnic validarà abans de publicar
 
 ## 🎨 Exemple Complet
+
+## 🗂️ Estructura del Curs (Unitats i Blocs)
+
+Estructura bàsica dins de `docs/`:
+
+```
+docs/
+├─ unitat-1/
+│  ├─ index.html                 # Pàgina de la unitat 1
+│  ├─ descripcio.html            # Descripció HTML OBLIGATÒRIA de la unitat 1
+│  ├─ bloc-1/
+│  │  ├─ index.html             # Contingut del Bloc 1.1 (layout: bloc)
+│  │  └─ descripcio.html        # Descripció HTML OBLIGATÒRIA del bloc 1.1
+│  └─ bloc-2/
+│     ├─ index.html             # Contingut del Bloc 1.2
+│     └─ descripcio.html        # Descripció HTML del Bloc 1.2
+├─ unitat-2/
+│  ├─ index.html
+│  ├─ descripcio.html
+│  ├─ bloc-3/
+│  └─ bloc-4/
+└─ ...
+```
+
+Notes importants:
+- Cada unitat ha de tenir `descripcio.html` (obligatori). Aquest fitxer pot contenir HTML lliure (paràgrafs, llistes, enllaços, imatges...).
+- Cada bloc viu a `bloc-<n>/` i ha de tenir:
+  - `index.html` amb front‑matter i contingut del bloc.
+  - `descripcio.html` amb la descripció curta (3–6 punts) que es mostra a la pàgina de la unitat.
+- Els enllaços a blocs en configuració (`_config.yml`) apunten a `/unitat-<n>/bloc-<m>/` (barra final) per fer correspondre `index.html`.
+
+## 🧩 Pàgina d’Unitat (`unitat-*/index.html`)
+
+- No inclou la descripció a la capçalera. La descripció es mostra en una secció pròpia:
+
+```
+<div class="unit-introduction">
+  <h2>Descripció de la Unitat</h2>
+  {% include_relative descripcio.html %}
+  <!-- Editeu docs/unitat-<n>/descripcio.html -->
+</div>
+```
+
+- La llista de blocs mostra la descripció carregada via include relatiu al bloc:
+
+```
+<div class="block-description">
+  {% include_relative bloc-{{ bloc.numero }}/descripcio.html %}
+</div>
+```
+
+## 📄 Pàgina de Bloc (`bloc-*/index.html`)
+
+Front‑matter recomanat:
+
+```
+---
+layout: bloc
+title: "Bloc X: Títol"
+description: "Descripció breu del bloc"
+unitat: N
+bloc: X
+bloc_numero: X
+---
+```
+
+Bones pràctiques de contingut:
+- Seccions principals amb `h2` (necessari per a la barra de progrés de seccions i TOC).
+- Subsections amb `h3`.
+- Fragments de codi amb el component `code-block` per conservar format i còpia:
+
+```
+{% include code-block.html
+   lang="typescript"
+   code="\nimport { Component } from '@angular/core';\n// ...\n" %}
+```
+
+## 🎯 Descripcions OBLIGATÒRIES
+
+- Unitat: `descripcio.html`
+  - Contingut: resum (80–150 paraules), punts clau, enllaços interns.
+  - Exemple i pautes dins del mateix fitxer (comentaris HTML inicials).
+
+- Bloc: `bloc-<n>/descripcio.html`
+  - Contingut: 3–6 punts clau (llista curta) sobre el que s’aprèn.
+  - Exemple i pautes dins del mateix fitxer (comentaris HTML inicials).
+
+## 🧭 Navegació i estil
+
+- Portada: títols d’unitat enllaçats sense subratllat (estil de títol preservat).
+- Breadcrumb: en mode fosc, només els enllaços en blau; l’element actual es manté neutre.
+- Botons: estil neutre en clar i coherent en fosc.
+
+## ♿ Accessibilitat i Progrés
+
+- Cada `h2` del bloc alimenta la barra de progrés de seccions del peu de pàgina.
+- Mantingueu títols clars i un ordre lògic de seccions.
+
+## 🛠️ Configuració (`_config.yml`)
+
+- Definició de la jerarquia en `curs.unitats` (noms, números i URL de blocs).
+- Exemple d’entrada de bloc:
+
+```
+blocs:
+  - { nom: "Bloc 1", numero: 1, descripcio: "...", url: "/unitat-1/bloc-1/" }
+```
+
+## ❗ Evitar
+
+- Descripcions llargues a la portada del curs.
+- Codi extens sense el component `code-block` (pot perdre format).
+- Feedback embedit al final de blocs (el peu de pàgina no inclou feedback).
+
+{% endraw %}
+
 
 ```html
 ---

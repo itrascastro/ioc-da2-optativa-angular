@@ -14,28 +14,29 @@ curs:
   unitats:
     - nom: "Unitat 1"
       numero: 1
-      descripcio: "Primera unitat del curs"
+      descripcio: "Primera unitat del curs fgdsgfsdfsd"
+      descripcio_html: true
       blocs:
-        - { nom: "Bloc 1", numero: 1, descripcio: "Primer bloc de la unitat 1", url: "/unitat-1/bloc-1.html" }
-        - { nom: "Bloc 2", numero: 2, descripcio: "Segon bloc de la unitat 1", url: "/unitat-1/bloc-2.html" }
+        - { nom: "Bloc 1", numero: 1, descripcio: "Primer bloc de la unitat 1 dffsfsds", url: "/unitat-1/bloc-1/" }
+        - { nom: "Bloc 2", numero: 2, descripcio: "Segon bloc de la unitat 1", url: "/unitat-1/bloc-2/" }
     - nom: "Unitat 2"
       numero: 2
       descripcio: "Segona unitat del curs"
       blocs:
-        - { nom: "Bloc 3", numero: 3, descripcio: "Primer bloc de la unitat 2", url: "/unitat-2/bloc-3.html" }
-        - { nom: "Bloc 4", numero: 4, descripcio: "Segon bloc de la unitat 2", url: "/unitat-2/bloc-4.html" }
+        - { nom: "Bloc 3", numero: 3, descripcio: "Primer bloc de la unitat 2", url: "/unitat-2/bloc-3/" }
+        - { nom: "Bloc 4", numero: 4, descripcio: "Segon bloc de la unitat 2", url: "/unitat-2/bloc-4/" }
     - nom: "Unitat 3"
       numero: 3
       descripcio: "Tercera unitat del curs"
       blocs:
-        - { nom: "Bloc 5", numero: 5, descripcio: "Primer bloc de la unitat 3", url: "/unitat-3/bloc-5.html" }
-        - { nom: "Bloc 6", numero: 6, descripcio: "Segon bloc de la unitat 3", url: "/unitat-3/bloc-6.html" }
+        - { nom: "Bloc 5", numero: 5, descripcio: "Primer bloc de la unitat 3", url: "/unitat-3/bloc-5/" }
+        - { nom: "Bloc 6", numero: 6, descripcio: "Segon bloc de la unitat 3", url: "/unitat-3/bloc-6/" }
     - nom: "Unitat 4"
       numero: 4
       descripcio: "Quarta unitat del curs"
       blocs:
-        - { nom: "Bloc 7", numero: 7, descripcio: "Primer bloc de la unitat 4", url: "/unitat-4/bloc-7.html" }
-        - { nom: "Bloc 8", numero: 8, descripcio: "Segon bloc de la unitat 4", url: "/unitat-4/bloc-8.html" }
+        - { nom: "Bloc 7", numero: 7, descripcio: "Primer bloc de la unitat 4", url: "/unitat-4/bloc-7/" }
+        - { nom: "Bloc 8", numero: 8, descripcio: "Segon bloc de la unitat 4", url: "/unitat-4/bloc-8/" }
 
 # URLs de desplegament (CANVIAR per cada professor)
 url: "https://itrascastro.github.io"                    # La vostra URL de GitHub Pages

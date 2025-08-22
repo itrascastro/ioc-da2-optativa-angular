@@ -3,29 +3,7 @@ layout: default
 sidebar: true
 ---
 
-<!-- Metadata del bloc -->
-<div class="bloc-metadata">
-    {% if page.unitat and page.bloc_numero %}
-    <div class="bloc-info">
-        <span class="bloc-badge">Bloc {{ page.bloc_numero }}</span>
-        <span class="unit-badge">Unitat {{ page.unitat }}</span>
-    </div>
-    {% endif %}
-    
-    {% if page.durada %}
-    <div class="duration-info">
-        <span class="duration-icon">⏱️</span>
-        <span class="duration-text">Durada estimada: {{ page.durada }}</span>
-    </div>
-    {% endif %}
-    
-    {% if page.dificultat %}
-    <div class="difficulty-info">
-        <span class="difficulty-icon">📊</span>
-        <span class="difficulty-text">Dificultat: {{ page.dificultat }}</span>
-    </div>
-    {% endif %}
-</div>
+{% comment %} Metadata de bloc eliminada per disseny més net {% endcomment %}
 
 <!-- Objectius del bloc (si estan definits al frontmatter) -->
 {% if page.objectius %}
@@ -116,31 +94,6 @@ sidebar: true
 </section>
 {% endif %}
 
-<!-- Feedback del bloc -->
-<section class="bloc-feedback">
-    <div class="feedback-container">
-        <h3>Feedback del Bloc</h3>
-        <p>Aquest bloc t'ha estat útil? Tens suggeriments de millora?</p>
-        
-        <div class="feedback-actions">
-            {% if site.github.repository_url %}
-            <a href="{{ site.github.repository_url }}/issues/new?title=Feedback%20Bloc%20{{ page.bloc_numero }}&body=Feedback%20sobre%20el%20bloc%20{{ page.bloc_numero }}:%20{{ page.title }}" 
-               class="feedback-link" 
-               target="_blank" 
-               rel="noopener noreferrer">
-               Enviar Feedback
-            </a>
-            {% endif %}
-            
-            <a href="{{ site.github.repository_url }}/edit/main/docs/{{ page.path }}" 
-               class="edit-link" 
-               target="_blank" 
-               rel="noopener noreferrer">
-               Millorar aquesta pàgina
-            </a>
-        </div>
-    </div>
-</section>
 
 <!-- Schema.org structured data per SEO -->
 <script type="application/ld+json">

@@ -29,8 +29,18 @@
 .nav-link.prev-block, .nav-link.next-block { display: block; padding: 15px; background-color: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--border-radius); text-decoration: none; color: inherit; transition: all 0.3s ease; }
 .nav-link.prev-block:hover, .nav-link.next-block:hover { background-color: var(--color-primary); color: white; transform: translateY(-1px); box-shadow: var(--shadow-medium); }
 
+/* Navegació entre pàgines (al final del bloc) amb botons als extrems */
+.page-navigation { margin-top: 2rem; padding-top: 1rem; border-top: 1px solid var(--color-border); }
+.page-navigation .nav-links-container { display: flex; justify-content: space-between; gap: 10px; }
+.page-navigation .nav-link-wrapper { flex: 1; display: flex; }
+.page-navigation .nav-link-wrapper:first-child { justify-content: flex-start; }
+.page-navigation .nav-link-wrapper:last-child { justify-content: flex-end; }
+.page-navigation .nav-button { min-width: 180px; text-align: center; }
+
 /* Navegació horizontal */
-.horizontal-nav { margin-bottom: 20px; padding: 15px 0; border-bottom: 1px solid var(--color-border); }
+.horizontal-nav { margin-top: 12px; margin-bottom: 20px; padding: 15px 0; border-bottom: none; }
+/* En pàgines de bloc, reduir espai del breadcrumb per apropar la primera secció */
+.bloc-layout .horizontal-nav { margin-top: 16px; margin-bottom: 8px; padding: 8px 0; }
 .horizontal-nav-list { display: flex; align-items: center; flex-wrap: wrap; gap: 5px; }
 .horizontal-nav .horizontal-nav-item { color: var(--color-accent); text-decoration: none; font-weight: 500; transition: color 0.3s ease; }
 .horizontal-nav .horizontal-nav-item:hover { color: var(--color-primary); }

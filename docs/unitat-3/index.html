@@ -19,15 +19,14 @@ unitat: 3
     <div class="unit-hero">
         <div class="unit-badge">Unitat {{ current_unitat.numero }}</div>
         <h1 class="unit-title">{{ current_unitat.nom }}</h1>
-        <p class="unit-description">{{ current_unitat.descripcio }}</p>
     </div>
 
-    {% if current_unitat.introduccio %}
     <div class="unit-introduction">
-        <h2>Introducció als continguts</h2>
-        <p>{{ current_unitat.introduccio }}</p>
+        <h2>Descripció de la Unitat</h2>
+        <div class="unit-description-content">
+            {% include_relative descripcio.html %}
+        </div>
     </div>
-    {% endif %}
 
     <div class="unit-content">
         <div class="blocks-grid">
@@ -39,7 +38,9 @@ unitat: 3
                     </div>
                     <div class="block-summary">
                         <h4 class="summary-title">Què aprendràs:</h4>
-                        <p class="block-description">{{ bloc.descripcio }}</p>
+                        <div class="block-description">
+                            {% include_relative bloc-{{ bloc.numero }}/descripcio.html %}
+                        </div>
                     </div>
                     <a href="{{ bloc.url | relative_url }}" class="block-action">
                         <span class="block-link-text">Començar bloc →</span>

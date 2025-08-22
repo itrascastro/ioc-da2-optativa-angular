@@ -162,10 +162,7 @@
                             {% for unitat in site.curs.unitats %}
                                 {% for bloc in unitat.blocs %}
                                     {% if bloc.numero == prev_bloc %}
-                                    <a href="{{ bloc.url | relative_url }}" class="nav-link nav-link-prev">
-                                        <span class="nav-direction">← Anterior</span>
-                                        <span class="nav-title">{{ bloc.nom }}</span>
-                                    </a>
+                                    <a href="{{ bloc.url | relative_url }}" class="nav-button" aria-label="Bloc anterior: {{ bloc.nom }}">← Anterior</a>
                                     {% break %}
                                     {% endif %}
                                 {% endfor %}
@@ -177,10 +174,7 @@
                         {% for unitat in site.curs.unitats %}
                             {% for bloc in unitat.blocs %}
                                 {% if bloc.numero == next_bloc %}
-                                <a href="{{ bloc.url | relative_url }}" class="nav-link nav-link-next">
-                                    <span class="nav-direction">Següent →</span>
-                                    <span class="nav-title">{{ bloc.nom }}</span>
-                                </a>
+                                <a href="{{ bloc.url | relative_url }}" class="nav-button" aria-label="Bloc següent: {{ bloc.nom }}">Següent →</a>
                                 {% break %}
                                 {% endif %}
                             {% endfor %}

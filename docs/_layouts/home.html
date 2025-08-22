@@ -31,9 +31,10 @@ layout: default
                 <div class="unit-header">
                     <h2 class="unit-title">
                         <span class="unit-number">Unitat {{ unitat.numero }}</span>
-                        {{ unitat.nom }}
+                        <a href="{{ '/unitat-' | append: unitat.numero | append: '/' | relative_url }}" class="unit-title-link">
+                            {{ unitat.nom }}
+                        </a>
                     </h2>
-                    <p class="unit-description">{{ unitat.descripcio }}</p>
                 </div>
                 
                 <div class="blocks-container">
@@ -44,7 +45,7 @@ layout: default
                                     <span class="block-number">{{ unitat.numero }}.{{ bloc.numero }}</span>
                                     <h3 class="block-title">{{ bloc.nom }}</h3>
                                 </div>
-                                <p class="block-description">{{ bloc.descripcio }}</p>
+                                {# Descripcions ocultes a la portada per simplicitat #}
                             </a>
                         </div>
                     {% endfor %}
