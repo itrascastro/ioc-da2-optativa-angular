@@ -28,49 +28,30 @@
 .ai-header { background-color: var(--comp-ai-hbg); }
 
 /* Prompt IA amb textarea i botó còpia */
-/* Estil general de prompt com code-block */
-.ai-prompt {
-  background: #1e1e1e;
-  color: #d4d4d4;
-  border-radius: 10px;
-  margin: 1.5rem 0;
-  font-family: 'Fira Code', monospace;
-  overflow: hidden;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-}
-.ai-header {
-  display: flex; justify-content: space-between; align-items: center;
-  padding: 6px 12px; background: #2c2c2c; border-bottom: 1px solid #444;
-  font-size: 13px; font-weight: bold; color: #ccc;
-}
-.ai-header .code-info { display: flex; align-items: center; gap: 10px; }
-.ai-header .code-actions { display: flex; gap: 5px; }
-.ai-header .code-actions .copy-btn {
-  background: #3a3a3a; border: none; padding: 4px 6px; border-radius: 5px;
-  cursor: pointer; font-size: 12px; color: #fff; transition: background 0.2s ease;
-}
-.ai-header .code-actions .copy-btn:hover { background: #555; }
-
+/* Prompt IA amb estil idèntic a les caixes (success/info/warning),
+   però amb una capa interior diferenciada per al text i botó de còpia */
 .ai-container { padding: 8px 12px; }
 .ai-prompt-content {
   padding: 10px 12px;
-  background: #2c2c2c; /* capa diferenciada en fosc */
-  border: 1px solid #444;
+  background: var(--color-surface); /* capa diferenciada */
+  border: 1px solid var(--color-border);
   border-radius: 6px;
-  color: #d4d4d4;
-  font-family: 'Fira Code', monospace;
-  font-size: 13px;
-  line-height: 1.5;
+  color: var(--color-text);
   white-space: pre-wrap;
   word-break: break-word;
 }
-
-/* Mode clar per prompt */
-[data-theme='light'] .ai-prompt { background: #f1f3f5; color: #2c2c2c; box-shadow: 0 0 10px rgba(0,0,0,0.06); }
-[data-theme='light'] .ai-header { background: #e4e8ed; border-bottom-color: #cfd6dd; color: #3a3f45; }
-[data-theme='light'] .ai-header .code-actions .copy-btn { background: #e2e6ea; color: #222; }
-[data-theme='light'] .ai-header .code-actions .copy-btn:hover { background: #d3d8de; }
-[data-theme='light'] .ai-prompt-content { background: #ffffff; color: #2c2c2c; border-color: #cfd6dd; }
+.ai-header { position: relative; }
+.ai-header .ai-actions { margin-left: auto; display: flex; gap: 8px; }
+.ai-header .copy-btn {
+  background-color: var(--color-surface-dark);
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
+  padding: 4px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 12px;
+}
+.ai-header .copy-btn:hover { background-color: var(--color-surface-dark); }
 
 /* Checklists */
 .checklist { background-color: var(--comp-bg); border: 1px solid var(--comp-border); border-radius: var(--border-radius); padding: 20px; margin: 20px 0; box-shadow: var(--shadow-light); }
