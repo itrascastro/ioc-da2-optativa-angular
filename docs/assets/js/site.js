@@ -20,15 +20,6 @@ function initializeNavDropdown() {
   });
 }
 
-// Footer progrés (estàtic)
-function initializeFooterProgress() {
-  const progressText = document.getElementById('footer-progress-text');
-  const progressFill = document.getElementById('footer-progress-fill');
-  if (progressText && progressFill) {
-    progressText.textContent = '0 de 5';
-    progressFill.style.width = '0%';
-  }
-}
 
 // Tema fosc/clar + tema Prism
 function initializeThemeToggle() {
@@ -129,3 +120,75 @@ document.addEventListener('DOMContentLoaded', function () {
 window.addEventListener('load', function () {
   window.scrollTo(0, 0);
 });
+// Barra de progrés: inicialitza grups (curs/unitat) a partir d'atributs data-*
+function initializeFooterProgress() {
+  document.querySelectorAll('.footer-progress .progress-group').forEach(group => {
+    const text = group.querySelector('.progress-text');
+    const fill = group.querySelector('.progress-fill-footer');
+    if (!text || !fill) return;
+    const pos = parseInt(text.getAttribute('data-pos') || '0', 10) || 0;
+    const total = parseInt(text.getAttribute('data-total') || '0', 10) || 0;
+    const pct = total > 0 ? Math.min(100, Math.max(0, Math.round((pos / total) * 100))) : 0;
+    text.textContent = `${pos} de ${total}`;
+    // Assegurar aplicació després del primer paint
+    requestAnimationFrame(() => { fill.style.width = `${pct}%`; });
+  });
+
+  // Seccions: comptar H2 i actualitzar progrés segons scroll
+  const sectionGroup = document.querySelector('.footer-progress .section-progress[data-scan-sections="true"]');
+  if (sectionGroup) {
+    const text = sectionGroup.querySelector('.progress-text');
+    const fill = sectionGroup.querySelector('.progress-fill-footer');
+    let total = 0;
+    let current = 0;
+
+    const update = () => {
+      if (!text || !fill) return;
+      const headers = Array.from(document.querySelectorAll('.content-body h2'));
+      total = headers.length;
+      if (total === 0) {
+        text.textContent = '0 de 0';
+        fill.style.width = '0%';
+        return;
+      }
+      // Trobar la secció més propera a la part superior (amb offset per header fix)
+      const headerEl = document.querySelector('.header');
+      const headerOffset = (headerEl ? headerEl.offsetHeight : 0) + 20;
+      const scrollY = window.scrollY + headerOffset;
+      let idx = 0;
+      for (let i = 0; i < total; i++) {
+        const top = headers[i].getBoundingClientRect().top + window.scrollY;
+        if (top <= scrollY) {
+          idx = i;
+        }
+      }
+      current = Math.min(total, idx + 1);
+      // Si estem al final de la pàgina, assegurar 100% (última secció)
+      const docBottom = Math.ceil(window.innerHeight + window.scrollY);
+      const fullHeight = Math.ceil(document.documentElement.scrollHeight || document.body.scrollHeight);
+      if (docBottom >= fullHeight - 2) {
+        current = total;
+      }
+      const pct = Math.min(100, Math.max(0, Math.round((current / total) * 100)));
+      text.setAttribute('data-pos', String(current));
+      text.setAttribute('data-total', String(total));
+      text.textContent = `${current} de ${total}`;
+      fill.style.width = `${pct}%`;
+    };
+
+    // Inicialitzar segons hash si existeix
+    const hash = window.location.hash.replace('#', '');
+    if (hash) {
+      // Ajustar posició inicial si es carrega amb hash
+      const target = document.getElementById(hash);
+      if (target) {
+        const all = Array.from(document.querySelectorAll('.content-body h2'));
+        current = all.indexOf(target) + 1;
+      }
+    }
+    update();
+    window.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', update);
+    window.addEventListener('hashchange', update);
+  }
+}

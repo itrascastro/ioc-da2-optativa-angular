@@ -174,19 +174,17 @@
                     </div>
                     
                     <div class="nav-link-wrapper">
-                        {% if next_bloc <= site.curs.total_blocs %}
-                            {% for unitat in site.curs.unitats %}
-                                {% for bloc in unitat.blocs %}
-                                    {% if bloc.numero == next_bloc %}
-                                    <a href="{{ bloc.url | relative_url }}" class="nav-link nav-link-next">
-                                        <span class="nav-direction">Següent →</span>
-                                        <span class="nav-title">{{ bloc.nom }}</span>
-                                    </a>
-                                    {% break %}
-                                    {% endif %}
-                                {% endfor %}
+                        {% for unitat in site.curs.unitats %}
+                            {% for bloc in unitat.blocs %}
+                                {% if bloc.numero == next_bloc %}
+                                <a href="{{ bloc.url | relative_url }}" class="nav-link nav-link-next">
+                                    <span class="nav-direction">Següent →</span>
+                                    <span class="nav-title">{{ bloc.nom }}</span>
+                                </a>
+                                {% break %}
+                                {% endif %}
                             {% endfor %}
-                        {% endif %}
+                        {% endfor %}
                     </div>
                 </div>
             </nav>
@@ -200,11 +198,62 @@
             <div class="footer-info">
                 <strong>{{ site.module_title }}</strong> - Material didàctic desenvolupat per l'{{ site.organization }}
             </div>
-            <div class="footer-progress">
-                <span class="progress-text" id="footer-progress-text">0 de 5</span>
-                <div class="progress-bar-footer">
-                    <div class="progress-fill-footer" id="footer-progress-fill"></div>
+            <div class="footer-progress" aria-label="Progrés de lectura">
+                {%- assign total_units = site.curs.unitats | size -%}
+                {%- assign unit_pos = 0 -%}
+                {%- if page.unitat -%}
+                  {%- assign unit_pos = page.unitat -%}
+                {%- endif -%}
+
+                <!-- Progrés per unitats (posició de la unitat actual) -->
+                {%- assign unit_pct = 0 -%}
+                {%- if total_units and total_units > 0 -%}
+                  {%- assign unit_pct = unit_pos | times: 100 | divided_by: total_units -%}
+                {%- endif -%}
+                <div class="progress-group course-progress">
+                    <span class="progress-label">Unitat</span>
+                    <span class="progress-text" data-pos="{{ unit_pos }}" data-total="{{ total_units }}">{{ unit_pos }} de {{ total_units }}</span>
+                    <div class="progress-bar-footer"><div class="progress-fill-footer" style="width: {{ unit_pct }}%"></div></div>
                 </div>
+
+                {%- if page.unitat and page.bloc -%}
+                  {%- assign current_unit = null -%}
+                  {%- for u in site.curs.unitats -%}
+                    {%- if u.numero == page.unitat -%}{%- assign current_unit = u -%}{%- break -%}{%- endif -%}
+                  {%- endfor -%}
+                  {%- if current_unit -%}
+                    {%- assign total_unit = current_unit.blocs | size -%}
+                    {%- assign pos_block = 0 -%}
+                    {%- for b in current_unit.blocs -%}
+                      {%- assign pos_block = forloop.index -%}
+                      {%- if b.numero == page.bloc -%}{%- break -%}{%- endif -%}
+                    {%- endfor -%}
+                    <!-- Progrés per blocs dins de la unitat -->
+                    {%- assign block_pct = 0 -%}
+                    {%- if total_unit and total_unit > 0 -%}
+                      {%- assign block_pct = pos_block | times: 100 | divided_by: total_unit -%}
+                    {%- endif -%}
+                    <div class="progress-group unit-progress">
+                        <span class="progress-label">Bloc</span>
+                        <span class="progress-text" data-pos="{{ pos_block }}" data-total="{{ total_unit }}">{{ pos_block }} de {{ total_unit }}</span>
+                        <div class="progress-bar-footer"><div class="progress-fill-footer" style="width: {{ block_pct }}%"></div></div>
+                    </div>
+
+                    <!-- Progrés per seccions (H2) dins del bloc -->
+                    {%- capture raw_content -%}{{ content }}{%- endcapture -%}
+                    {%- assign sec_split = raw_content | split: '<h2' -%}
+                    {%- assign total_sec = sec_split | size | minus: 1 -%}
+                    {%- assign sec_pct = 0 -%}
+                    {%- if total_sec and total_sec > 0 -%}
+                      {%- assign sec_pct = 1 | times: 100 | divided_by: total_sec -%}
+                    {%- endif -%}
+                    <div class="progress-group section-progress" data-scan-sections="true">
+                        <span class="progress-label">Seccions</span>
+                        <span class="progress-text" data-pos="1" data-total="{{ total_sec }}">1 de {{ total_sec }}</span>
+                        <div class="progress-bar-footer"><div class="progress-fill-footer" style="width: {{ sec_pct }}%"></div></div>
+                    </div>
+                  {%- endif -%}
+                {%- endif -%}
             </div>
         </div>
     </footer>

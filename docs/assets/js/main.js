@@ -24,22 +24,11 @@ function initializeNavDropdown() {
     });
 }
 
-// Footer progrés ESTÀTIC - NO DINÀMIC
-function initializeFooterProgress() {
-    const progressText = document.getElementById('footer-progress-text');
-    const progressFill = document.getElementById('footer-progress-fill');
-    
-    if (progressText && progressFill) {
-        progressText.textContent = '0 de 5';
-        progressFill.style.width = '0%';
-    }
-}
 
 // Funcions d'inicialització MÍNIMES
 document.addEventListener('DOMContentLoaded', function() {
     initializeThemeToggle();
     initializeNavDropdown();
-    initializeFooterProgress();
 });
 
 // Assegurar posició 0,0 inicial

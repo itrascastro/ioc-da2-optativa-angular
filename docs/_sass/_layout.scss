@@ -38,13 +38,14 @@ body { padding-top: 70px; padding-bottom: 50px; }
 .footer { position: fixed; bottom: 0; left: 0; right: 0; z-index: 999; background-color: var(--color-surface); border-top: 1px solid var(--color-border); padding: 8px 20px; box-shadow: 0 -2px 4px rgba(0,0,0,0.03); }
 .footer-content { display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; }
 .footer-info { color: var(--color-text-muted); }
-.footer-progress { display: flex; align-items: center; gap: 10px; }
+.footer-progress { display: flex; align-items: center; gap: 14px; }
+.progress-group { display: flex; align-items: center; gap: 8px; }
+.progress-label { color: var(--color-text-muted); font-weight: 600; }
 .progress-text { color: var(--color-text-muted); font-size: 0.8rem; }
-.progress-bar-footer { width: 150px; height: 6px; background-color: var(--color-border); border-radius: 3px; overflow: hidden; }
+.progress-bar-footer { width: 140px; height: 6px; background-color: var(--color-border); border-radius: 3px; overflow: hidden; }
 .progress-fill-footer { height: 100%; background-color: var(--color-primary); border-radius: 3px; transition: width 0.5s ease; width: 0%; }
 .main-content { padding-bottom: 60px; }
 
 /* Skip link per accessibilitat */
 .skip-link { position: absolute; top: -40px; left: 6px; background: var(--color-primary); color: white; padding: 8px; text-decoration: none; border-radius: 4px; z-index: 1000; }
 .skip-link:focus { top: 6px; }
-

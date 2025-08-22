@@ -80,3 +80,5 @@
 [data-theme="dark"] .unit-header { background-color: #2a2a2a; color: #e6edf3; }
 [data-theme="dark"] .block-number { background-color: #3a3a3a; color: #ffffff; }
 [data-theme="dark"] .block-action:hover { background-color: #353535; }
+/* Barra de progrés en fosc: farcit amb to blau per contrast */
+[data-theme="dark"] .progress-fill-footer { background-color: #7aa2e3; }
