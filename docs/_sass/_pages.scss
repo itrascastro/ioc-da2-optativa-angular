@@ -1,4 +1,94 @@
 /* Portada (home) */
+/* Informació acadèmica (portada) */
+.academic-info {
+  margin-bottom: 2rem;
+  padding: 1.5rem 0;
+  border-bottom: 1px solid var(--color-border);
+  
+  .course-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+  
+  .course-title-section {
+    flex: 1;
+  }
+  
+  .cicle-tag {
+    display: inline-block;
+    color: var(--color-primary);
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 0.5rem;
+  }
+  
+  .module-title {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: var(--color-primary);
+    margin: 0;
+    line-height: 1.1;
+  }
+  
+  .course-details {
+    text-align: right;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+  
+  .author-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+  
+  .author-name {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--color-text);
+    line-height: 1.2;
+  }
+  
+  .institution {
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+    font-weight: 500;
+  }
+}
+
+/* Responsive per informació acadèmica */
+@media (max-width: 768px) {
+  .academic-info {
+    padding: 1rem 0;
+    
+    .course-header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1rem;
+      padding: 0 15px;
+    }
+    
+    .course-details {
+      text-align: left;
+    }
+    
+    .module-title {
+      font-size: 1.8rem;
+    }
+    
+    .cicle-tag {
+      font-size: 0.8rem;
+    }
+  }
+}
+
 .course-index { max-width: 1200px; margin: 0 auto; padding: 20px; }
 .course-content { margin-top: 40px; }
 .unit-section { margin-bottom: 50px; border: 1px solid var(--color-border); border-radius: var(--border-radius); overflow: hidden; box-shadow: var(--shadow-light); }

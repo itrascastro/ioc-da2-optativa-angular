@@ -3,8 +3,10 @@
 # ==========================================
 
 # Informació acadèmica específica del mòdul (CANVIAR per cada mòdul)
-cicle_modulo: "DA2_Optativa"
-module_title: "Angular"
+cicle_modul: "DA2_Optativa"
+title: "Angular"
+description: "Materials del curs Angular de l'IOC"
+version: "v1.0"
 authors: 
   - "Ismael Trascastro"
 
@@ -138,6 +140,3 @@ exclude:
   - .sass-cache
   - .jekyll-metadata
 
-# Metadades SEO bàsiques
-title: "Angular — IOC"
-description: "Materials del curs Angular de l'IOC"

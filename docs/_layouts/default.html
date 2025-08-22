@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     
-    <title>{% if page.title %}{{ page.title }} | {% endif %}{{ site.module_title }} - IOC</title>
+    <title>{% if page.title %}{{ page.title }} | {% endif %}{{ site.title }} - IOC</title>
     <meta name="description" content="{{ page.excerpt | default: 'Material educatiu' | strip_html | normalize_whitespace | truncate: 160 | escape }} - {{ site.organization }}">
     
     <!-- SEO Tags -->
@@ -52,13 +52,17 @@
     <!-- Header fix -->
     <header class="header" role="banner">
         <div class="header-brand">
-            <img src="{{ '/assets/images/logo_IOC_light.jpg' | relative_url }}" 
-                 alt="Institut Obert de Catalunya" 
-                 class="logo logo-light">
-            <img src="{{ '/assets/images/logo_IOC_dark.png' | relative_url }}" 
-                 alt="Institut Obert de Catalunya" 
-                 class="logo logo-dark">
-            <h1>{% if page.title %}{{ page.title }}{% else %}{{ site.module_title }}{% endif %}</h1>
+            <a href="{{ '/' | relative_url }}" class="logo-link">
+                <img src="{{ '/assets/images/logo_IOC_light.jpg' | relative_url }}" 
+                     alt="Institut Obert de Catalunya" 
+                     class="logo logo-light">
+                <img src="{{ '/assets/images/logo_IOC_dark.png' | relative_url }}" 
+                     alt="Institut Obert de Catalunya" 
+                     class="logo logo-dark">
+            </a>
+            <a href="{{ '/' | relative_url }}" class="title-link">
+                <h1>{{ site.cicle_modul }} - {{ site.title }}</h1>
+            </a>
         </div>
         <div class="header-controls">
             <div class="nav-dropdown" id="nav-dropdown">
@@ -131,7 +135,7 @@
                             {% endif %}
                         {% endif %}
                     {% else %}
-                        {% if page.title and page.title != site.module_title %}
+                        {% if page.title and page.title != site.title %}
                             <span class="horizontal-nav-separator"> &gt; </span>
                             <span class="horizontal-nav-item current">
                                 {{ page.title }}
@@ -190,7 +194,7 @@
     <footer class="footer">
         <div class="footer-content">
             <div class="footer-info">
-                <strong>{{ site.module_title }}</strong> - Material didàctic desenvolupat per l'{{ site.organization }}
+                Version {{ site.version }}
             </div>
             <div class="footer-progress" aria-label="Progrés de lectura">
                 {%- assign total_units = site.curs.unitats | size -%}
