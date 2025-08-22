@@ -50,7 +50,7 @@
     <a class="skip-link" href="#main-content">Salta al contingut principal</a>
     
     <!-- Header fix -->
-    <header class="header" role="banner">
+    <header class="header" role="banner" id="top">
         <div class="header-brand">
             <a href="{{ '/' | relative_url }}" class="logo-link">
                 <img src="{{ '/assets/images/logo_IOC_light.jpg' | relative_url }}" 
@@ -252,6 +252,12 @@
                     </div>
                   {%- endif -%}
                 {%- endif -%}
+            </div>
+            <div class="footer-actions">
+                <a href="#top" id="footer-btn-top" class="task-btn" aria-label="Anar a l'inici">↑</a>
+                <a href="#bottom" id="footer-btn-bottom" class="task-btn" aria-label="Anar al final">↓</a>
+                <a href="#next" id="footer-btn-next" class="task-btn" aria-label="Secció següent">→</a>
+                <a href="#prev" id="footer-btn-prev" class="task-btn" aria-label="Secció anterior">←</a>
             </div>
         </div>
     </footer>

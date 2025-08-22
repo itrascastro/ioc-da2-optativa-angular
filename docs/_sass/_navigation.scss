@@ -37,6 +37,9 @@
 .page-navigation .nav-link-wrapper:last-child { justify-content: flex-end; }
 .page-navigation .nav-button { min-width: 180px; text-align: center; }
 
+/* Reserva espai a la dreta per a la burbuja 'amunt' ancorada */
+.page-navigation { position: relative; }
+
 /* Navegació horizontal */
 .horizontal-nav { margin-top: 12px; margin-bottom: 20px; padding: 15px 0; border-bottom: none; }
 /* En pàgines de bloc, reduir espai del breadcrumb per apropar la primera secció */
@@ -50,3 +53,5 @@
 /* Botons: en mode clar, estil neutre tipus fosc (sense canvis en hover) */
 .btn, .nav-button, .theme-toggle { border: 1px solid var(--color-border); }
 .btn:hover, .nav-button:hover, .theme-toggle:hover { border: 1px solid var(--color-border); color: inherit; box-shadow: none; transform: none; }
+
+/* Eliminat app bar del footer per preferència de barra fina */

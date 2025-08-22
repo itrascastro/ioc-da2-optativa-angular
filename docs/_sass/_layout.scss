@@ -46,6 +46,15 @@ body { padding-top: 70px; padding-bottom: 20px; }
 .progress-fill-footer { height: 100%; background-color: var(--color-primary); border-radius: 3px; transition: width 0.5s ease; width: 0%; }
 .main-content { padding-bottom: 30px; }
 
+/* Accions del footer */
+.footer-actions { display: flex; align-items: center; gap: 6px; }
+.task-btn {
+  width: 28px; height: 28px; border-radius: 6px; display: inline-flex; align-items: center; justify-content: center;
+  background-color: var(--color-surface-dark); border: 1px solid var(--color-border); color: var(--color-text); text-decoration: none;
+  font-size: 16px; line-height: 1; cursor: pointer;
+}
+.task-btn:hover { background-color: var(--color-surface-dark); box-shadow: none; transform: none; border-color: var(--color-border); }
+
 /* Header Brand (logos IOC) */
 .header-brand {
   display: flex;

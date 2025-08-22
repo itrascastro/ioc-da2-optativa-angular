@@ -56,12 +56,27 @@ document.addEventListener('DOMContentLoaded', function () {
   initializeNavDropdown();
   initializeFooterProgress();
   initializePromptCopy();
+  initializeFooterNav();
 
   // Smooth scroll amb offset per header fix
   document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
+      // Si són botons de la barra del footer per next/prev, deixar que la seva funció específica gestioni
+      const action = (this.getAttribute('id') || '').startsWith('footer-btn-') ? (this.getAttribute('id') || '') : '';
+      if (action === 'footer-btn-next' || action === 'footer-btn-prev') {
+        return; // gestionat per initializeFooterNav
+      }
       e.preventDefault();
       const targetId = this.getAttribute('href').substring(1);
+      if (!targetId || targetId === 'top') {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        return;
+      }
+      if (targetId === 'bottom') {
+        const fullHeight = Math.max(document.documentElement.scrollHeight, document.body.scrollHeight);
+        window.scrollTo({ top: fullHeight, behavior: 'smooth' });
+        return;
+      }
       const target = document.getElementById(targetId);
       if (target) {
         const headerHeight = 70;
@@ -238,4 +253,69 @@ function showPromptCopyFeedback(button, success) {
     button.classList.remove('copied');
     button.setAttribute('aria-label', 'Copiar prompt');
   }, 2000);
+}
+
+// Navegació del footer: inici, final, següent/anter. secció
+function initializeFooterNav() {
+  const btnTop = document.getElementById('footer-btn-top');
+  const btnBottom = document.getElementById('footer-btn-bottom');
+  const btnNext = document.getElementById('footer-btn-next');
+  const btnPrev = document.getElementById('footer-btn-prev');
+  const headerEl = document.querySelector('.header');
+  const headerOffset = (headerEl ? headerEl.offsetHeight : 0) + 20;
+
+  const getHeaders = () => Array.from(document.querySelectorAll('.content-body h2'));
+  const currentIndex = () => {
+    const headers = getHeaders();
+    if (headers.length === 0) return -1;
+    const scrollY = window.scrollY + headerOffset;
+    let idx = 0;
+    for (let i = 0; i < headers.length; i++) {
+      const top = headers[i].getBoundingClientRect().top + window.scrollY;
+      if (top <= scrollY) idx = i;
+    }
+    // si al final de la pàgina, seleccionar l'última
+    const docBottom = Math.ceil(window.innerHeight + window.scrollY);
+    const fullHeight = Math.ceil(document.documentElement.scrollHeight || document.body.scrollHeight);
+    if (docBottom >= fullHeight - 2) idx = headers.length - 1;
+    return idx;
+  };
+  const scrollToHeader = (el) => {
+    const y = el.getBoundingClientRect().top + window.scrollY - headerOffset;
+    window.scrollTo({ top: y, behavior: 'smooth' });
+  };
+
+  if (btnTop) {
+    btnTop.addEventListener('click', (e) => {
+      e.preventDefault();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  }
+  if (btnBottom) {
+    btnBottom.addEventListener('click', (e) => {
+      e.preventDefault();
+      const full = Math.max(document.documentElement.scrollHeight, document.body.scrollHeight);
+      window.scrollTo({ top: full, behavior: 'smooth' });
+    });
+  }
+  if (btnNext) {
+    btnNext.addEventListener('click', (e) => {
+      e.preventDefault();
+      const headers = getHeaders();
+      if (headers.length === 0) return;
+      const idx = currentIndex();
+      const nextIdx = Math.min(headers.length - 1, idx + 1);
+      scrollToHeader(headers[nextIdx]);
+    });
+  }
+  if (btnPrev) {
+    btnPrev.addEventListener('click', (e) => {
+      e.preventDefault();
+      const headers = getHeaders();
+      if (headers.length === 0) return;
+      const idx = currentIndex();
+      const prevIdx = Math.max(0, idx - 1);
+      scrollToHeader(headers[prevIdx]);
+    });
+  }
 }
