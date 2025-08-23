@@ -115,6 +115,16 @@
 .add-note-btn:hover { background-color: var(--color-surface-dark); }
 .add-note-btn:focus { outline: 2px solid var(--color-primary); outline-offset: 2px; }
 
+/* Mostra discretament en desktop: visible en passar el ratolí o focus dins l'H2 */
+@media (hover: hover) and (pointer: fine) {
+  .content-body h2 .add-note-btn { opacity: 0; pointer-events: none; transition: opacity 0.2s ease; }
+  .content-body h2:hover .add-note-btn, .content-body h2:focus-within .add-note-btn { opacity: 1; pointer-events: auto; }
+}
+/* En mòbil/touch, sempre visible per facilitat d'ús */
+@media (hover: none), (pointer: coarse) {
+  .content-body h2 .add-note-btn { opacity: 1; pointer-events: auto; }
+}
+
 /* Panell de notes (bottom sheet) */
 .notes-panel {
   position: fixed;

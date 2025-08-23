@@ -238,7 +238,15 @@
       }
       notes.forEach(n => {
         const li = document.createElement('li');
-        const a = document.createElement('a'); a.href = '#' + n.sectionId; a.textContent = n.sectionTitle || n.sectionId; a.addEventListener('click', (e)=>{ e.preventDefault(); document.getElementById(n.sectionId)?.scrollIntoView({behavior:'smooth', block:'start'}); });
+        const a = document.createElement('a'); a.href = '#' + n.sectionId; a.textContent = n.sectionTitle || n.sectionId; a.addEventListener('click', (e)=>{ 
+          e.preventDefault(); 
+          const el = document.getElementById(n.sectionId); 
+          if (!el) return; 
+          const header = document.querySelector('.header');
+          const offset = (header ? header.offsetHeight : 0) + 20; 
+          const y = el.getBoundingClientRect().top + window.scrollY - offset; 
+          window.scrollTo({ top: y, behavior: 'smooth' });
+        });
         const del = document.createElement('button'); del.type='button'; del.className='btn'; del.textContent='Eliminar'; del.style.marginLeft='8px'; del.addEventListener('click', ()=>{ this._removeNote(n.sectionId); this._loadCurrentNote(); });
         li.appendChild(a); li.appendChild(del); ul.appendChild(li);
       });

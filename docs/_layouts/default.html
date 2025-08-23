@@ -7,6 +7,8 @@
     
     <title>{% if page.title %}{{ page.title }} | {% endif %}{{ site.title }} - IOC</title>
     <meta name="description" content="{{ page.excerpt | default: 'Material educatiu' | strip_html | normalize_whitespace | truncate: 160 | escape }} - {{ site.organization }}">
+    {% if page.unitat %}<meta name="page-unitat" content="{{ page.unitat }}">{% endif %}
+    {% if page.bloc %}<meta name="page-bloc" content="{{ page.bloc }}">{% endif %}
     
     <!-- SEO Tags -->
     {% seo %}
