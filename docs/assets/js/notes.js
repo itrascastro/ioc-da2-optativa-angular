@@ -19,6 +19,7 @@
         this._injectNoteButtons();
         this._ensurePanel();
         this._bindFooterButton();
+        this._bindSidebarToc();
       } catch (e) {
         // Fail silently to avoid breaking site
         // console.warn('Notes init error', e);
@@ -112,6 +113,28 @@
       if (btn) btn.addEventListener('click', () => this._togglePanel());
     },
 
+    _bindSidebarToc() {
+      // Quan es fa clic a una secció del TOC i el panell és obert, canviar l'edició a aquella secció
+      const links = Array.from(document.querySelectorAll('.sidebar .nav-link'));
+      if (links.length === 0) return;
+      links.forEach(a => {
+        a.addEventListener('click', () => {
+          if (!this._isPanelOpen()) return;
+          const id = a.getAttribute('data-section') || (a.getAttribute('href') || '').replace('#', '');
+          if (!id) return;
+          // Assegurar que el selector conté la secció
+          this._populateSections();
+          const sel = this.panelEl?.querySelector('#notes-section');
+          if (!sel) return;
+          sel.value = id;
+          this._loadCurrentNote();
+          this._setPanelTitle();
+          const ta = this.panelEl?.querySelector('#notes-text');
+          ta && ta.focus();
+        });
+      });
+    },
+
     _togglePanel(show) {
       if (!this.panelEl) return;
       const visible = this.panelEl.style.display !== 'none' && this.panelEl.style.display !== '' ? true : this.panelEl.classList.contains('open');
@@ -130,6 +153,11 @@
         this._restoreContentPadding();
         this._unbindResize();
       }
+    },
+
+    _isPanelOpen() {
+      if (!this.panelEl) return false;
+      return (this.panelEl.style.display === 'block');
     },
 
     _openPanel(sectionId) {
