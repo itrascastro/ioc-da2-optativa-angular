@@ -98,4 +98,47 @@
 
 /* Notes (Fase 0 placeholders: sense efecte visual) */
 .notes-panel { display: none; }
-.add-note-btn { /* placeholder per al botó de secció; s'estilarà en Fase 1 */ }
+.add-note-btn {
+  position: absolute;
+  right: 0;
+  top: 0;
+  transform: translateY(-10%);
+  width: 28px; height: 28px;
+  border-radius: 6px;
+  background-color: var(--color-surface-dark);
+  border: 1px solid var(--color-border);
+  color: var(--color-text);
+  font-size: 12px;
+  line-height: 1;
+  cursor: pointer;
+}
+.add-note-btn:hover { background-color: var(--color-surface-dark); }
+.add-note-btn:focus { outline: 2px solid var(--color-primary); outline-offset: 2px; }
+
+/* Panell de notes (bottom sheet) */
+.notes-panel {
+  position: fixed;
+  left: 0; right: 0;
+  bottom: 50px; /* per sobre del footer fix */
+  background-color: var(--color-surface);
+  border-top: 1px solid var(--color-border);
+  box-shadow: 0 -4px 10px rgba(0,0,0,0.08);
+  max-height: 40vh;
+  padding: 12px 16px;
+  z-index: 998;
+}
+.notes-panel .panel-inner { max-width: 1000px; margin: 0 auto; }
+.notes-panel .panel-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+.notes-panel .panel-title { font-weight: 600; color: var(--color-text); }
+.notes-panel .panel-close { background-color: var(--color-surface-dark); border: 1px solid var(--color-border); color: var(--color-text); border-radius: 6px; padding: 4px 8px; cursor: pointer; }
+.notes-panel .panel-body { display: grid; grid-template-columns: 1fr 2fr 1fr; gap: 12px; }
+.notes-panel select, .notes-panel textarea { width: 100%; border: 1px solid var(--color-border); background: var(--color-background); color: var(--color-text); border-radius: 6px; padding: 8px; }
+.notes-panel textarea { min-height: 120px; resize: vertical; }
+.notes-panel .actions { display: flex; gap: 8px; margin-top: 8px; }
+.notes-panel .btn { background-color: var(--color-surface-dark); color: var(--color-text); border: 1px solid var(--color-border); padding: 6px 10px; border-radius: 6px; cursor: pointer; }
+.notes-panel .btn:hover { background-color: var(--color-surface-dark); }
+.notes-panel .status { color: var(--color-text-muted); font-size: 0.85rem; margin-left: 8px; }
+.notes-panel .notes-list { list-style: disc; padding-left: 18px; margin: 0; }
+.notes-panel .notes-list li { margin: 4px 0; }
+.notes-panel .notes-list a { color: var(--color-accent); text-decoration: none; }
+.notes-panel .notes-list a:hover { color: var(--color-primary); }
