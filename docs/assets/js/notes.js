@@ -70,25 +70,25 @@
             <div class="panel-title">Notes d\'aquesta pàgina</div>
             <div class="panel-controls">
               <span class="status" id="notes-status" aria-live="polite"></span>
-              <button class="panel-close" type="button" id="notes-close">Tancar</button>
+              <button class="panel-close" type="button" id="notes-close" title="Tancar" aria-label="Tancar">✕</button>
             </div>
           </div>
           <div class="panel-body">
-            <div class="col left">
-              <label for="notes-section">Secció</label>
-              <select id="notes-section"></select>
-              <div class="actions">
-                <button class="btn" id="notes-export-json" type="button">Exporta JSON</button>
-                <button class="btn" id="notes-export-md" type="button">Exporta MD</button>
-              </div>
+            <div class="row">
+              <label for="notes-section" class="sr-only">Secció</label>
+              <select id="notes-section" aria-label="Secció"></select>
             </div>
-            <div class="col center">
-              <label for="notes-text">Nota</label>
+            <div class="row">
+              <label for="notes-text" class="sr-only">Nota</label>
               <textarea id="notes-text" placeholder="Escriu la teva nota…"></textarea>
             </div>
-            <div class="col right">
-              <div><strong>Notes d\'aquesta pàgina</strong></div>
-              <ul class="notes-list" id="notes-list"></ul>
+            <div class="row actions">
+              <button class="icon-btn" id="notes-delete" type="button" title="Eliminar nota" aria-label="Eliminar nota">
+                <i class="bi bi-trash" aria-hidden="true"></i>
+              </button>
+              <div class="spacer"></div>
+              <button class="btn btn-small" id="notes-export-json" type="button" title="Exporta JSON">Exporta JSON</button>
+              <button class="btn btn-small" id="notes-export-md" type="button" title="Exporta Markdown">Exporta MD</button>
             </div>
           </div>
         </div>
@@ -103,9 +103,21 @@
       if (ta) ta.addEventListener('input', () => this._autosave());
       panel.querySelector('#notes-export-json')?.addEventListener('click', () => this._exportJSON());
       panel.querySelector('#notes-export-md')?.addEventListener('click', () => this._exportMD());
+      panel.querySelector('#notes-delete')?.addEventListener('click', () => {
+        const sel = this.panelEl?.querySelector('#notes-section');
+        if (!sel) return;
+        const id = sel.value;
+        if (!id) return;
+        this._removeNote(id);
+        const ta = this.panelEl?.querySelector('#notes-text');
+        if (ta) ta.value = '';
+        this._setStatus('Eliminada');
+        setTimeout(()=> this._setStatus(''), 1200);
+        this._updateButtonsState();
+      });
       // Populate sections
       this._populateSections();
-      this._renderList();
+      // _renderList is optional now; panel simplificat
       this._updateButtonsState();
     },
 
@@ -122,6 +134,7 @@
       if (next) {
         this._populateSections();
         this._loadCurrentNote();
+        this._adjustPanelOffset();
         this._adjustContentPadding();
         this._bindResize();
         this._updateButtonsState();
@@ -281,7 +294,7 @@
     _resizeHandler: null,
     _bindResize() {
       if (this._resizeHandler) return;
-      this._resizeHandler = () => this._adjustContentPadding();
+      this._resizeHandler = () => { this._adjustPanelOffset(); this._adjustContentPadding(); };
       window.addEventListener('resize', this._resizeHandler);
     },
     _unbindResize() {
@@ -313,6 +326,14 @@
       const blob = new Blob([content], { type: 'application/octet-stream' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a'); a.href = url; a.download = name; document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
+    },
+
+    // Panel bottom offset equals footer height (no gap)
+    _adjustPanelOffset() {
+      if (!this.panelEl) return;
+      const footer = document.querySelector('.footer');
+      const h = footer ? footer.offsetHeight : 0;
+      this.panelEl.style.bottom = `${h}px`;
     },
 
     // Icon state for H2 buttons: journal-text (no note) vs journal-check (has note)
