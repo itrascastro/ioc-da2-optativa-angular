@@ -108,9 +108,12 @@
   background-color: var(--color-surface-dark);
   border: 1px solid var(--color-border);
   color: var(--color-text);
-  font-size: 12px;
+  font-size: 16px;
   line-height: 1;
   cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 .add-note-btn:hover { background-color: var(--color-surface-dark); }
 .add-note-btn:focus { outline: 2px solid var(--color-primary); outline-offset: 2px; }
@@ -124,6 +127,9 @@
 @media (hover: none), (pointer: coarse) {
   .content-body h2 .add-note-btn { opacity: 1; pointer-events: auto; }
 }
+
+/* Sempre visible, en tots els dispositius (override explícit) */
+.content-body h2 .add-note-btn { opacity: 1 !important; pointer-events: auto !important; }
 
 /* Panell de notes (bottom sheet) */
 .notes-panel {

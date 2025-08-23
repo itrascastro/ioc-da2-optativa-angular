@@ -43,7 +43,7 @@
         btn.className = 'add-note-btn';
         btn.type = 'button';
         btn.setAttribute('aria-label', 'Afegir nota a aquesta secció');
-        btn.textContent = 'Nota';
+        btn.innerHTML = '<i class="bi bi-journal-text" aria-hidden="true"></i>';
         // Ensure h2 relatively positioned to anchor absolute button
         const style = window.getComputedStyle(h2);
         if (style.position === 'static') h2.style.position = 'relative';
@@ -52,6 +52,8 @@
           this._openPanel(h2.id);
         });
       });
+      // Set initial state of icons depending on existing notes
+      this._updateButtonsState();
     },
 
     // Panel creation/toggle
@@ -104,6 +106,7 @@
       // Populate sections
       this._populateSections();
       this._renderList();
+      this._updateButtonsState();
     },
 
     _bindFooterButton() {
@@ -121,6 +124,7 @@
         this._loadCurrentNote();
         this._adjustContentPadding();
         this._bindResize();
+        this._updateButtonsState();
       }
       else {
         this._restoreContentPadding();
@@ -188,6 +192,7 @@
       all.updatedAt = this._nowISO();
       this._saveAll(all);
       this._renderList();
+      this._updateButtonsState();
     },
     _removeNote(sectionId) {
       const all = this._loadAll();
@@ -198,6 +203,7 @@
         all.updatedAt = this._nowISO();
         this._saveAll(all);
         this._renderList();
+        this._updateButtonsState();
       }
     },
 
@@ -307,6 +313,23 @@
       const blob = new Blob([content], { type: 'application/octet-stream' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a'); a.href = url; a.download = name; document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
+    },
+
+    // Icon state for H2 buttons: journal-text (no note) vs journal-check (has note)
+    _hasNote(sectionId) {
+      const n = this._getNote(sectionId);
+      return !!(n && n.content && n.content.trim().length > 0);
+    },
+    _updateButtonsState() {
+      document.querySelectorAll('.content-body h2').forEach(h2 => {
+        const btn = h2.querySelector('.add-note-btn');
+        if (!btn || !h2.id) return;
+        const has = this._hasNote(h2.id);
+        const icon = has ? 'bi-journal-check' : 'bi-journal-text';
+        btn.innerHTML = `<i class="bi ${icon}" aria-hidden="true"></i>`;
+        btn.setAttribute('title', has ? 'Editar nota' : 'Afegir nota');
+        btn.setAttribute('aria-label', has ? 'Editar nota d\'aquesta secció' : 'Afegir nota a aquesta secció');
+      });
     }
   };
 
