@@ -365,16 +365,23 @@
       const titleEl = this.panelEl?.querySelector('#notes-panel-title');
       if (!titleEl) return;
       let fullTitle = "Notes d'aquesta pàgina";
-      const nav = document.querySelector('.horizontal-nav');
-      if (nav) {
-        const items = Array.from(nav.querySelectorAll('.horizontal-nav-item'));
-        const unit = items.find(el => /Unitat \d+/.test(el.textContent || ''));
-        const bloc = nav.querySelector('.horizontal-nav-item.current');
-        let inner = '';
-        if (unit && bloc) inner = `${(unit.textContent||'').trim()} · ${(bloc.textContent||'').trim()}`;
-        else if (unit) inner = (unit.textContent||'').trim();
-        else if (bloc) inner = (bloc.textContent||'').trim();
-        if (inner) fullTitle = `Notes de ${inner}`;
+      const ctx = this._context();
+      if (ctx.unitat) {
+        if (ctx.bloc) fullTitle = `Notes de Unitat ${ctx.unitat} - Bloc ${ctx.bloc}`;
+        else fullTitle = `Notes de Unitat ${ctx.unitat}`;
+      } else {
+        // Fallback a breadcrumb si no hi ha metadades
+        const nav = document.querySelector('.horizontal-nav');
+        if (nav) {
+          const items = Array.from(nav.querySelectorAll('.horizontal-nav-item'));
+          const unit = items.find(el => /Unitat \d+/.test(el.textContent || ''));
+          const bloc = nav.querySelector('.horizontal-nav-item.current');
+          let inner = '';
+          if (unit && bloc) inner = `${(unit.textContent||'').trim()} · ${(bloc.textContent||'').trim()}`;
+          else if (unit) inner = (unit.textContent||'').trim();
+          else if (bloc) inner = (bloc.textContent||'').trim();
+          if (inner) fullTitle = `Notes de ${inner}`;
+        }
       }
       titleEl.textContent = fullTitle;
     },
