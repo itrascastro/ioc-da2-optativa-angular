@@ -95,3 +95,7 @@
 .responsive-table th, .responsive-table td { padding: 12px 15px; text-align: left; border-bottom: 1px solid var(--color-border); }
 .responsive-table th { background-color: var(--color-primary); color: white; font-weight: 600; }
 .responsive-table tr:hover { background-color: rgba(52,152,219,0.05); }
+
+/* Notes (Fase 0 placeholders: sense efecte visual) */
+.notes-panel { display: none; }
+.add-note-btn { /* placeholder per al botó de secció; s'estilarà en Fase 1 */ }
