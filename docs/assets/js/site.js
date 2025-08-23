@@ -1,22 +1,31 @@
 // Dropdown de navegació
 function initializeNavDropdown() {
-  const dropdown = document.getElementById('nav-dropdown');
-  const btn = document.getElementById('nav-dropdown-btn');
-  if (!dropdown || !btn) return;
+  const dropdowns = Array.from(document.querySelectorAll('.nav-dropdown'));
+  if (dropdowns.length === 0) return;
 
-  btn.addEventListener('click', function (e) {
-    e.stopPropagation();
-    dropdown.classList.toggle('open');
+  const closeAll = () => dropdowns.forEach(d => d.classList.remove('open'));
+
+  dropdowns.forEach(dropdown => {
+    const btn = dropdown.querySelector('.nav-dropdown-btn');
+    if (!btn) return;
+
+    btn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      // si és de header (no sidebar-mode), comportament exclusiu
+      const isSidebar = dropdown.classList.contains('sidebar-mode');
+      if (!isSidebar) closeAll();
+      dropdown.classList.toggle('open');
+    });
+
+    // Evitar tancar en clicar dins del dropdown
+    dropdown.addEventListener('click', function (e) {
+      e.stopPropagation();
+    });
   });
 
-  // Tancar en clicar fora
+  // Tancar en clicar fora (només afecta dropdowns oberts)
   document.addEventListener('click', function () {
-    dropdown.classList.remove('open');
-  });
-
-  // Evitar tancar en clicar dins del dropdown
-  dropdown.addEventListener('click', function (e) {
-    e.stopPropagation();
+    closeAll();
   });
 }
 
@@ -56,6 +65,7 @@ document.addEventListener('DOMContentLoaded', function () {
   initializeNavDropdown();
   initializeFooterProgress();
   initializePromptCopy();
+  initializeTocActive();
   initializeFooterNav();
 
   // Smooth scroll amb offset per header fix
@@ -145,7 +155,7 @@ function initializeFooterProgress() {
     const pos = parseInt(text.getAttribute('data-pos') || '0', 10) || 0;
     const total = parseInt(text.getAttribute('data-total') || '0', 10) || 0;
     const pct = total > 0 ? Math.min(100, Math.max(0, Math.round((pos / total) * 100))) : 0;
-    text.textContent = `${pos} de ${total}`;
+    text.textContent = `(${pos}/${total})`;
     // Assegurar aplicació després del primer paint
     requestAnimationFrame(() => { fill.style.width = `${pct}%`; });
   });
@@ -163,7 +173,7 @@ function initializeFooterProgress() {
       const headers = Array.from(document.querySelectorAll('.content-body h2'));
       total = headers.length;
       if (total === 0) {
-        text.textContent = '0 de 0';
+        text.textContent = '(0/0)';
         fill.style.width = '0%';
         return;
       }
@@ -188,7 +198,7 @@ function initializeFooterProgress() {
       const pct = Math.min(100, Math.max(0, Math.round((current / total) * 100)));
       text.setAttribute('data-pos', String(current));
       text.setAttribute('data-total', String(total));
-      text.textContent = `${current} de ${total}`;
+      text.textContent = `(${current}/${total})`;
       fill.style.width = `${pct}%`;
     };
 
@@ -207,6 +217,41 @@ function initializeFooterProgress() {
     window.addEventListener('resize', update);
     window.addEventListener('hashchange', update);
   }
+}
+
+// Resaltat de la secció actual al TOC del sidebar (H2)
+function initializeTocActive() {
+  const tocLinks = Array.from(document.querySelectorAll('.sidebar .nav-link'));
+  if (tocLinks.length === 0) return;
+  const headerEl = document.querySelector('.header');
+  const headerOffset = (headerEl ? headerEl.offsetHeight : 0) + 20;
+
+  const getHeaders = () => Array.from(document.querySelectorAll('.content-body h2'));
+
+  const updateActive = () => {
+    const headers = getHeaders();
+    if (headers.length === 0) return;
+    const scrollY = window.scrollY + headerOffset;
+    let idx = 0;
+    for (let i = 0; i < headers.length; i++) {
+      const top = headers[i].getBoundingClientRect().top + window.scrollY;
+      if (top <= scrollY) idx = i;
+    }
+    const docBottom = Math.ceil(window.innerHeight + window.scrollY);
+    const fullHeight = Math.ceil(document.documentElement.scrollHeight || document.body.scrollHeight);
+    if (docBottom >= fullHeight - 2) idx = headers.length - 1;
+
+    const currentId = headers[idx]?.id || '';
+    tocLinks.forEach(a => {
+      if (a.getAttribute('data-section') === currentId) a.classList.add('current');
+      else a.classList.remove('current');
+    });
+  };
+
+  updateActive();
+  window.addEventListener('scroll', updateActive, { passive: true });
+  window.addEventListener('resize', updateActive);
+  window.addEventListener('hashchange', updateActive);
 }
 
 // Copiar prompt d'IA des d'una textarea amb botó copy

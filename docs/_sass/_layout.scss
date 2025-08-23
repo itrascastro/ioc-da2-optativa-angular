@@ -46,6 +46,9 @@ body { padding-top: 70px; padding-bottom: 20px; }
 .progress-fill-footer { height: 100%; background-color: var(--color-primary); border-radius: 3px; transition: width 0.5s ease; width: 0%; }
 .main-content { padding-bottom: 30px; }
 
+/* Més aire sobre el footer en pàgines de bloc */
+.bloc-layout .main-content { padding-bottom: 50px; }
+
 /* Accions del footer */
 .footer-actions { display: flex; align-items: center; gap: 6px; }
 .task-btn {

@@ -6,6 +6,7 @@
 .nav-item { margin-bottom: 8px; }
 .nav-link, .course-nav-link { display: block; padding: 10px 12px; color: var(--color-text); text-decoration: none; font-size: 0.9rem; border-radius: 4px; transition: all 0.3s ease; margin-bottom: 6px; background-color: var(--color-surface-dark); }
 .nav-link:hover, .course-nav-link:hover { background-color: var(--color-primary); color: white; }
+.nav-link.current { background-color: var(--color-primary); color: #fff; }
 .course-nav-link.current-block { background-color: var(--color-primary); color: white; font-weight: 600; }
 
 /* Dropdown navegació */
@@ -17,6 +18,8 @@
 .nav-dropdown-item { display: block; padding: 10px 12px; color: var(--color-text); text-decoration: none; font-size: 0.9rem; border-radius: 4px; transition: all 0.3s ease; margin-bottom: 4px; background-color: var(--color-surface-dark); }
 .nav-dropdown-item:hover, .nav-dropdown-item.current { background-color: var(--color-primary); color: white; }
 .nav-dropdown-item:last-child { margin-bottom: 0; }
+
+/* (El sidebar usa enllaços .nav-link oberts; sense variant desplegable) */
 
 /* Estil unificat per tots els botons */
 .btn, .nav-button, .theme-toggle { background-color: var(--color-surface-dark); color: var(--color-text); border: 1px solid var(--color-border); padding: 10px 20px; border-radius: var(--border-radius); cursor: pointer; font-size: 0.9rem; font-weight: 500; transition: all 0.3s ease; text-decoration: none; display: inline-block; }
@@ -30,7 +33,7 @@
 .nav-link.prev-block:hover, .nav-link.next-block:hover { background-color: var(--color-primary); color: white; transform: translateY(-1px); box-shadow: var(--shadow-medium); }
 
 /* Navegació entre pàgines (al final del bloc) amb botons als extrems */
-.page-navigation { margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--color-border); }
+.page-navigation { margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--color-border); margin-bottom: 18px; }
 .page-navigation .nav-links-container { display: flex; justify-content: space-between; gap: 10px; }
 .page-navigation .nav-link-wrapper { flex: 1; display: flex; }
 .page-navigation .nav-link-wrapper:first-child { justify-content: flex-start; }

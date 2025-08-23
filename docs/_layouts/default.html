@@ -194,7 +194,7 @@
     <footer class="footer">
         <div class="footer-content">
             <div class="footer-info">
-                Version {{ site.version }}
+                Versió {{ site.version }}
             </div>
             <div class="footer-progress" aria-label="Progrés de lectura">
                 {%- assign total_units = site.curs.unitats | size -%}
@@ -210,7 +210,7 @@
                 {%- endif -%}
                 <div class="progress-group course-progress">
                     <span class="progress-label">Unitat</span>
-                    <span class="progress-text" data-pos="{{ unit_pos }}" data-total="{{ total_units }}">{{ unit_pos }} de {{ total_units }}</span>
+                    <span class="progress-text" data-pos="{{ unit_pos }}" data-total="{{ total_units }}">({{ unit_pos }}/{{ total_units }})</span>
                     <div class="progress-bar-footer"><div class="progress-fill-footer" style="width: {{ unit_pct }}%"></div></div>
                 </div>
 
@@ -233,7 +233,7 @@
                     {%- endif -%}
                     <div class="progress-group unit-progress">
                         <span class="progress-label">Bloc</span>
-                        <span class="progress-text" data-pos="{{ pos_block }}" data-total="{{ total_unit }}">{{ pos_block }} de {{ total_unit }}</span>
+                        <span class="progress-text" data-pos="{{ pos_block }}" data-total="{{ total_unit }}">({{ pos_block }}/{{ total_unit }})</span>
                         <div class="progress-bar-footer"><div class="progress-fill-footer" style="width: {{ block_pct }}%"></div></div>
                     </div>
 
@@ -246,8 +246,8 @@
                       {%- assign sec_pct = 1 | times: 100 | divided_by: total_sec -%}
                     {%- endif -%}
                     <div class="progress-group section-progress" data-scan-sections="true">
-                        <span class="progress-label">Seccions</span>
-                        <span class="progress-text" data-pos="1" data-total="{{ total_sec }}">1 de {{ total_sec }}</span>
+                        <span class="progress-label">Secció</span>
+                        <span class="progress-text" data-pos="1" data-total="{{ total_sec }}">(1/{{ total_sec }})</span>
                         <div class="progress-bar-footer"><div class="progress-fill-footer" style="width: {{ sec_pct }}%"></div></div>
                     </div>
                   {%- endif -%}
