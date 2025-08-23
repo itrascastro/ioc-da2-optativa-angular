@@ -143,6 +143,26 @@ echo 'Angular CLI instal·lat i configurat correctament!'
 </div>
 
 <div class="section">
+    <h2 id="components-exemples">Exemples de Components Addicionals</h2>
+
+    {% include objectius.html llista="Comprendre la CLI d'Angular|Crear el primer component|Entendre el flux de treball bàsic" %}
+
+    {% include definicio.html terme="Injecció de Dependències" definicio="Patró en què els components reben les seves dependències externes, millorant el desacoblament i la testabilitat." %}
+
+    {% include figura.html src="/assets/images/logo_IOC_light.jpg" alt="Logo IOC" caption="Exemple de figura amb peu de foto." %}
+
+    {% include exercici.html 
+       nom="Component de Suma"
+       dificultat="Fàcil"
+       temps="15 min"
+       descripcio="<p>Crea un component <code>Sumador</code> amb dos inputs i un botó que mostri el resultat.</p>"
+       pistes="Usa <strong>[(ngModel)]</strong>|Afegeix un mètode <code>sumar()</code>"
+    %}
+
+    {% include recursos.html items="Doc oficial Angular|https://angular.io|external||Guia TypeScript IOC|/docs/ts/guia/" %}
+</div>
+
+<div class="section">
     <h2 id="primer-projecte">Primer Projecte: Calculadora Angular Professional</h2>
 
 {% capture code_ts %}

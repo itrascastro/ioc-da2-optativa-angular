@@ -17,7 +17,8 @@
 .code-inline { background-color: var(--code-border); color: var(--code-accent); padding: 2px 6px; border-radius: 4px; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 0.9em; }
 
 /* Caixes Informatives (alineades amb code-block: paleta neutra + accent suau) */
-.info-box, .warning-box, .success-box, .problem-box, .solution-box, .suggestion-box, .ai-prompt { background-color: var(--comp-bg); border: 1px solid var(--comp-border); padding: 15px; margin: 20px 0; border-radius: var(--border-radius); box-shadow: var(--shadow-light); }
+.info-box, .warning-box, .success-box, .problem-box, .solution-box, .suggestion-box, .ai-prompt,
+.objectius-box, .exercise-box, .figure-box, .resources-box, .definition-box { background-color: var(--comp-bg); border: 1px solid var(--comp-border); padding: 15px; margin: 20px 0; border-radius: var(--border-radius); box-shadow: var(--shadow-light); }
 .component-header { font-weight: 600; color: var(--comp-header-fg); background-color: var(--comp-header-bg); margin: -15px -15px 15px -15px; padding: 12px 15px; border-radius: var(--border-radius) var(--border-radius) 0 0; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid var(--comp-border); }
 .info-header { background-color: var(--comp-info-hbg); }
 .warning-header { background-color: var(--comp-warning-hbg); }
@@ -54,6 +55,30 @@
 .ai-header .copy-btn:hover { background-color: var(--color-surface-dark); }
 .ai-prompt .copy-btn:focus { outline: 2px solid #4fc3f7; outline-offset: 2px; }
 .ai-prompt .copy-btn.copied { background: #4caf50; color: #fff; }
+
+/* Exercici */
+.exercise-meta { color: var(--color-text); margin: 10px 0 6px 0; display: flex; gap: 8px; flex-wrap: wrap; }
+.badge { background-color: var(--color-surface-dark); border: 1px solid var(--color-border); color: var(--color-text); border-radius: 9999px; padding: 2px 8px; font-size: 0.8rem; }
+.exercise-hints { margin-top: 8px; }
+.exercise-hints summary { cursor: pointer; color: var(--color-accent); text-decoration: none; }
+.exercise-hints summary:hover { color: var(--color-primary); }
+.exercise-description p { margin: 0 0 10px 0; }
+
+/* Figura */
+.figure { margin: 0; }
+.figure-img { max-width: 100%; height: auto; display: block; border: 1px solid var(--color-border); border-radius: var(--border-radius); background: var(--color-background); }
+.figure-caption { color: var(--color-text-muted); font-size: 0.9rem; margin-top: 6px; }
+
+/* Recursos */
+.resource-list { margin: 0; padding-left: 18px; }
+.resource-item { margin-bottom: 6px; }
+.resource-item:last-child { margin-bottom: 0; }
+.resource-link { text-decoration: none; color: var(--color-accent); }
+.resource-link:hover { color: var(--color-primary); }
+
+/* Enllaços dins de caixes de components: consistents amb breadcrumb */
+.component-content a { color: var(--color-accent); text-decoration: none; }
+.component-content a:hover { color: var(--color-primary); }
 
 /* Checklists */
 .checklist { background-color: var(--comp-bg); border: 1px solid var(--comp-border); border-radius: var(--border-radius); padding: 20px; margin: 20px 0; box-shadow: var(--shadow-light); }
