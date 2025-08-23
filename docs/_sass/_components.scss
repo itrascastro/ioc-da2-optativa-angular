@@ -147,6 +147,10 @@
 .notes-panel .panel-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
 .notes-panel .panel-title { font-weight: 600; color: var(--color-text); }
 .notes-panel .panel-close { background-color: var(--color-surface-dark); border: 1px solid var(--color-border); color: var(--color-text); border-radius: 6px; padding: 4px 8px; cursor: pointer; }
+.notes-panel .panel-controls { display: flex; align-items: center; gap: 6px; }
+.notes-panel #notes-delete { border-color: var(--color-border); color: var(--comp-error); }
+.notes-panel #notes-delete:hover { background-color: var(--color-surface-dark); }
+.notes-panel #notes-delete:focus { outline: 2px solid var(--comp-error); outline-offset: 2px; }
 .notes-panel .panel-body { display: block; }
 .notes-panel .row { margin-bottom: 8px; }
 .notes-panel select, .notes-panel textarea { width: 100%; border: 1px solid var(--color-border); background: var(--color-background); color: var(--color-text); border-radius: 6px; padding: 8px; }
@@ -160,3 +164,13 @@
 .notes-panel .icon-btn:hover { background-color: var(--color-surface-dark); }
 .notes-panel .status { color: var(--color-text-muted); font-size: 0.85rem; margin-left: 8px; }
 .notes-panel .sr-only { position: absolute; left: -9999px; top: auto; width: 1px; height: 1px; overflow: hidden; }
+
+
+/* Modal de confirmació per notes */
+.notes-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 1005; display: flex; align-items: center; justify-content: center; padding: 16px; }
+.notes-dialog { background: var(--color-surface); color: var(--color-text); border: 1px solid var(--color-border); border-radius: var(--border-radius); width: min(480px, 90vw); padding: 16px; box-shadow: var(--shadow-medium); }
+.notes-dialog-title { font-weight: 600; margin-bottom: 8px; }
+.notes-dialog-body { margin-bottom: 12px; }
+.notes-dialog-actions { display: flex; gap: 8px; justify-content: flex-end; }
+.btn-danger { background-color: var(--comp-error); color: #fff; border: 1px solid var(--comp-error); }
+.btn-danger:hover { background-color: var(--comp-error); }

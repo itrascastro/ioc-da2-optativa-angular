@@ -49,6 +49,10 @@
         if (style.position === 'static') h2.style.position = 'relative';
         h2.appendChild(btn);
         btn.addEventListener('click', () => {
+          const header = document.querySelector('.header');
+          const offset = (header ? header.offsetHeight : 0) + 20;
+          const y = h2.getBoundingClientRect().top + window.scrollY - offset;
+          window.scrollTo({ top: y, behavior: 'smooth' });
           this._openPanel(h2.id);
         });
       });
@@ -67,9 +71,10 @@
       panel.innerHTML = `
         <div class="panel-inner">
           <div class="panel-header">
-            <div class="panel-title">Notes d\'aquesta pàgina</div>
+            <div class="panel-title" id="notes-panel-title">Notes d\'aquesta pàgina</div>
             <div class="panel-controls">
               <span class="status" id="notes-status" aria-live="polite"></span>
+              <button class="icon-btn" id="notes-delete" type="button" title="Eliminar nota" aria-label="Eliminar nota"><i class="bi bi-trash" aria-hidden="true"></i></button>
               <button class="panel-close" type="button" id="notes-close" title="Tancar" aria-label="Tancar">✕</button>
             </div>
           </div>
@@ -82,14 +87,6 @@
               <label for="notes-text" class="sr-only">Nota</label>
               <textarea id="notes-text" placeholder="Escriu la teva nota…"></textarea>
             </div>
-            <div class="row actions">
-              <button class="icon-btn" id="notes-delete" type="button" title="Eliminar nota" aria-label="Eliminar nota">
-                <i class="bi bi-trash" aria-hidden="true"></i>
-              </button>
-              <div class="spacer"></div>
-              <button class="btn btn-small" id="notes-export-json" type="button" title="Exporta JSON">Exporta JSON</button>
-              <button class="btn btn-small" id="notes-export-md" type="button" title="Exporta Markdown">Exporta MD</button>
-            </div>
           </div>
         </div>
       `;
@@ -101,23 +98,12 @@
       if (select) select.addEventListener('change', () => this._loadCurrentNote());
       const ta = panel.querySelector('#notes-text');
       if (ta) ta.addEventListener('input', () => this._autosave());
-      panel.querySelector('#notes-export-json')?.addEventListener('click', () => this._exportJSON());
-      panel.querySelector('#notes-export-md')?.addEventListener('click', () => this._exportMD());
-      panel.querySelector('#notes-delete')?.addEventListener('click', () => {
-        const sel = this.panelEl?.querySelector('#notes-section');
-        if (!sel) return;
-        const id = sel.value;
-        if (!id) return;
-        this._removeNote(id);
-        const ta = this.panelEl?.querySelector('#notes-text');
-        if (ta) ta.value = '';
-        this._setStatus('Eliminada');
-        setTimeout(()=> this._setStatus(''), 1200);
-        this._updateButtonsState();
-      });
+      // Exportació de pàgina es gestionarà en una vista global; no mostrar a nivell de panell
+      panel.querySelector('#notes-delete')?.addEventListener('click', () => this._deleteCurrentNote());
       // Populate sections
       this._populateSections();
       // _renderList is optional now; panel simplificat
+      this._setPanelTitle();
       this._updateButtonsState();
     },
 
@@ -134,6 +120,7 @@
       if (next) {
         this._populateSections();
         this._loadCurrentNote();
+        this._setPanelTitle();
         this._adjustPanelOffset();
         this._adjustContentPadding();
         this._bindResize();
@@ -152,6 +139,7 @@
         sel.value = sectionId;
         this._loadCurrentNote();
       }
+      this._setPanelTitle();
       const ta = this.panelEl?.querySelector('#notes-text');
       ta && ta.focus();
     },
@@ -326,6 +314,76 @@
       const blob = new Blob([content], { type: 'application/octet-stream' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a'); a.href = url; a.download = name; document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
+    },
+
+    _deleteCurrentNote() {
+      const sel = this.panelEl?.querySelector('#notes-section');
+      if (!sel) return;
+      const id = sel.value;
+      if (!id) return;
+      const sectionTitle = (this.sections.find(s => s.id === id)?.title) || id;
+      this._showConfirmModal(`Vols eliminar la nota de la secció \"${sectionTitle}\"?`).then(ok => {
+        if (!ok) return;
+        this._removeNote(id);
+        const ta = this.panelEl?.querySelector('#notes-text');
+        if (ta) ta.value = '';
+        this._setStatus('Eliminada');
+        setTimeout(()=> this._setStatus(''), 1200);
+        this._updateButtonsState();
+      });
+    },
+
+    _setPanelTitle() {
+      const titleEl = this.panelEl?.querySelector('#notes-panel-title');
+      if (!titleEl) return;
+      let fullTitle = "Notes d'aquesta pàgina";
+      const nav = document.querySelector('.horizontal-nav');
+      if (nav) {
+        const items = Array.from(nav.querySelectorAll('.horizontal-nav-item'));
+        const unit = items.find(el => /Unitat \d+/.test(el.textContent || ''));
+        const bloc = nav.querySelector('.horizontal-nav-item.current');
+        let inner = '';
+        if (unit && bloc) inner = `${(unit.textContent||'').trim()} · ${(bloc.textContent||'').trim()}`;
+        else if (unit) inner = (unit.textContent||'').trim();
+        else if (bloc) inner = (bloc.textContent||'').trim();
+        if (inner) fullTitle = `Notes de ${inner}`;
+      }
+      titleEl.textContent = fullTitle;
+    },
+
+    _showConfirmModal(message) {
+      return new Promise(resolve => {
+        const overlay = document.createElement('div');
+        overlay.className = 'notes-modal';
+        overlay.setAttribute('role', 'dialog');
+        overlay.setAttribute('aria-modal', 'true');
+        overlay.innerHTML = `
+          <div class="notes-dialog" role="document">
+            <div class="notes-dialog-title">Confirmació</div>
+            <div class="notes-dialog-body">${message}</div>
+            <div class="notes-dialog-actions">
+              <button type="button" class="btn btn-small" id="notes-cancel">Cancel·la</button>
+              <button type="button" class="btn btn-small btn-danger" id="notes-confirm">Eliminar</button>
+            </div>
+          </div>
+        `;
+        document.body.appendChild(overlay);
+        const active = document.activeElement;
+        const cleanup = (result) => {
+          if (overlay && overlay.parentNode) overlay.parentNode.removeChild(overlay);
+          if (active && active.focus) { try { active.focus(); } catch(e){} }
+          resolve(result);
+        };
+        overlay.addEventListener('click', (e) => {
+          if (e.target === overlay) cleanup(false);
+        });
+        const btnCancel = overlay.querySelector('#notes-cancel');
+        const btnConfirm = overlay.querySelector('#notes-confirm');
+        btnCancel?.addEventListener('click', () => cleanup(false));
+        btnConfirm?.addEventListener('click', () => cleanup(true));
+        overlay.addEventListener('keydown', (e) => { if (e.key === 'Escape') cleanup(false); });
+        (btnConfirm || btnCancel || overlay).focus();
+      });
     },
 
     // Panel bottom offset equals footer height (no gap)

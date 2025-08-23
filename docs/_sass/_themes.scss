@@ -53,6 +53,10 @@
 [data-theme="dark"] .btn:disabled,
 [data-theme="dark"] .nav-button:disabled { background-color: var(--color-border); color: #bbbbbb; }
 
+/* Botó perill (confirmació) en mode fosc: mantenir vermell */
+[data-theme="dark"] .btn-danger { background-color: var(--comp-error); border: 1px solid var(--comp-error); color: #fff; }
+[data-theme="dark"] .btn-danger:hover { background-color: var(--comp-error); }
+
 [data-theme="dark"] .nav-dropdown-item:hover,
 [data-theme="dark"] .nav-dropdown-item.current { background-color: #353535; color: #ffffff; }
 [data-theme="dark"] .skip-link { background: #4a4a4a; }
