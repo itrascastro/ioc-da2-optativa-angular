@@ -1,0 +1,303 @@
+/* =============================
+   LAYOUT BASE DEL QUADERN
+   ============================= */
+
+/* Variables específiques del quadern */
+:root {
+  // Extending existing CSS variables from the main theme
+  --quadern-header-height: 60px;
+  --quadern-sidebar-width: 280px;
+  --quadern-footer-height: 40px;
+  
+  // Specific colors for quadern (inheriting main theme)
+  --quadern-accent: var(--color-primary);
+  --quadern-accent-hover: var(--color-primary-dark);
+  --quadern-danger: #ef4444;
+  --quadern-success: #10b981;
+  --quadern-warning: #f59e0b;
+}
+
+.quadern-layout {
+  font-family: var(--font-family-base);
+  background: var(--color-background);
+  color: var(--color-text);
+  overflow-x: hidden;
+}
+
+/* Header del Quadern */
+.quadern-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--quadern-header-height);
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  z-index: 1000;
+  box-shadow: var(--shadow-light);
+}
+
+.quadern-header .header-brand {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.quadern-header .logo-link {
+  display: flex;
+  align-items: center;
+}
+
+.quadern-header .logo {
+  height: 32px;
+  width: auto;
+}
+
+.quadern-logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--color-primary);
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+.quadern-logo i {
+  font-size: 1.2rem;
+}
+
+/* Cerca Global */
+.header-search {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  max-width: 500px;
+  margin: 0 20px;
+}
+
+.global-search {
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+}
+
+.global-search input {
+  width: 100%;
+  padding: 8px 40px 8px 15px;
+  border: 2px solid var(--color-border);
+  border-radius: 25px;
+  font-size: 14px;
+  background: var(--color-background);
+  color: var(--color-text);
+  transition: all 0.3s ease;
+}
+
+.global-search input:focus {
+  outline: none;
+  border-color: var(--quadern-accent);
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+}
+
+.global-search .search-icon {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--color-text-muted);
+  pointer-events: none;
+}
+
+/* Controls del Header */
+.header-controls {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+/* =============================
+   CONTAINER PRINCIPAL
+   ============================= */
+
+.quadern-container {
+  display: flex;
+  margin-top: var(--quadern-header-height);
+  margin-bottom: var(--quadern-footer-height);
+  min-height: calc(100vh - var(--quadern-header-height) - var(--quadern-footer-height));
+}
+
+/* Sidebar */
+.quadern-sidebar {
+  width: var(--quadern-sidebar-width);
+  background: var(--color-surface-dark);
+  border-right: 1px solid var(--color-border);
+  overflow-y: auto;
+  position: fixed;
+  left: 0;
+  top: var(--quadern-header-height);
+  bottom: var(--quadern-footer-height);
+}
+
+.sidebar-section {
+  padding: 20px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.sidebar-section:last-child {
+  border-bottom: none;
+}
+
+.sidebar-section h3 {
+  margin: 0 0 15px 0;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-text);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Navegació de Vistes */
+.view-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.view-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 15px;
+  background: none;
+  border: none;
+  border-radius: var(--border-radius);
+  color: var(--color-text);
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: left;
+  width: 100%;
+}
+
+.view-btn:hover {
+  background: rgba(52, 152, 219, 0.1);
+  color: var(--quadern-accent);
+}
+
+.view-btn.active {
+  background: var(--quadern-accent);
+  color: white;
+}
+
+.view-btn i {
+  font-size: 1rem;
+  width: 16px;
+  text-align: center;
+}
+
+/* Arbre de Navegació */
+.nav-tree {
+  font-size: 0.85rem;
+}
+
+.tree-item {
+  margin-bottom: 2px;
+}
+
+.tree-item-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+  color: var(--color-text);
+}
+
+.tree-item-header:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.tree-item-header.active {
+  background: var(--quadern-accent);
+  color: white;
+}
+
+.tree-children {
+  padding-left: 20px;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+}
+
+.tree-children.expanded {
+  max-height: 500px;
+}
+
+.tree-arrow {
+  transition: transform 0.3s ease;
+  font-size: 12px;
+}
+
+.tree-arrow.expanded {
+  transform: rotate(90deg);
+}
+
+/* Main Content */
+.quadern-main {
+  flex: 1;
+  margin-left: var(--quadern-sidebar-width);
+  padding: 30px;
+  overflow-y: auto;
+  background: var(--color-background);
+}
+
+/* =============================
+   FOOTER DEL QUADERN
+   ============================= */
+
+.quadern-footer {
+  position: fixed;
+  bottom: 0;
+  left: var(--quadern-sidebar-width);
+  right: 0;
+  height: var(--quadern-footer-height);
+  background: var(--color-surface);
+  border-top: 1px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  z-index: 999;
+  font-size: 0.8rem;
+}
+
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.stats-container {
+  display: flex;
+  gap: 20px;
+}
+
+.stat-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--color-text-muted);
+}
+
+.stat-item i {
+  font-size: 0.9rem;
+}
+
+.footer-version {
+  color: var(--color-text-muted);
+  font-size: 0.75rem;
+}
