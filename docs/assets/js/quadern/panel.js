@@ -86,6 +86,7 @@
       list.appendChild(item);
     });
     this.loadEditor(notes[0].id);
+    this.updateHeadCounts();
   };
   Panel.prototype.clearEditor = function(){
     this.root.querySelector('#qnp-title').value='';
@@ -108,22 +109,66 @@
     n.content = this.root.querySelector('#qnp-text').value;
     n.updatedAt = U.nowISO();
     S.save(this.state);
+    this.updateHeadCounts();
   };
   Panel.prototype.newNote = function(){
     const ctx = this.sectionContext(); if(!ctx.sectionId) return;
     const n = Object.assign({ id: '', noteTitle: 'Nova nota', tags: [], content: '', createdAt: U.nowISO(), updatedAt: U.nowISO() }, ctx);
-    const saved = S.upsertNote(this.state, n); S.save(this.state); this.refreshList(); this.loadEditor(saved.id);
+    const saved = S.upsertNote(this.state, n); S.save(this.state); this.refreshList(); this.loadEditor(saved.id); this.updateHeadCounts();
   };
   Panel.prototype.duplicate = function(){
     if (!this.currentId) return; const base = this.state.notes.byId[this.currentId]; if(!base) return;
     const copy = Object.assign({}, base, { id: '', noteTitle: (base.noteTitle||'') + ' (còpia)', createdAt: U.nowISO(), updatedAt: U.nowISO() });
-    const saved = S.upsertNote(this.state, copy); S.save(this.state); this.refreshList(); this.loadEditor(saved.id);
+    const saved = S.upsertNote(this.state, copy); S.save(this.state); this.refreshList(); this.loadEditor(saved.id); this.updateHeadCounts();
   };
   Panel.prototype.remove = function(){
-    if (!this.currentId) return; S.deleteNote(this.state, this.currentId); S.save(this.state); this.refreshList();
+    if (!this.currentId) return; S.deleteNote(this.state, this.currentId); S.save(this.state); this.refreshList(); this.updateHeadCounts();
+  };
+
+  // H2 buttons with count badge
+  Panel.prototype.installHeads = function(){
+    const headers = U.$all('.content-body h2');
+    headers.forEach(h2 => {
+      if (!h2.id) return;
+      if (h2.querySelector('.qnp-add')) return;
+      const btn = document.createElement('button');
+      btn.type = 'button'; btn.className = 'qnp-add';
+      btn.innerHTML = '<i class="bi bi-journal-text" aria-hidden="true"></i><span class="qnp-badge" hidden>0</span>';
+      const style = window.getComputedStyle(h2); if (style.position === 'static') h2.style.position = 'relative';
+      btn.addEventListener('click', () => { this.openForSection(h2.id); });
+      h2.appendChild(btn);
+    });
+    this.updateHeadCounts();
+  };
+  Panel.prototype.updateHeadCounts = function(){
+    const base = document.body.getAttribute('data-baseurl')||''; const pageUrl = base + (location.pathname||'');
+    U.$all('.content-body h2').forEach(h2 => {
+      if (!h2.id) return;
+      const count = S.countForSection(this.state, pageUrl, h2.id) || 0;
+      const badge = h2.querySelector('.qnp-add .qnp-badge');
+      if (badge) {
+        badge.textContent = String(count);
+        badge.hidden = !(count > 0);
+      }
+      const icon = h2.querySelector('.qnp-add i');
+      if (icon) icon.className = 'bi ' + (count>0 ? 'bi-journal-check' : 'bi-journal-text');
+    });
+  };
+  Panel.prototype.openForSection = function(sectionId){
+    this.toggle(true);
+    const sel = this.root.querySelector('#qnp-section');
+    if (sel) { sel.value = sectionId; }
+    this.refreshList();
+    this.adjustOffsets();
+  };
+  Panel.prototype.adjustOffsets = function(){
+    const footer = document.querySelector('.footer, .quadern-footer');
+    const h = footer ? footer.offsetHeight : 0;
+    this.root.style.bottom = h + 'px';
+    const main = document.querySelector('.main-content, .quadern-main');
+    if (main) main.style.paddingBottom = `calc(${h + (this.root.offsetHeight||0) + 20}px)`;
   };
 
   window.Quadern = window.Quadern || {};
   window.Quadern.Panel = Panel;
 })();
-

@@ -45,8 +45,12 @@
     const ids = state.notes.bySection[sKey] || [];
     return ids.map(id => state.notes.byId[id]).filter(Boolean);
   }
+  function countForSection(state, pageUrl, sectionId){
+    const sKey = sectionKey(pageUrl, sectionId);
+    const arr = state.notes.bySection[sKey] || [];
+    return arr.length;
+  }
 
   window.Quadern = window.Quadern || {};
-  window.Quadern.Store = { load, save, upsertNote, deleteNote, notesForSection };
+  window.Quadern.Store = { load, save, upsertNote, deleteNote, notesForSection, countForSection };
 })();
-
