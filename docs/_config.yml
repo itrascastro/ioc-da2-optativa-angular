@@ -19,26 +19,70 @@ curs:
       descripcio: "Primera unitat del curs fgdsgfsdfsd"
       descripcio_html: true
       blocs:
-        - { nom: "Bloc 1", numero: 1, descripcio: "Primer bloc de la unitat 1 dffsfsds", url: "/unitat-1/bloc-1/" }
-        - { nom: "Bloc 2", numero: 2, descripcio: "Segon bloc de la unitat 1", url: "/unitat-1/bloc-2/" }
+        - nom: "Bloc 1"
+          numero: 1
+          descripcio: "Primer bloc de la unitat 1 dffsfsds"
+          url: "/unitat-1/bloc-1/"
+          seccions:
+            - { id: "Unitat1_Bloc1_Seccio1", titol: "Introducció a Angular" }
+            - { id: "Unitat1_Bloc1_Seccio2", titol: "Configuració de l'Entorn" }
+            - { id: "Unitat1_Bloc1_Seccio3", titol: "Exemples de Components Addicionals" }
+            - { id: "Unitat1_Bloc1_Seccio4", titol: "Primer Projecte: Calculadora Angular Professional" }
+            - { id: "Unitat1_Bloc1_Seccio5", titol: "Desenvolupament amb IA" }
+        - nom: "Bloc 2"
+          numero: 2
+          descripcio: "Segon bloc de la unitat 1"
+          url: "/unitat-1/bloc-2/"
+          seccions:
+            - { id: "Unitat1_Bloc2_Seccio1", titol: "Introducció" }
     - nom: "Unitat 2"
       numero: 2
       descripcio: "Segona unitat del curs"
       blocs:
-        - { nom: "Bloc 3", numero: 3, descripcio: "Primer bloc de la unitat 2", url: "/unitat-2/bloc-3/" }
-        - { nom: "Bloc 4", numero: 4, descripcio: "Segon bloc de la unitat 2", url: "/unitat-2/bloc-4/" }
+        - nom: "Bloc 3"
+          numero: 3
+          descripcio: "Primer bloc de la unitat 2"
+          url: "/unitat-2/bloc-3/"
+          seccions:
+            - { id: "Unitat2_Bloc3_Seccio1", titol: "Introducció" }
+        - nom: "Bloc 4"
+          numero: 4
+          descripcio: "Segon bloc de la unitat 2"
+          url: "/unitat-2/bloc-4/"
+          seccions:
+            - { id: "Unitat2_Bloc4_Seccio1", titol: "Introducció" }
     - nom: "Unitat 3"
       numero: 3
       descripcio: "Tercera unitat del curs"
       blocs:
-        - { nom: "Bloc 5", numero: 5, descripcio: "Primer bloc de la unitat 3", url: "/unitat-3/bloc-5/" }
-        - { nom: "Bloc 6", numero: 6, descripcio: "Segon bloc de la unitat 3", url: "/unitat-3/bloc-6/" }
+        - nom: "Bloc 5"
+          numero: 5
+          descripcio: "Primer bloc de la unitat 3"
+          url: "/unitat-3/bloc-5/"
+          seccions:
+            - { id: "Unitat3_Bloc5_Seccio1", titol: "Introducció" }
+        - nom: "Bloc 6"
+          numero: 6
+          descripcio: "Segon bloc de la unitat 3"
+          url: "/unitat-3/bloc-6/"
+          seccions:
+            - { id: "Unitat3_Bloc6_Seccio1", titol: "Introducció" }
     - nom: "Unitat 4"
       numero: 4
       descripcio: "Quarta unitat del curs"
       blocs:
-        - { nom: "Bloc 7", numero: 7, descripcio: "Primer bloc de la unitat 4", url: "/unitat-4/bloc-7/" }
-        - { nom: "Bloc 8", numero: 8, descripcio: "Segon bloc de la unitat 4", url: "/unitat-4/bloc-8/" }
+        - nom: "Bloc 7"
+          numero: 7
+          descripcio: "Primer bloc de la unitat 4"
+          url: "/unitat-4/bloc-7/"
+          seccions:
+            - { id: "Unitat4_Bloc7_Seccio1", titol: "Introducció" }
+        - nom: "Bloc 8"
+          numero: 8
+          descripcio: "Segon bloc de la unitat 4"
+          url: "/unitat-4/bloc-8/"
+          seccions:
+            - { id: "Unitat4_Bloc8_Seccio1", titol: "Introducció" }
 
 # URLs de desplegament (CANVIAR per cada professor)
 url: "https://itrascastro.github.io"                    # La vostra URL de GitHub Pages

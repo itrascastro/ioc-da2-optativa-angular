@@ -192,9 +192,17 @@
       `;
       
       try {
-        // Usar Discovery per carregar estructura completa
+        // SEMPRE carregar estructura fresca per obtenir comptadors de notes correctes
+        let completeStructure = null;
         if (this.modules.discovery) {
-          const completeStructure = await this.modules.discovery.loadCompleteStructure();
+          console.log('🟦 App: Carregant estructura fresca per actualitzar comptadors...');
+          completeStructure = await this.modules.discovery.loadCompleteStructure();
+          
+          // Fallback al storage només si falla la càrrega fresca
+          if (!completeStructure) {
+            console.log('🟦 App: Fallback a estructura del storage');
+            completeStructure = this.modules.discovery.loadCourseFromStorage();
+          }
           
           if (!completeStructure || Object.keys(completeStructure).length === 0) {
             navTree.innerHTML = `
@@ -208,12 +216,16 @@
           }
           
           // Renderitzar estructura completa
+          console.log('🎨 App: Cridant _renderCompleteStructure amb:', Object.keys(completeStructure).length, 'unitats');
           navTree.innerHTML = this._renderCompleteStructure(completeStructure);
+          console.log('🎨 App: navTree HTML actualitzat');
           
-          // Mostrar estadístiques
+          // Mostrar estadístiques (Discovery ja té courseStructure assignat)
           const stats = this.modules.discovery.getStructureStats();
           if (stats) {
             console.log('📊 App: Estadístiques estructura:', stats);
+          } else {
+            console.warn('⚠️ App: No s\'han pogut obtenir estadístiques');
           }
           
           console.log('✅ App: Estructura completa carregada');
@@ -320,11 +332,15 @@
     },
 
     _renderCompleteStructure(structure) {
+      console.log('🎨 App: Renderitzant estructura completa. Unitats:', Object.keys(structure).length);
       let html = '<div class="nav-tree-complete">';
       
+      let isFirstUnit = true;
       Object.values(structure).forEach(unitat => {
         const hasNotes = unitat.noteCount > 0;
-        const unitClass = hasNotes ? 'nav-unit has-notes' : 'nav-unit';
+        const expandedClass = isFirstUnit ? ' expanded' : '';
+        const unitClass = hasNotes ? `nav-unit has-notes${expandedClass}` : `nav-unit${expandedClass}`;
+        isFirstUnit = false;
         
         html += `
           <div class="${unitClass}" data-unit-id="${unitat.id}">
@@ -421,58 +437,174 @@
       html += '</div>';
       
       // Afegir event listeners per navegació
-      setTimeout(() => this._bindNavigationEvents(), 100);
+      setTimeout(() => {
+        this._bindNavigationEvents();
+        this._restoreNavigationState();
+        this._setupStorageListener();
+      }, 100);
       
       return html;
+    },
+
+    _setupStorageListener() {
+      console.log('👂 App: Configurant listener per canvis al storage');
+      
+      // Guardar estat anterior del storage per detectar canvis
+      let lastNotesCount = 0;
+      if (window.Quadern?.Store) {
+        const state = window.Quadern.Store.load();
+        lastNotesCount = Object.keys(state.notes.byId || {}).length;
+      }
+      
+      // Verificar canvis cada 2 segons
+      setInterval(() => {
+        if (window.Quadern?.Store) {
+          const state = window.Quadern.Store.load();
+          const currentNotesCount = Object.keys(state.notes.byId || {}).length;
+          
+          if (currentNotesCount !== lastNotesCount) {
+            console.log(`🔄 App: Detectat canvi en notes: ${lastNotesCount} → ${currentNotesCount}`);
+            lastNotesCount = currentNotesCount;
+            
+            // Refrescar navegació amb comptadors actualitzats
+            this._refreshNavigationCounts();
+          }
+        }
+      }, 2000);
+    },
+
+    _refreshNavigationCounts() {
+      console.log('🔄 App: Refrescant comptadors de navegació...');
+      
+      // Re-carregar estructura amb notes actualitzades
+      if (this.modules.discovery) {
+        // Forçar recàlcul sense cache
+        this.modules.discovery.loadCompleteStructure().then(structure => {
+          if (structure) {
+            // Actualitzar només els badges sense re-renderitzar tot l'HTML
+            this._updateNavigationBadges(structure);
+          }
+        });
+      }
+    },
+
+    _updateNavigationBadges(structure) {
+      console.log('🏷️ App: Actualitzant badges de navegació');
+      
+      Object.values(structure).forEach(unitat => {
+        // Actualitzar badge d'unitat
+        const unitElement = document.querySelector(`[data-unit-id="${unitat.id}"]`);
+        if (unitElement) {
+          const unitBadge = unitElement.querySelector('.note-badge');
+          if (unitat.noteCount > 0) {
+            if (unitBadge) {
+              unitBadge.textContent = unitat.noteCount;
+            } else {
+              const badgesContainer = unitElement.querySelector('.nav-badges');
+              if (badgesContainer) {
+                badgesContainer.innerHTML += `<span class="note-badge">${unitat.noteCount}</span>`;
+              }
+            }
+          }
+        }
+        
+        // Actualitzar badges de blocs
+        Object.values(unitat.blocs).forEach(bloc => {
+          const blockElement = document.querySelector(`[data-block-id="${bloc.id}"]`);
+          if (blockElement) {
+            const blockBadge = blockElement.querySelector('.note-badge');
+            if (bloc.noteCount > 0) {
+              if (blockBadge) {
+                blockBadge.textContent = bloc.noteCount;
+              } else {
+                const badgesContainer = blockElement.querySelector('.nav-badges');
+                if (badgesContainer) {
+                  badgesContainer.innerHTML += `<span class="note-badge">${bloc.noteCount}</span>`;
+                }
+              }
+            }
+          }
+        });
+      });
     },
 
     _bindNavigationEvents() {
       console.log('🟦 App: Vinculant events de navegació...');
       
-      // Toggle unitats i blocs
-      document.querySelectorAll('.nav-unit-header, .nav-block-header').forEach(header => {
-        header.addEventListener('click', (e) => {
-          const container = header.parentElement;
-          const isExpanded = container.classList.contains('expanded');
-          
-          // Toggle expanded class
-          container.classList.toggle('expanded', !isExpanded);
-          
-          // Actualitzar icona
-          const toggleIcon = header.querySelector('.nav-toggle');
-          if (toggleIcon) {
-            toggleIcon.style.transform = isExpanded ? 'rotate(0deg)' : 'rotate(90deg)';
-          }
-        });
-      });
+      const navTree = document.getElementById('nav-tree');
+      if (!navTree) {
+        console.warn('🟨 App: No s\'ha trobat l\'element nav-tree');
+        return;
+      }
       
-      // Click en seccions
-      document.querySelectorAll('.nav-section').forEach(section => {
-        section.addEventListener('click', (e) => {
-          // Evitar que el click en botons propagui
-          if (e.target.closest('.btn-add-note')) return;
+      // Event delegation per tots els clicks dins l'arbre de navegació  
+      navTree.addEventListener('click', (e) => {
+        console.log('🖱️ CLICK: Event detectat. Target:', e.target, 'Classes:', e.target.className, 'TagName:', e.target.tagName);
+        
+        // Debug detallat de l'element target
+        console.log('🔍 CLICK DEBUG:', {
+          target: e.target,
+          targetClasses: e.target.className,
+          parentElement: e.target.parentElement,
+          parentClasses: e.target.parentElement?.className,
+          clientX: e.clientX,
+          clientY: e.clientY,
+          elementAtPoint: document.elementFromPoint(e.clientX, e.clientY)
+        });
+        
+        // Gestionar clicks en headers d'unitats i blocs
+        const header = e.target.closest('.nav-unit-header, .nav-block-header');
+        if (header) {
+          console.log('🖱️ App: Click en header detectat:', {
+            element: header,
+            className: header.className,
+            isUnitHeader: header.classList.contains('nav-unit-header'),
+            isBlockHeader: header.classList.contains('nav-block-header')
+          });
+          e.preventDefault();  // Només prevenir default per headers
+          e.stopPropagation(); // Només aturar propagació per headers
           
+          if (this.modules.navigation) {
+            this.modules.navigation.toggleTreeItem(header);
+          } else {
+            console.warn('🟨 App: navigation module no disponible');
+          }
+          return;
+        }
+        
+        // Gestionar clicks en seccions
+        const section = e.target.closest('.nav-section');
+        if (section && !e.target.closest('.btn-add-note')) {
+          e.preventDefault();   // Només per seccions
+          e.stopPropagation();  // Només per seccions
+          
+          // Comportament per defecte: obrir pàgina en nova pestanya
           const pageUrl = section.dataset.pageUrl;
           const sectionId = section.dataset.sectionId;
           
           if (pageUrl) {
-            // Navegar a la pàgina amb ancoratge
             const fullUrl = `${pageUrl}#${sectionId}`;
             console.log('🧭 App: Navegant a secció:', fullUrl);
             window.open(fullUrl, '_blank');
           }
-        });
-      });
-      
-      // Botons d'afegir nota
-      document.querySelectorAll('.btn-add-note').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-          e.stopPropagation();
           
-          const unitId = btn.dataset.unitId;
-          const blockId = btn.dataset.blockId;
-          const sectionId = btn.dataset.sectionId;
-          const pageUrl = btn.dataset.pageUrl;
+          // També notificar al navigation module
+          if (this.modules.navigation) {
+            this.modules.navigation.selectSection(section);
+          }
+          return;
+        }
+        
+        // Gestionar clicks en botons d'afegir nota
+        const addNoteBtn = e.target.closest('.btn-add-note');
+        if (addNoteBtn) {
+          e.preventDefault();   // Només per botons
+          e.stopPropagation();  // Només per botons
+          
+          const unitId = addNoteBtn.dataset.unitId;
+          const blockId = addNoteBtn.dataset.blockId;
+          const sectionId = addNoteBtn.dataset.sectionId;
+          const pageUrl = addNoteBtn.dataset.pageUrl;
           
           console.log('➕ App: Afegir nota per secció:', {unitId, blockId, sectionId, pageUrl});
           
@@ -487,8 +619,100 @@
               }
             }, 200);
           }
-        });
+          return;
+        }
+        
+        // Si arribes aquí, és un click general - no fer res especial
+        console.log('🖱️ App: Click general en navegació, deixant comportament normal');
       });
+      
+      // COMPARACIÓ: Event listener per keyboard
+      navTree.addEventListener('keydown', (e) => {
+        if (e.key === ' ' || e.key === 'Enter') {
+          console.log('⌨️ KEYBOARD: Event detectat. Key:', e.key, 'Target:', e.target, 'Classes:', e.target.className, 'TagName:', e.target.tagName);
+          
+          // Debug detallat del keyboard event
+          console.log('🔍 KEYBOARD DEBUG:', {
+            key: e.key,
+            target: e.target,
+            targetClasses: e.target.className,
+            parentElement: e.target.parentElement,
+            parentClasses: e.target.parentElement?.className,
+            activeElement: document.activeElement,
+            focusedClasses: document.activeElement?.className
+          });
+          
+          // Verificar si el target és un header
+          const header = e.target.closest('.nav-unit-header, .nav-block-header');
+          console.log('⌨️ KEYBOARD: Header trobat:', header ? header.className : 'NO');
+        }
+      });
+      
+      // Activar events del navigation module
+      if (this.modules.navigation) {
+        this.modules.navigation.refreshTreeEvents();
+      }
+    },
+
+    _restoreNavigationState() {
+      try {
+        if (!window.Quadern?.Store) return;
+        
+        const state = window.Quadern.Store.load();
+        const { openUnits, openBlocs } = state.ui.explorer;
+        
+        console.log('🔄 App: Restaurant estat navegació:', { openUnits, openBlocs });
+        
+        // Expandir unitats obertes
+        openUnits.forEach(unitId => {
+          const unitElement = document.querySelector(`[data-unit-id="${unitId}"]`);
+          if (unitElement && !unitElement.classList.contains('expanded')) {
+            unitElement.classList.add('expanded');
+            
+            // Actualitzar icona
+            const arrow = unitElement.querySelector('.nav-toggle');
+            if (arrow) {
+              arrow.style.transform = 'rotate(90deg)';
+            }
+            
+            // Actualitzar accessibilitat
+            const header = unitElement.querySelector('.nav-unit-header');
+            if (header) {
+              header.setAttribute('aria-expanded', 'true');
+            }
+          }
+        });
+        
+        // Expandir blocs oberts
+        Object.entries(openBlocs).forEach(([unitId, blocIds]) => {
+          if (Array.isArray(blocIds)) {
+            blocIds.forEach(blockId => {
+              const blockSelector = `[data-unit-id="${unitId}"] [data-block-id="${blockId}"]`;
+              const blockElement = document.querySelector(blockSelector);
+              if (blockElement && !blockElement.classList.contains('expanded')) {
+                blockElement.classList.add('expanded');
+                
+                // Actualitzar icona
+                const arrow = blockElement.querySelector('.nav-toggle');
+                if (arrow) {
+                  arrow.style.transform = 'rotate(90deg)';
+                }
+                
+                // Actualitzar accessibilitat
+                const header = blockElement.querySelector('.nav-block-header');
+                if (header) {
+                  header.setAttribute('aria-expanded', 'true');
+                }
+              }
+            });
+          }
+        });
+        
+        console.log('✅ App: Estat navegació restaurat');
+        
+      } catch (error) {
+        console.error('❌ App: Error restaurant estat navegació:', error);
+      }
     },
 
     _updateFooterStats() {

@@ -17,7 +17,7 @@ unitat-X/
 
 ```html
 <div class="section">
-    <h2 id="nom-seccio">Títol de la Secció</h2>
+    <h2 id="Unitat1_Bloc1_Seccio1">Títol de la Secció</h2>
     
     <p>Contingut educatiu amb <strong>text destacat</strong> i <em>cursiva</em>.</p>
 
@@ -256,6 +256,42 @@ Bones pràctiques de contingut:
    code="\nimport { Component } from '@angular/core';\n// ...\n" %}
 ```
 
+## 🔗 OBLIGATORI: IDs Jeràrquics per Seccions H2
+
+**⚠️ IMPORTANT:** Tots els `<h2>` han de tenir un atribut `id` que segueixi la convenció jeràrquica per al funcionament correcte del sistema de navegació del quadern de notes.
+
+### Convenció Obligatòria:
+```
+Unitat{N}_Bloc{M}_Seccio{X}
+```
+
+### Exemples Correctes:
+```html
+<!-- Unitat 1, Bloc 1 -->
+<h2 id="Unitat1_Bloc1_Seccio1">Introducció a Angular</h2>
+<h2 id="Unitat1_Bloc1_Seccio2">Configuració de l'Entorn</h2>
+
+<!-- Unitat 2, Bloc 3 -->
+<h2 id="Unitat2_Bloc3_Seccio1">Components</h2>
+<h2 id="Unitat2_Bloc3_Seccio2">Directives</h2>
+
+<!-- Unitat 4, Bloc 8 -->
+<h2 id="Unitat4_Bloc8_Seccio1">Introducció</h2>
+```
+
+### ❌ Exemples Incorrectes:
+```html
+<h2>Títol sense ID</h2>              ← No funciona amb el quadern
+<h2 id="introduccio">Títol</h2>      ← Format antic, no jeràrquic
+<h2 id="seccio-1">Títol</h2>         ← Format incorrecte
+```
+
+### Per què són Necessaris?
+- **Sistema de navegació:** El quadern de notes detecta automàticament les seccions
+- **Creació de notes:** Cada secció pot tenir múltiples notes associades
+- **Estructura jeràrquica:** Permet navegar per unitats → blocs → seccions
+- **IDs únics:** Evita conflictes entre seccions de diferents blocs
+
 ## 🎯 Descripcions OBLIGATÒRIES
 
 - Unitat: `descripcio.html`
@@ -307,7 +343,7 @@ block: 1
 ---
 
 <div class="section">
-    <h2 id="introduccio">Introducció</h2>
+    <h2 id="Unitat1_Bloc1_Seccio1">Introducció</h2>
     
     <p><strong>Angular</strong> és un framework modern amb <em>components</em> reutilitzables.</p>
 
@@ -339,7 +375,7 @@ ng version"
 </div>
 
 <div class="section">
-    <h2 id="configuracio">Configuració</h2>
+    <h2 id="Unitat1_Bloc1_Seccio2">Configuració</h2>
     
     <p>Contingut de la segona secció amb <strong>HTML</strong> directe...</p>
     

@@ -149,11 +149,14 @@
     _calculateStats(notes) {
       const notesWithContent = notes.filter(n => n.content && n.content.trim());
       
-      // Unitats úniques
-      const units = new Set(notesWithContent.map(n => n.unitat).filter(u => u != null));
-      
-      // Blocs únics
-      const blocks = new Set(notesWithContent.map(n => `${n.unitat}-${n.bloc}`).filter(b => !b.includes('undefined')));
+      // Obtenir estadístiques reals del curs des de Discovery
+      let courseStats = { unitats: 0, blocs: 0, seccions: 0 };
+      if (this.app.modules.discovery) {
+        const realStats = this.app.modules.discovery.getStructureStats();
+        if (realStats) {
+          courseStats = realStats;
+        }
+      }
       
       // Última edició
       let lastEdit = 'Mai';
@@ -170,8 +173,9 @@
       
       return {
         totalNotes: notesWithContent.length,
-        units: units.size,
-        blocks: blocks.size,
+        units: courseStats.unitats,        // Unitats reals del curs
+        blocks: courseStats.blocs,         // Blocs reals del curs
+        sections: courseStats.seccions,    // Seccions reals del curs
         lastEdit,
         storageSize,
         allNotes: notes.length // Inclou notes buides
