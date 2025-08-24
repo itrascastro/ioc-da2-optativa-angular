@@ -72,11 +72,20 @@
       panel.innerHTML = `
         <div class="panel-inner">
           <div class="panel-header">
-            <div class="panel-title" id="notes-panel-title">Notes d\'aquesta pàgina</div>
-            <div class="panel-controls">
-              <span class="status" id="notes-status" aria-live="polite"></span>
-              <button class="icon-btn" id="notes-delete" type="button" title="Eliminar nota" aria-label="Eliminar nota"><i class="bi bi-trash" aria-hidden="true"></i></button>
-              <button class="panel-close" type="button" id="notes-close" title="Tancar" aria-label="Tancar">✕</button>
+            <div class="header-row">
+              <div class="title-with-icon">
+                <i class="bi bi-pencil-square edit-icon" aria-hidden="true"></i>
+                <div class="panel-title" id="notes-panel-title">Notes d\'aquesta pàgina</div>
+              </div>
+              <div class="panel-actions">
+                <span class="status" id="notes-status" aria-live="polite"></span>
+                <button class="icon-simple" id="notes-delete" type="button" title="Eliminar nota" aria-label="Eliminar nota"><i class="bi bi-trash" aria-hidden="true"></i></button>
+                <button class="icon-simple" type="button" id="notes-close" title="Tancar" aria-label="Tancar"><i class="bi bi-x-lg" aria-hidden="true"></i></button>
+              </div>
+            </div>
+            <div class="format-toolbar" id="format-toolbar">
+              <!-- Toolbar de format enriquit (futura) -->
+              <!-- Placeholder per botons: Bold, Italic, Code, List, etc. -->
             </div>
           </div>
           <div class="panel-body">
