@@ -147,11 +147,40 @@
         </div>
     </footer>
 
+    <!-- Dades del curs per JavaScript -->
+    <script>
+      window.courseData = {{ site.curs | jsonify }};
+      window.siteConfig = {
+        baseurl: "{{ site.baseurl }}",
+        title: "{{ site.title }}",
+        version: "{{ site.version }}"
+      };
+    </script>
+    
     <!-- Scripts del lloc -->
     <script src="{{ '/assets/js/site.js' | relative_url }}" defer></script>
+    
+    <!-- Quadern App - Base modules -->
     <script src="{{ '/assets/js/quadern-app/constants.js' | relative_url }}" defer></script>
     <script src="{{ '/assets/js/quadern-app/utils.js' | relative_url }}" defer></script>
     <script src="{{ '/assets/js/quadern-app/store.js' | relative_url }}" defer></script>
-    <script src="{{ '/assets/js/quadern-app/dashboard.js' | relative_url }}" defer></script>
+    <script src="{{ '/assets/js/quadern-app/panel.js' | relative_url }}" defer></script>
+    <script src="{{ '/assets/js/quadern-app/discovery.js' | relative_url }}" defer></script>
+    
+    <!-- Quadern App - Core system -->
+    <script src="{{ '/assets/js/quadern-app/events.js' | relative_url }}" defer></script>
+    <script src="{{ '/assets/js/quadern-app/ui/navigation.js' | relative_url }}" defer></script>
+    <script src="{{ '/assets/js/quadern-app/ui/components.js' | relative_url }}" defer></script>
+    <script src="{{ '/assets/js/quadern-app/ui/formatters.js' | relative_url }}" defer></script>
+    
+    <!-- Quadern App - Views -->
+    <script src="{{ '/assets/js/quadern-app/views/dashboard.js' | relative_url }}" defer></script>
+    <script src="{{ '/assets/js/quadern-app/views/editor.js' | relative_url }}" defer></script>
+    <script src="{{ '/assets/js/quadern-app/views/search.js' | relative_url }}" defer></script>
+    <script src="{{ '/assets/js/quadern-app/views/study.js' | relative_url }}" defer></script>
+    <script src="{{ '/assets/js/quadern-app/views/import-export.js' | relative_url }}" defer></script>
+    
+    <!-- Quadern App - Main application -->
+    <script src="{{ '/assets/js/quadern-app/app.js' | relative_url }}" defer></script>
 </body>
 </html>
