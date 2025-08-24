@@ -269,6 +269,18 @@
 
     <!-- Scripts del lloc -->
     <script src="{{ '/assets/js/site.js' | relative_url }}" defer></script>
-    <script src="{{ '/assets/js/notes.js' | relative_url }}" defer></script>
+    <!-- Quadern Notes v2 (nou sistema) -->
+    <script src="{{ '/assets/js/quadern/constants.js' | relative_url }}" defer></script>
+    <script src="{{ '/assets/js/quadern/utils.js' | relative_url }}" defer></script>
+    <script src="{{ '/assets/js/quadern/store.js' | relative_url }}" defer></script>
+    <script src="{{ '/assets/js/quadern/panel.js' | relative_url }}" defer></script>
+    <script src="{{ '/assets/js/index-notes.js' | relative_url }}" defer></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function(){
+        if (window.Quadern && typeof window.Quadern.bootstrapNotes === 'function') {
+          try { window.Quadern.bootstrapNotes(); } catch(e) {}
+        }
+      });
+    </script>
 </body>
 </html>

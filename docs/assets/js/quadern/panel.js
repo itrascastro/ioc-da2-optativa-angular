@@ -4,7 +4,10 @@
   Panel.prototype.init = function(){
     this.state = S.load();
     this.ensurePanel();
-    this.refresh();
+    this.installHeads();
+    this.populateSections();
+    this.adjustOffsets();
+    window.addEventListener('resize', this.adjustOffsets.bind(this));
   };
   Panel.prototype.ensurePanel = function(){
     if (document.querySelector('.qnp-panel')) return;
@@ -70,7 +73,7 @@
     const sectionTitle = (document.getElementById(sectionId)?.textContent||'').trim();
     return { unitat, bloc, pageUrl, sectionId, sectionTitle };
   };
-  Panel.prototype.refresh = function(){ this.populateSections(); this.refreshList(); this.toggle(true); };
+  Panel.prototype.refresh = function(){ this.populateSections(); this.refreshList(); };
   Panel.prototype.refreshList = function(){
     const ctx = this.sectionContext(); if (!ctx.sectionId) return;
     const list = this.root.querySelector('#qnp-list'); list.innerHTML='';
