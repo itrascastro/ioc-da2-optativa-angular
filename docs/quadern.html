@@ -1,0 +1,448 @@
+---
+layout: quadern
+title: "Quadern de Notes"
+quadern: true
+sidebar: false
+breadcrumb: false
+---
+
+<!-- Vista Dashboard -->
+<div id="dashboard-view" class="view active" role="tabpanel" aria-labelledby="dashboard-btn">
+    <div class="view-header">
+        <h2>Dashboard Principal</h2>
+        <p>Gestiona les teves notes d'aprenentatge</p>
+    </div>
+
+    <div class="dashboard-grid">
+        <!-- Notes Recents -->
+        <div class="card">
+            <div class="card-header">
+                <i class="bi bi-clock-history" aria-hidden="true"></i>
+                <h3>Notes Recents</h3>
+            </div>
+            <div class="card-body" id="recent-notes">
+                <div class="empty-state">
+                    <p>Encara no tens notes. Crea la teva primera nota!</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Accions Ràpides -->
+        <div class="card">
+            <div class="card-header">
+                <i class="bi bi-lightning" aria-hidden="true"></i>
+                <h3>Accions Ràpides</h3>
+            </div>
+            <div class="card-body">
+                <div class="quick-actions">
+                    <button class="action-btn" data-action="new-note" aria-label="Crear nova nota">
+                        <i class="bi bi-plus-lg" aria-hidden="true"></i>
+                        <span>Nova Nota</span>
+                    </button>
+                    <button class="action-btn" data-action="search" aria-label="Cercar notes">
+                        <i class="bi bi-search" aria-hidden="true"></i>
+                        <span>Cercar</span>
+                    </button>
+                    <button class="action-btn" data-action="import" aria-label="Importar notes">
+                        <i class="bi bi-upload" aria-hidden="true"></i>
+                        <span>Importar</span>
+                    </button>
+                    <button class="action-btn" data-action="export" aria-label="Exportar notes">
+                        <i class="bi bi-download" aria-hidden="true"></i>
+                        <span>Exportar</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Estadístiques -->
+        <div class="card">
+            <div class="card-header">
+                <i class="bi bi-graph-up" aria-hidden="true"></i>
+                <h3>Estadístiques</h3>
+            </div>
+            <div class="card-body">
+                <div class="stats-grid" id="stats-grid">
+                    <div class="stat">
+                        <span class="stat-label">Total de Notes:</span>
+                        <span class="stat-value" id="stat-total-notes">0</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label">Unitats:</span>
+                        <span class="stat-value" id="stat-units">0</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label">Blocs:</span>
+                        <span class="stat-value" id="stat-blocks">0</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label">Última edició:</span>
+                        <span class="stat-value" id="stat-last-edit">Mai</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label">Espai utilitzat:</span>
+                        <span class="stat-value" id="stat-storage">0 KB</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Etiquetes Populars -->
+        <div class="card">
+            <div class="card-header">
+                <i class="bi bi-tags" aria-hidden="true"></i>
+                <h3>Etiquetes Populars</h3>
+            </div>
+            <div class="card-body">
+                <div class="tags-container" id="popular-tags">
+                    <div class="empty-state">
+                        <p>Les etiquetes apareixeran quan tinguis notes.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Vista Editor (3 Panells) -->
+<div id="editor-view" class="view" role="tabpanel" aria-labelledby="editor-btn">
+    <div class="editor-container">
+        <!-- Panel Navegació (20%) -->
+        <div class="editor-panel editor-nav">
+            <div class="panel-header">
+                <h3>Navegació</h3>
+            </div>
+            <div class="panel-body">
+                <div class="nav-tree-editor" id="editor-nav-tree">
+                    <div class="loading-state">
+                        <p>Carregant estructura...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Panel Llista Notes (25%) -->
+        <div class="editor-panel editor-list">
+            <div class="panel-header">
+                <h3 id="section-title">Selecciona una secció</h3>
+                <button class="btn-icon" id="refresh-notes" aria-label="Actualitzar llista">
+                    <i class="bi bi-arrow-clockwise" aria-hidden="true"></i>
+                </button>
+            </div>
+            <div class="panel-body">
+                <div class="notes-list" id="notes-list">
+                    <div class="empty-state">
+                        <p>Selecciona una secció per veure les notes.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Panel Editor (55%) -->
+        <div class="editor-panel editor-main">
+            <div class="panel-header">
+                <div class="editor-title-container">
+                    <input type="text" id="note-title" placeholder="Títol de la nota..." aria-label="Títol de la nota">
+                </div>
+                <div class="editor-actions">
+                    <button class="btn btn-outline" id="editor-cancel" aria-label="Cancel·lar edició">
+                        <i class="bi bi-x" aria-hidden="true"></i>
+                        Cancel·lar
+                    </button>
+                    <button class="btn btn-primary save-btn" id="editor-save" aria-label="Desar nota">
+                        <i class="bi bi-check" aria-hidden="true"></i>
+                        Desar
+                    </button>
+                </div>
+            </div>
+            <div class="panel-body">
+                <div class="editor-toolbar">
+                    <div class="toolbar-group">
+                        <button class="toolbar-btn" data-command="bold" aria-label="Negreta" title="Negreta">
+                            <i class="bi bi-type-bold" aria-hidden="true"></i>
+                        </button>
+                        <button class="toolbar-btn" data-command="italic" aria-label="Cursiva" title="Cursiva">
+                            <i class="bi bi-type-italic" aria-hidden="true"></i>
+                        </button>
+                        <button class="toolbar-btn" data-command="underline" aria-label="Subratllat" title="Subratllat">
+                            <i class="bi bi-type-underline" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                    <div class="toolbar-group">
+                        <button class="toolbar-btn" data-command="insertUnorderedList" aria-label="Llista amb punts" title="Llista amb punts">
+                            <i class="bi bi-list-ul" aria-hidden="true"></i>
+                        </button>
+                        <button class="toolbar-btn" data-command="insertOrderedList" aria-label="Llista numerada" title="Llista numerada">
+                            <i class="bi bi-list-ol" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                    <div class="toolbar-group">
+                        <button class="toolbar-btn" data-command="createLink" aria-label="Enllaç" title="Enllaç">
+                            <i class="bi bi-link-45deg" aria-hidden="true"></i>
+                        </button>
+                        <button class="toolbar-btn" data-command="removeFormat" aria-label="Neteja format" title="Neteja format">
+                            <i class="bi bi-eraser" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="editor-content" contenteditable="true" id="note-content" aria-label="Contingut de la nota">
+                    <p>Selecciona una nota per editar o crea una nova nota.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Vista Cerca -->
+<div id="search-view" class="view" role="tabpanel" aria-labelledby="search-btn">
+    <div class="search-container">
+        <!-- Sidebar Filtres -->
+        <div class="search-filters">
+            <div class="filter-section">
+                <h3>Filtres de Cerca</h3>
+                
+                <div class="filter-group">
+                    <label for="date-from">Data des de:</label>
+                    <input type="date" id="date-from" class="filter-input">
+                </div>
+                
+                <div class="filter-group">
+                    <label for="date-to">Data fins:</label>
+                    <input type="date" id="date-to" class="filter-input">
+                </div>
+                
+                <div class="filter-group">
+                    <label for="unit-filter">Unitat:</label>
+                    <select id="unit-filter" class="filter-select">
+                        <option value="">Totes les unitats</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label for="block-filter">Bloc:</label>
+                    <select id="block-filter" class="filter-select">
+                        <option value="">Tots els blocs</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label>Etiquetes:</label>
+                    <div class="tags-filter" id="tags-filter">
+                        <!-- Etiquetes dinàmiques -->
+                    </div>
+                </div>
+                
+                <div class="filter-actions">
+                    <button class="btn btn-primary" id="apply-filters">Aplicar Filtres</button>
+                    <button class="btn btn-outline" id="clear-filters">Netejar</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Resultats de Cerca -->
+        <div class="search-results">
+            <div class="search-header">
+                <h3>Resultats de Cerca</h3>
+                <div class="search-controls">
+                    <span id="results-count">0 resultats</span>
+                    <div class="view-toggle">
+                        <button class="toggle-btn active" data-view="grid" aria-label="Vista en graella">
+                            <i class="bi bi-grid-3x3-gap" aria-hidden="true"></i>
+                        </button>
+                        <button class="toggle-btn" data-view="list" aria-label="Vista en llista">
+                            <i class="bi bi-list" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="results-container" id="search-results-container">
+                <div class="empty-state">
+                    <i class="bi bi-search" aria-hidden="true"></i>
+                    <p>Utilitza la barra de cerca o els filtres per trobar notes.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Vista Import/Export -->
+<div id="import-export-view" class="view" role="tabpanel" aria-labelledby="import-export-btn">
+    <div class="view-header">
+        <h2>Gestió de Dades</h2>
+        <p>Importa i exporta les teves notes</p>
+    </div>
+
+    <div class="import-export-container">
+        <!-- Importar -->
+        <div class="card">
+            <div class="card-header">
+                <i class="bi bi-upload" aria-hidden="true"></i>
+                <h3>Importar Notes</h3>
+            </div>
+            <div class="card-body">
+                <div class="upload-area" id="upload-area">
+                    <i class="bi bi-file-earmark-arrow-up upload-icon" aria-hidden="true"></i>
+                    <h4>Arrossega el fitxer aquí</h4>
+                    <p>o fes clic per seleccionar</p>
+                    <input type="file" id="import-file" accept=".json" aria-label="Seleccionar fitxer JSON">
+                </div>
+                <div class="import-options">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="merge-notes" checked>
+                        <span>Fusionar amb notes existents</span>
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="backup-before-import">
+                        <span>Crear còpia de seguretat abans d'importar</span>
+                    </label>
+                </div>
+                <button class="btn btn-primary" id="import-btn" disabled>
+                    <i class="bi bi-upload" aria-hidden="true"></i>
+                    Importar Notes
+                </button>
+            </div>
+        </div>
+
+        <!-- Exportar -->
+        <div class="card">
+            <div class="card-header">
+                <i class="bi bi-download" aria-hidden="true"></i>
+                <h3>Exportar Notes</h3>
+            </div>
+            <div class="card-body">
+                <div class="export-options">
+                    <div class="export-option" data-format="json">
+                        <i class="bi bi-filetype-json" aria-hidden="true"></i>
+                        <h4>JSON</h4>
+                        <p>Format complet per importar posteriorment</p>
+                        <button class="btn btn-outline export-btn" data-format="json">
+                            Exportar JSON
+                        </button>
+                    </div>
+                    <div class="export-option" data-format="html">
+                        <i class="bi bi-filetype-html" aria-hidden="true"></i>
+                        <h4>HTML</h4>
+                        <p>Document web llegible</p>
+                        <button class="btn btn-outline export-btn" data-format="html">
+                            Exportar HTML
+                        </button>
+                    </div>
+                    <div class="export-option" data-format="pdf">
+                        <i class="bi bi-filetype-pdf" aria-hidden="true"></i>
+                        <h4>PDF</h4>
+                        <p>Document per impressió</p>
+                        <button class="btn btn-outline export-btn" data-format="pdf">
+                            Exportar PDF
+                        </button>
+                    </div>
+                    <div class="export-option" data-format="markdown">
+                        <i class="bi bi-markdown" aria-hidden="true"></i>
+                        <h4>Markdown</h4>
+                        <p>Format de text pla amb format</p>
+                        <button class="btn btn-outline export-btn" data-format="markdown">
+                            Exportar Markdown
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="export-settings">
+                    <h4>Opcions d'Exportació</h4>
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="include-timestamps" checked>
+                        <span>Incloure dates de creació/modificació</span>
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="include-metadata" checked>
+                        <span>Incloure metadades (unitat, bloc, secció)</span>
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="group-by-structure" checked>
+                        <span>Agrupar per estructura del curs</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Vista d'Estudi -->
+<div id="study-view" class="view" role="tabpanel" aria-labelledby="study-btn">
+    <div class="study-container">
+        <!-- Índex lateral -->
+        <div class="study-index" id="study-index">
+            <div class="index-header">
+                <h3>Índex de Continguts</h3>
+                <button class="btn-icon index-toggle" id="index-toggle" aria-label="Amagar/mostrar índex">
+                    <i class="bi bi-chevron-left" aria-hidden="true"></i>
+                </button>
+            </div>
+            <div class="index-content" id="study-index-content">
+                <div class="loading-state">
+                    <p>Generant índex...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contingut d'estudi -->
+        <div class="study-content" id="study-content">
+            <div class="study-header">
+                <h2>Vista d'Estudi del Curs</h2>
+                <div class="study-controls">
+                    <button class="btn btn-outline" id="print-study">
+                        <i class="bi bi-printer" aria-hidden="true"></i>
+                        Imprimir
+                    </button>
+                    <button class="btn btn-outline" id="export-study">
+                        <i class="bi bi-download" aria-hidden="true"></i>
+                        Exportar
+                    </button>
+                </div>
+            </div>
+            
+            <div class="study-body" id="study-body">
+                <div class="empty-state">
+                    <i class="bi bi-book" aria-hidden="true"></i>
+                    <h3>No hi ha notes per mostrar</h3>
+                    <p>Crea algunes notes per veure-les en format d'estudi.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Botó tornar a dalt -->
+    <button class="back-to-top" id="back-to-top" aria-label="Tornar a dalt">
+        <i class="bi bi-arrow-up" aria-hidden="true"></i>
+    </button>
+</div>
+
+<!-- Modal de confirmació -->
+<div class="modal" id="confirm-modal" role="dialog" aria-labelledby="confirm-title" aria-modal="true">
+    <div class="modal-backdrop"></div>
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 id="confirm-title">Confirmar Acció</h3>
+            <button class="modal-close" id="confirm-close" aria-label="Tancar modal">
+                <i class="bi bi-x" aria-hidden="true"></i>
+            </button>
+        </div>
+        <div class="modal-body">
+            <p id="confirm-message">Estàs segur que vols fer aquesta acció?</p>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-outline" id="confirm-cancel">Cancel·lar</button>
+            <button class="btn btn-primary" id="confirm-accept">Confirmar</button>
+        </div>
+    </div>
+</div>
+
+<!-- Notificació toast -->
+<div class="toast" id="toast" role="alert" aria-live="polite">
+    <div class="toast-content">
+        <i class="toast-icon" aria-hidden="true"></i>
+        <span class="toast-message"></span>
+        <button class="toast-close" aria-label="Tancar notificació">
+            <i class="bi bi-x" aria-hidden="true"></i>
+        </button>
+    </div>
+</div>

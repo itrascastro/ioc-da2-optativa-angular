@@ -96,8 +96,7 @@
 .responsive-table th { background-color: var(--color-primary); color: white; font-weight: 600; }
 .responsive-table tr:hover { background-color: rgba(52,152,219,0.05); }
 
-/* Notes (Fase 0 placeholders: sense efecte visual) */
-.notes-panel { display: none; }
+/* Notes (Fase 1: panell integrat al footer - només en pàgines de contingut) */
 .add-note-btn {
   position: absolute;
   right: 0;
