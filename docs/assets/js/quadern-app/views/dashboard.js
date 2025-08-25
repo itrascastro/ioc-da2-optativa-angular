@@ -151,8 +151,8 @@
       
       // Obtenir estadístiques reals del curs des de Discovery
       let courseStats = { unitats: 0, blocs: 0, seccions: 0 };
-      if (this.app.modules.discovery) {
-        const realStats = this.app.modules.discovery.getStructureStats();
+      if (window.Quadern?.Discovery) {
+        const realStats = window.Quadern.Discovery.getStructureStats();
         if (realStats) {
           courseStats = realStats;
         }
@@ -230,9 +230,6 @@
       }
 
       container.innerHTML = `
-        <div class="popular-tags-header">
-          <h3>Etiquetes Populars</h3>
-        </div>
         <div class="tags-cloud">
           ${popularTags.map(([tag, count]) => `
             <button class="tag-item" data-tag="${tag}" data-count="${count}">
@@ -459,6 +456,10 @@
     // =============================
     // API PÚBLICA
     // =============================
+
+    onViewActivated() {
+      this.loadData();
+    },
 
     refreshData() {
       this.loadData();

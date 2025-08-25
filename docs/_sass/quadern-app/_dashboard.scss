@@ -149,24 +149,47 @@
   gap: 8px;
 }
 
-.tag {
+.tags-cloud {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.tag,
+.tag-item {
   display: inline-flex;
   align-items: center;
-  padding: 4px 10px;
+  gap: 6px;
+  padding: 6px 12px;
   background: var(--color-surface-dark);
   color: var(--color-text);
-  border-radius: 15px;
-  font-size: 0.8rem;
+  border: 1px solid var(--color-border);
+  border-radius: 20px;
+  font-size: 0.85rem;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
+  text-decoration: none;
 }
 
-.tag:hover {
+.tag:hover,
+.tag-item:hover {
   background: var(--quadern-accent);
   color: white;
+  border-color: var(--quadern-accent);
 }
 
-.tag.active {
+.tag-count {
+  background: rgba(255,255,255,0.2);
+  padding: 2px 6px;
+  border-radius: 10px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  min-width: 18px;
+  text-align: center;
+}
+
+.tag.active,
+.tag-item.active {
   background: var(--quadern-accent);
   color: white;
 }
