@@ -8,6 +8,38 @@
 
   const Events = {
     app: null,
+    listeners: {},
+
+    // =============================
+    // SISTEMA EMIT/ON
+    // =============================
+
+    emit(event, data) {
+      console.log(`📡 Events: emit ${event}`, data);
+      if (this.listeners[event]) {
+        this.listeners[event].forEach(callback => {
+          try {
+            callback(data);
+          } catch (error) {
+            console.error(`❌ Events: Error en listener ${event}:`, error);
+          }
+        });
+      }
+    },
+
+    on(event, callback) {
+      if (!this.listeners[event]) {
+        this.listeners[event] = [];
+      }
+      this.listeners[event].push(callback);
+      console.log(`👂 Events: listener registrat per ${event}`);
+    },
+
+    off(event, callback) {
+      if (this.listeners[event]) {
+        this.listeners[event] = this.listeners[event].filter(cb => cb !== callback);
+      }
+    },
 
     // =============================
     // INICIALITZACIÓ

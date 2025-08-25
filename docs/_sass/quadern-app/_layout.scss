@@ -303,9 +303,9 @@
 }
 
 .nav-unit.expanded .nav-unit-content {
-  max-height: 2000px; /* Augmentat per contingut més llarg */
-  padding: 10px 0 10px 20px;
-  opacity: 1;
+  max-height: 2000px !important; /* Augmentat per contingut més llarg */
+  padding: 10px 0 10px 20px !important;
+  opacity: 1 !important;
 }
 
 /* Blocs */
@@ -359,9 +359,9 @@
 }
 
 .nav-block.expanded .nav-block-content {
-  max-height: 1500px; /* Augmentat per contingut més llarg */
-  padding: 8px 0 8px 15px;
-  opacity: 1;
+  max-height: 1500px !important; /* Augmentat per contingut més llarg */
+  padding: 8px 0 8px 15px !important;
+  opacity: 1 !important;
 }
 
 /* Seccions */

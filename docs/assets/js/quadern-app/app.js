@@ -215,10 +215,40 @@
             return;
           }
           
-          // Renderitzar estructura completa
-          console.log('🎨 App: Cridant _renderCompleteStructure amb:', Object.keys(completeStructure).length, 'unitats');
-          navTree.innerHTML = this._renderCompleteStructure(completeStructure);
-          console.log('🎨 App: navTree HTML actualitzat');
+          // SISTEMA NOU: Usar NavigationTree COMPLETAMENT
+          console.log('🆕 App: Inicialitzant NavigationTree NOU sistema');
+          
+          if (window.Quadern?.NavigationTree) {
+            window.Quadern.NavigationTree.init();
+            console.log('✅ App: NavigationTree inicialitzat correctament');
+          } else {
+            console.error('❌ App: NavigationTree no trobat');
+            navTree.innerHTML = `
+              <div class="nav-error">
+                <i class="bi bi-exclamation-circle"></i>
+                <p>Error carregant sistema de navegació nou</p>
+              </div>
+            `;
+          }
+          
+          // DEBUG: Mostrar structure HTML real generada
+          console.log('🏗️ App: HTML STRUCTURE generat:', navTree.innerHTML.substring(0, 1000) + '...');
+          
+          // VALIDACIÓ: Test manual dels selectors després de generar HTML
+          setTimeout(() => {
+            const allHeaders = document.querySelectorAll('.nav-unit-header, .nav-block-header');
+            console.log('🔍 VALIDACIÓ: Headers trobats:', allHeaders.length);
+            allHeaders.forEach((header, index) => {
+              console.log(`Header ${index}:`, {
+                element: header,
+                classes: header.className,
+                tagName: header.tagName,
+                parentClasses: header.parentElement?.className,
+                hasTabindex: header.hasAttribute('tabindex'),
+                hasRole: header.hasAttribute('role')
+              });
+            });
+          }, 500);
           
           // Mostrar estadístiques (Discovery ja té courseStructure assignat)
           const stats = this.modules.discovery.getStructureStats();
@@ -436,12 +466,19 @@
       
       html += '</div>';
       
-      // Afegir event listeners per navegació
+      // Afegir event listeners per navegació DESPRÉS de renderitzar HTML
       setTimeout(() => {
+        console.log('⚙️ App: Configurant event listeners després de renderitzar...');
         this._bindNavigationEvents();
         this._restoreNavigationState();
         this._setupStorageListener();
-      }, 100);
+        
+        // CRITICAL: Assegurar que navigation module també actualitzi els seus events
+        if (this.modules.navigation) {
+          console.log('⚙️ App: Refrescant events del navigation module...');
+          this.modules.navigation._activateTreeEvents();
+        }
+      }, 600); // Augmentat timeout per assegurar que HTML és present
       
       return html;
     },
@@ -541,19 +578,51 @@
       navTree.addEventListener('click', (e) => {
         console.log('🖱️ CLICK: Event detectat. Target:', e.target, 'Classes:', e.target.className, 'TagName:', e.target.tagName);
         
-        // Debug detallat de l'element target
-        console.log('🔍 CLICK DEBUG:', {
+        // Debug exhaustiu de l'estructura DOM
+        console.log('🔍 CLICK DEBUG EXHAUSTIU:', {
           target: e.target,
+          targetTag: e.target.tagName,
           targetClasses: e.target.className,
-          parentElement: e.target.parentElement,
-          parentClasses: e.target.parentElement?.className,
-          clientX: e.clientX,
-          clientY: e.clientY,
+          targetId: e.target.id,
+          
+          // Jerarquia ascendent completa
+          parent1: e.target.parentElement,
+          parent1Classes: e.target.parentElement?.className,
+          parent1Tag: e.target.parentElement?.tagName,
+          
+          parent2: e.target.parentElement?.parentElement,
+          parent2Classes: e.target.parentElement?.parentElement?.className,
+          parent2Tag: e.target.parentElement?.parentElement?.tagName,
+          
+          parent3: e.target.parentElement?.parentElement?.parentElement,
+          parent3Classes: e.target.parentElement?.parentElement?.parentElement?.className,
+          parent3Tag: e.target.parentElement?.parentElement?.parentElement?.tagName,
+          
+          // Test manual de closest()
+          closestHeader: e.target.closest('.nav-unit-header, .nav-block-header'),
+          closestNavUnit: e.target.closest('.nav-unit'),
+          closestNavBlock: e.target.closest('.nav-block'),
+          
+          // Posició del click
+          clickCoords: { x: e.clientX, y: e.clientY },
           elementAtPoint: document.elementFromPoint(e.clientX, e.clientY)
         });
         
-        // Gestionar clicks en headers d'unitats i blocs
-        const header = e.target.closest('.nav-unit-header, .nav-block-header');
+        // Gestionar clicks en headers d'unitats i blocs amb múltiples estratègies
+        let header = e.target.closest('.nav-unit-header, .nav-block-header');
+        
+        // ESTRATÈGIA ALTERNATIVA: Si no trobem header, potser estem fent click en un element fill
+        if (!header) {
+          // Provar amb el target directament si té les classes correctes
+          if (e.target.classList.contains('nav-unit-header') || e.target.classList.contains('nav-block-header')) {
+            header = e.target;
+          }
+          // Provar amb parents immediats
+          else if (e.target.parentElement && (e.target.parentElement.classList.contains('nav-unit-header') || e.target.parentElement.classList.contains('nav-block-header'))) {
+            header = e.target.parentElement;
+          }
+        }
+        
         if (header) {
           console.log('🖱️ App: Click en header detectat:', {
             element: header,

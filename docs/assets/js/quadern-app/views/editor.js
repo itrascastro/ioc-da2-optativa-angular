@@ -605,6 +605,124 @@
     },
 
     // =============================
+    // INTEGRACIÓ AMB NAVIGATION TREE
+    // =============================
+
+    showNotesForSection(sectionData) {
+      console.log('✏️ Editor: Mostrant notes per secció:', sectionData);
+      
+      const { sectionId, unitId, blocId, sectionTitle, notes } = sectionData;
+      
+      // Actualitzar header amb informació de la secció
+      const header = document.getElementById('editor-header');
+      if (header) {
+        header.innerHTML = `
+          <div class="editor-breadcrumb">
+            <span class="breadcrumb-item">Unitat ${unitId} - Bloc ${blocId}</span>
+            <i class="bi bi-chevron-right"></i>
+            <span class="breadcrumb-item">${sectionTitle}</span>
+          </div>
+          <div class="editor-meta">
+            <span class="editor-status">Notes de secció</span>
+            <span class="editor-count">${notes.length} ${notes.length === 1 ? 'nota' : 'notes'}</span>
+          </div>
+        `;
+      }
+      
+      // Mostrar llista de notes de la secció
+      this._displaySectionNotes(notes, sectionData);
+      
+      // Netejar editor si hi havia una nota carregada
+      this._clearEditor();
+      
+      // Guardar context actual
+      this.currentSection = sectionData;
+      this.currentNote = null;
+    },
+
+    _displaySectionNotes(notes, sectionData) {
+      const notesList = document.getElementById('notes-list');
+      if (!notesList) return;
+      
+      if (notes.length === 0) {
+        notesList.innerHTML = `
+          <div class="no-notes">
+            <i class="bi bi-journal-plus"></i>
+            <h3>Encara no hi ha notes</h3>
+            <p>Clica el botó + per crear la primera nota d'aquesta secció</p>
+            <button class="btn btn-primary" onclick="window.Quadern.Editor.createNoteForSection()">
+              <i class="bi bi-plus"></i>
+              Crear primera nota
+            </button>
+          </div>
+        `;
+        return;
+      }
+      
+      let html = '<div class="section-notes-header">';
+      html += `<h3>Notes de ${sectionData.sectionTitle}</h3>`;
+      html += `<button class="btn btn-outline btn-sm" onclick="window.Quadern.Editor.createNoteForSection()">`;
+      html += '<i class="bi bi-plus"></i> Nova nota</button>';
+      html += '</div>';
+      
+      html += '<div class="notes-list-container">';
+      notes.forEach(note => {
+        html += this._renderNoteListItem(note);
+      });
+      html += '</div>';
+      
+      notesList.innerHTML = html;
+    },
+
+    createNoteForSection() {
+      if (!this.currentSection) {
+        console.warn('✏️ Editor: No hi ha secció activa per crear nota');
+        return;
+      }
+      
+      console.log('✏️ Editor: Creant nova nota per secció:', this.currentSection);
+      
+      const { sectionId, unitId, blocId, sectionTitle } = this.currentSection;
+      
+      // Crear nova nota amb context de la secció
+      const newNote = {
+        id: '', // S'assignarà automàticament al Store
+        noteTitle: '',
+        content: '',
+        tags: [],
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        unitat: parseInt(unitId),
+        bloc: parseInt(blocId),
+        pageUrl: `#${sectionId}`,
+        sectionId: sectionId,
+        sectionTitle: sectionTitle
+      };
+
+      this.currentNote = newNote;
+      this._loadNoteInEditor(newNote);
+      this._clearActiveNoteInList();
+      
+      // Focus al títol
+      const titleField = document.getElementById('note-title');
+      if (titleField) {
+        titleField.focus();
+      }
+    },
+
+    _clearEditor() {
+      const titleField = document.getElementById('note-title');
+      const tagsField = document.getElementById('note-tags');
+      const contentField = document.getElementById('note-content');
+
+      if (titleField) titleField.value = '';
+      if (tagsField) tagsField.value = '';
+      if (contentField) contentField.value = '';
+      
+      this.isEditing = false;
+    },
+
+    // =============================
     // API PÚBLICA
     // =============================
 

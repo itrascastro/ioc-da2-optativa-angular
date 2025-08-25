@@ -168,22 +168,49 @@
       // Actualitzar accessibilitat
       header.setAttribute('aria-expanded', shouldExpand.toString());
       
-      // Verificar que el CSS s'aplica correctament només amb classes
+      // Verificar que el CSS s'aplica correctament i aplicar fallback si cal
       const content = item.querySelector('.nav-unit-content, .nav-block-content');
       if (content) {
         console.log(`🔧 Navigation: Verificant CSS del contingut. shouldExpand: ${shouldExpand}`);
         
-        // NETEJAR completament els inline styles que poden interferir
+        // Primer intentar amb només classes CSS
         content.removeAttribute('style');
+        content.offsetHeight; // Força reflow
         
-        // Força un reflow per aplicar els canvis CSS de classe
-        content.offsetHeight;
+        // Verificar si el CSS s'aplica correctament
+        const computedStyle = window.getComputedStyle(content);
+        const cssWorking = shouldExpand ? 
+          (computedStyle.maxHeight !== '0px' && computedStyle.opacity !== '0') :
+          (computedStyle.maxHeight === '0px' && computedStyle.opacity === '0');
         
-        console.log(`🔧 Navigation: CSS aplicat via classes:`, {
+        console.log(`🔧 Navigation: CSS initial result:`, {
           expanded: item.classList.contains('expanded'),
-          computedMaxHeight: window.getComputedStyle(content).maxHeight,
-          computedOpacity: window.getComputedStyle(content).opacity,
-          display: window.getComputedStyle(content).display
+          shouldExpand: shouldExpand,
+          computedMaxHeight: computedStyle.maxHeight,
+          computedOpacity: computedStyle.opacity,
+          cssWorking: cssWorking
+        });
+        
+        // FALLBACK: Si el CSS no funciona, forçar amb inline styles
+        if (!cssWorking) {
+          console.log('🚨 Navigation: CSS no funciona, aplicant fallback inline styles');
+          if (shouldExpand) {
+            content.style.maxHeight = '2000px';
+            content.style.opacity = '1';
+            content.style.padding = '10px 0 10px 20px';
+          } else {
+            content.style.maxHeight = '0px';
+            content.style.opacity = '0';
+            content.style.padding = '0';
+          }
+        }
+        
+        // Verificació final
+        const finalStyle = window.getComputedStyle(content);
+        console.log(`🔧 Navigation: CSS final result:`, {
+          computedMaxHeight: finalStyle.maxHeight,
+          computedOpacity: finalStyle.opacity,
+          display: finalStyle.display
         });
       }
       
