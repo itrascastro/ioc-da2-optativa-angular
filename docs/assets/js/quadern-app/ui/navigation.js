@@ -44,6 +44,9 @@
       // Inicialitzar vista específica si és necessari
       this._initializeView(viewName);
 
+      // Cridar onViewActivated si la vista ho suporta
+      this._notifyViewActivated(viewName);
+
       // Actualitzar URL hash
       if (history.pushState) {
         history.pushState(null, null, `#${viewName}`);
@@ -64,6 +67,24 @@
             this.app.modules.editor.refreshData();
           }
           break;
+      }
+    },
+
+    _notifyViewActivated(viewName) {
+      // Notificar a la vista que s'ha activat
+      const moduleMap = {
+        'dashboard': 'dashboard',
+        'editor': 'editor', 
+        'search': 'search',
+        'study': 'study',
+        'import-export': 'importExport'
+      };
+      
+      const moduleName = moduleMap[viewName];
+      if (moduleName && this.app.modules[moduleName] && 
+          typeof this.app.modules[moduleName].onViewActivated === 'function') {
+        console.log(`🧭 Navigation: Notificant activació vista ${viewName}`);
+        this.app.modules[moduleName].onViewActivated();
       }
     },
 

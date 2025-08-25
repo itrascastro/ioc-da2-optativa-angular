@@ -17,6 +17,12 @@
       console.log('✅ Study: Vista inicialitzada');
     },
 
+    // Mètode cridat quan s'activa la vista d'estudi
+    onViewActivated() {
+      console.log('📚 Study: Vista activada - carregant totes les notes');
+      this.loadAllNotes();
+    },
+
     _bindEvents() {
       // Esdeveniment per print
       const printBtn = document.getElementById('print-study');
@@ -32,38 +38,81 @@
     },
 
     // =============================
-    // INTEGRACIÓ AMB NAVIGATION TREE
+    // CÀRREGA DE TOTES LES NOTES
     // =============================
 
-    showNotesForSection(sectionData) {
-      console.log('📚 Study: Mostrant notes d\'estudi per secció:', sectionData);
+    loadAllNotes() {
+      console.log('📚 Study: Carregant totes les notes del curs');
       
-      const { sectionId, unitId, blocId, sectionTitle, notes } = sectionData;
-      
-      // Actualitzar header amb informació de la secció
+      // Actualitzar header
       const header = document.querySelector('.study-header h2');
       if (header) {
-        header.textContent = `Estudi: ${sectionTitle}`;
+        header.textContent = 'Vista d\'Estudi del Curs';
       }
       
-      // Mostrar les notes en format d'estudi
-      this._displayStudyNotes(notes, sectionData);
+      // Obtenir totes les notes
+      let allNotes = [];
+      if (window.Quadern?.Store) {
+        const state = window.Quadern.Store.load();
+        allNotes = Object.values(state.notes.byId || {});
+      }
       
-      // Guardar context actual
-      this.currentSection = sectionData;
+      // Organitzar per estructura del curs
+      const organizedNotes = this._organizeNotesByStructure(allNotes);
+      
+      // Mostrar en format d'estudi
+      this._displayAllNotes(organizedNotes, allNotes.length);
     },
 
-    _displayStudyNotes(notes, sectionData) {
+    _organizeNotesByStructure(allNotes) {
+      const organized = {};
+      
+      allNotes.forEach(note => {
+        const unitKey = `unitat-${note.unitat || 'sense'}`;
+        const blocKey = `bloc-${note.bloc || 'sense'}`;
+        
+        if (!organized[unitKey]) {
+          organized[unitKey] = {
+            id: note.unitat || 0,
+            nom: `Unitat ${note.unitat || '?'}`,
+            blocs: {}
+          };
+        }
+        
+        if (!organized[unitKey].blocs[blocKey]) {
+          organized[unitKey].blocs[blocKey] = {
+            id: note.bloc || 0,
+            nom: `Bloc ${note.bloc || '?'}`,
+            seccions: {}
+          };
+        }
+        
+        const sectionKey = note.sectionId || 'sense-seccio';
+        if (!organized[unitKey].blocs[blocKey].seccions[sectionKey]) {
+          organized[unitKey].blocs[blocKey].seccions[sectionKey] = {
+            id: sectionKey,
+            title: note.sectionTitle || 'Sense títol de secció',
+            notes: []
+          };
+        }
+        
+        organized[unitKey].blocs[blocKey].seccions[sectionKey].notes.push(note);
+      });
+      
+      return organized;
+    },
+
+    _displayAllNotes(organizedNotes, totalCount) {
       const studyBody = document.getElementById('study-body');
       if (!studyBody) return;
       
-      if (notes.length === 0) {
+      if (totalCount === 0) {
         studyBody.innerHTML = `
           <div class="empty-state">
             <i class="bi bi-book"></i>
             <h3>No hi ha notes per mostrar</h3>
-            <p>Crea algunes notes per ${sectionData.sectionTitle} per veure-les en format d'estudi.</p>
-            <button class="btn btn-primary" onclick="window.Quadern.Events.emit('switch-view', 'editor')">
+            <p>Crea algunes notes per veure-les en format d'estudi.</p>
+            <button class="btn btn-primary" onclick="window.Quadern.Navigation.switchView('editor')">
               <i class="bi bi-plus"></i>
               Crear primera nota
             </button>
@@ -73,16 +122,18 @@
       }
       
       let html = `
-        <div class="study-section">
-          <div class="study-section-header">
-            <h1>${sectionData.sectionTitle}</h1>
-            <p class="section-meta">Unitat ${sectionData.unitId} - Bloc ${sectionData.blocId} • ${notes.length} ${notes.length === 1 ? 'nota' : 'notes'}</p>
+        <div class="study-course">
+          <div class="study-course-header">
+            <h1>Totes les Notes del Curs</h1>
+            <p class="course-meta">${totalCount} ${totalCount === 1 ? 'nota' : 'notes'} disponibles per estudiar</p>
           </div>
-          <div class="study-notes">
+          <div class="study-units">
       `;
       
-      notes.forEach((note, index) => {
-        html += this._renderStudyNote(note, index + 1);
+      // Renderitzar per unitats
+      Object.keys(organizedNotes).forEach(unitKey => {
+        const unitat = organizedNotes[unitKey];
+        html += this._renderStudyUnit(unitat);
       });
       
       html += `
@@ -91,6 +142,75 @@
       `;
       
       studyBody.innerHTML = html;
+    },
+
+    _renderStudyUnit(unitat) {
+      let html = `
+        <div class="study-unit">
+          <div class="study-unit-header">
+            <h2>${unitat.nom}</h2>
+          </div>
+          <div class="study-unit-content">
+      `;
+      
+      // Renderitzar blocs de la unitat
+      Object.keys(unitat.blocs).forEach(blocKey => {
+        const bloc = unitat.blocs[blocKey];
+        html += this._renderStudyBlock(bloc);
+      });
+      
+      html += `
+          </div>
+        </div>
+      `;
+      
+      return html;
+    },
+
+    _renderStudyBlock(bloc) {
+      let html = `
+        <div class="study-block">
+          <div class="study-block-header">
+            <h3>${bloc.nom}</h3>
+          </div>
+          <div class="study-block-content">
+      `;
+      
+      // Renderitzar seccions del bloc
+      Object.keys(bloc.seccions).forEach(sectionKey => {
+        const seccio = bloc.seccions[sectionKey];
+        html += this._renderStudySection(seccio);
+      });
+      
+      html += `
+          </div>
+        </div>
+      `;
+      
+      return html;
+    },
+
+    _renderStudySection(seccio) {
+      let html = `
+        <div class="study-section">
+          <div class="study-section-header">
+            <h4>${seccio.title}</h4>
+            <p class="section-meta">${seccio.notes.length} ${seccio.notes.length === 1 ? 'nota' : 'notes'}</p>
+          </div>
+          <div class="study-notes">
+      `;
+      
+      // Renderitzar notes de la secció
+      seccio.notes.forEach((note, index) => {
+        html += this._renderStudyNote(note, index + 1);
+      });
+      
+      html += `
+          </div>
+        </div>
+      `;
+      
+      return html;
     },
 
     _renderStudyNote(note, index) {
@@ -124,22 +244,48 @@
 
     _exportStudy() {
       console.log('📚 Study: Exportant vista d\'estudi');
-      if (!this.currentSection || !this.currentSection.notes.length) {
-        alert('No hi ha contingut per exportar');
+      
+      // Obtenir totes les notes
+      let allNotes = [];
+      if (window.Quadern?.Store) {
+        const state = window.Quadern.Store.load();
+        allNotes = Object.values(state.notes.byId || {});
+      }
+      
+      if (allNotes.length === 0) {
+        alert('No hi ha notes per exportar');
         return;
       }
 
       // Crear contingut per exportar
-      let content = `# Estudi: ${this.currentSection.sectionTitle}\n\n`;
-      content += `**Unitat ${this.currentSection.unitId} - Bloc ${this.currentSection.blocId}**\n\n`;
+      let content = `# Notes d'Estudi - Curs Complet\n\n`;
+      content += `**Total: ${allNotes.length} notes**\n\n`;
       
-      this.currentSection.notes.forEach((note, index) => {
-        content += `## ${index + 1}. ${note.noteTitle || 'Sense títol'}\n\n`;
-        content += `${note.content || 'Contingut buit'}\n\n`;
-        if (note.tags && note.tags.length) {
-          content += `*Etiquetes: ${note.tags.join(', ')}*\n\n`;
-        }
-        content += '---\n\n';
+      // Organitzar per estructura
+      const organized = this._organizeNotesByStructure(allNotes);
+      
+      Object.keys(organized).forEach(unitKey => {
+        const unitat = organized[unitKey];
+        content += `# ${unitat.nom}\n\n`;
+        
+        Object.keys(unitat.blocs).forEach(blocKey => {
+          const bloc = unitat.blocs[blocKey];
+          content += `## ${bloc.nom}\n\n`;
+          
+          Object.keys(bloc.seccions).forEach(sectionKey => {
+            const seccio = bloc.seccions[sectionKey];
+            content += `### ${seccio.title}\n\n`;
+            
+            seccio.notes.forEach((note, index) => {
+              content += `#### ${index + 1}. ${note.noteTitle || 'Sense títol'}\n\n`;
+              content += `${note.content || 'Contingut buit'}\n\n`;
+              if (note.tags && note.tags.length) {
+                content += `*Etiquetes: ${note.tags.join(', ')}*\n\n`;
+              }
+              content += '---\n\n';
+            });
+          });
+        });
       });
 
       // Descarregar com a fitxer
@@ -147,29 +293,15 @@
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `estudi-${this.currentSection.sectionId}.md`;
+      a.download = `estudi-curs-complet.md`;
       a.click();
       URL.revokeObjectURL(url);
     },
 
     refreshData() {
-      // Recarregar notes de la secció actual si n'hi ha una
-      if (this.currentSection) {
-        // Obtenir notes actualitzades
-        let updatedNotes = [];
-        if (window.Quadern?.Discovery) {
-          updatedNotes = window.Quadern.Discovery.getNotesForSection(
-            this.currentSection.unitId, 
-            this.currentSection.blocId, 
-            this.currentSection.sectionId
-          );
-        }
-        
-        this.showNotesForSection({
-          ...this.currentSection,
-          notes: updatedNotes
-        });
-      }
+      // Recarregar totes les notes
+      console.log('📚 Study: Refrescant dades - recarregant totes les notes');
+      this.loadAllNotes();
     }
   };
 

@@ -46,28 +46,106 @@
 }
 
 /* STUDY CONTENT */
-.study-section {
-  max-width: 900px;
+.study-course {
+  max-width: 1000px;
   margin: 0 auto;
 }
 
-.study-section-header {
+.study-course-header {
   text-align: center;
   margin-bottom: 40px;
   padding-bottom: 20px;
   border-bottom: 2px solid var(--color-border);
 }
 
-.study-section-header h1 {
+.study-course-header h1 {
   font-size: 2.5rem;
   font-weight: 700;
   color: var(--quadern-accent);
   margin: 0 0 10px 0;
 }
 
-.section-meta {
+.course-meta {
   color: var(--color-text-muted);
   font-size: 1.1rem;
+  margin: 0;
+}
+
+/* JERARQUIA D'ESTUDI */
+.study-units {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.study-unit {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.study-unit-header {
+  background: var(--quadern-accent);
+  color: white;
+  padding: 20px 30px;
+  
+  h2 {
+    margin: 0;
+    font-size: 1.8rem;
+    font-weight: 700;
+  }
+}
+
+.study-unit-content {
+  padding: 24px;
+}
+
+.study-block {
+  margin-bottom: 30px;
+  
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.study-block-header {
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--color-border);
+  
+  h3 {
+    margin: 0;
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: var(--color-text);
+  }
+}
+
+.study-block-content {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.study-section {
+  margin-bottom: 20px;
+}
+
+.study-section-header {
+  margin-bottom: 16px;
+  
+  h4 {
+    margin: 0 0 4px 0;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--quadern-accent);
+  }
+}
+
+.section-meta {
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
   margin: 0;
 }
 
