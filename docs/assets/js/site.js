@@ -95,12 +95,12 @@ document.addEventListener('DOMContentLoaded', function () {
         const targetPosition = target.getBoundingClientRect().top + window.scrollY - headerHeight - additionalOffset;
         window.scrollTo({ top: targetPosition, behavior: 'smooth' });
       }
-      // Si clic als enllaços del sidebar (Contingut del Bloc) i el panell està obert, seleccionar la secció
+      // Si clic als enllaços del sidebar (Contingut del Bloc) i el panell està obert, seleccionar la secció i buidar formulari
       const inSidebar = this.closest('.sidebar') !== null || this.closest('.nav-tree') !== null;
       const panel = (window.Quadern && window.Quadern._panel) ? window.Quadern._panel : null;
       const panelOpen = !!(document.querySelector('.qnp-panel') && getComputedStyle(document.querySelector('.qnp-panel')).display !== 'none');
       if (inSidebar && panel && panelOpen && targetId) {
-        try { panel.selectSectionOnly(targetId); } catch (err) {}
+        try { panel.openForSection(targetId); } catch (err) {}
       }
     });
   });
@@ -324,12 +324,12 @@ function initializeBookmark(){
         // Forçar actualització d'estat (TOC actiu, progrés, etc.)
         try { window.dispatchEvent(new Event('hashchange')); } catch{}
         setTimeout(()=>{ try { window.dispatchEvent(new Event('scroll')); } catch{} }, 50);
-        // Si el panell està obert, sincronitzar la secció també al panell
+        // Si el panell està obert, sincronitzar la secció també al panell i buidar formulari
         try {
           const panelEl = document.querySelector('.qnp-panel');
           const isOpen = panelEl && getComputedStyle(panelEl).display !== 'none';
-          if (isOpen && window.Quadern && window.Quadern._panel && typeof window.Quadern._panel.selectSectionOnly === 'function') {
-            window.Quadern._panel.selectSectionOnly(existing.sectionId);
+          if (isOpen && window.Quadern && window.Quadern._panel && typeof window.Quadern._panel.openForSection === 'function') {
+            window.Quadern._panel.openForSection(existing.sectionId);
           }
         } catch {}
         return;
