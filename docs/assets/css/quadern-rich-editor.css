@@ -46,7 +46,8 @@
 .qnp-panel .qre .panel{ height: 100%; display:flex; flex-direction: column; }
 .qnp-panel .qre .editor{ flex: 1; min-height: 0; padding: 6px 10px 6px; overflow: hidden; display:flex; flex-direction: column; }
 .qnp-panel .qre .editor .ql-toolbar{ position: relative; top: auto; z-index: 2; background: var(--toolbar); border-bottom: 1px solid var(--border); }
-.qnp-panel .qre .editor .ql-container{ flex: 1; min-height: 0; overflow: auto; }
+.qnp-panel .qre .editor .ql-container{ flex: 1; min-height: 0; overflow: auto; cursor: default; }
+.qnp-panel .qre .editor .ql-editor{ overflow: visible; height: auto; cursor: text; }
 .qnp-panel .qre .ql-toolbar.ql-snow{ padding: 4px 6px; background: var(--toolbar); border-bottom: 1px solid var(--border); }
 
 /* Ensure header compacts nicely on small screens */
