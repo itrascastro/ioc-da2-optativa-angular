@@ -270,12 +270,17 @@ function initializeBookmark(){
     if (!headers.length) return null;
     const headerEl = document.querySelector('.header');
     const headerOffset = (headerEl ? headerEl.offsetHeight : 0) + 20;
-    const scrollY = window.scrollY + headerOffset;
+    // línia de referència consistent amb TOC/progrés
+    const yRef = window.scrollY + headerOffset + (window.innerHeight - headerOffset) * 0.25;
     let best = headers[0];
     for (let i=0;i<headers.length;i++){
       const top = headers[i].getBoundingClientRect().top + window.scrollY;
-      if (top <= scrollY) best = headers[i]; else break;
+      if (top <= yRef) best = headers[i]; else break;
     }
+    // Cas especial: prop del final del document → última secció
+    const docBottom = Math.ceil(window.innerHeight + window.scrollY);
+    const fullHeight = Math.ceil(document.documentElement.scrollHeight || document.body.scrollHeight);
+    if (docBottom >= fullHeight - 2) best = headers[headers.length - 1];
     return best || headers[0];
   }
   function getPageContext(){
