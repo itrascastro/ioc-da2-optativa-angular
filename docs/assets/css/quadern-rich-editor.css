@@ -1,7 +1,7 @@
 /* Scoped Rich Editor styles (qre) based on dev-resources/rich-12.html */
 .qre{ --editor-h:240px; --modal-h:70vh; --radius:10px; --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace; --sans: system-ui, -apple-system, "Segoe UI", Roboto, Ubuntu, Cantarell, Arial, "Noto Sans", sans-serif; --scrollbar-bg:#eef0f2; --scrollbar-thumb:#c2c6cc; --scrollbar-thumb-hover:#aeb3ba; }
 .qre[data-theme="light"]{ --bg:#f6f7f9; --panel:#fff; --text:#111827; --muted:#7a8699; --border:#e5e7eb; --border-strong:#d1d5db; --toolbar:#f3f4f6; --icon:#374151; --icon-hover:#111827; --picker-bg:#ffffff; --picker-text:#111827; --picker-border:#d1d5db; --code-bg:#f6f8fa; --code-fg:#24292f; --html-bg:#ffffff; --html-fg:#0f172a; --html-border:#d1d5db; }
-.qre[data-theme="dark"]{ --bg:#3b3f43; --panel:#2f3337; --text:#e7e9ec; --muted:#b3bac2; --border:#4a4f55; --border-strong:#5a6067; --toolbar:#3a3f44; --icon:#e8eaed; --icon-hover:#ffffff; --picker-bg:#2f3337; --picker-text:#e7e9ec; --picker-border:#5a6067; --code-bg:#262b2f; --code-fg:#e7e9ec; --html-bg:#1f2428; --html-fg:#e7e9ec; --html-border:#4a4f55; --scrollbar-bg:#2b2f33; --scrollbar-thumb:#52585e; --scrollbar-thumb-hover:#626970; }
+.qre[data-theme="dark"]{ --panel: var(--color-surface); --toolbar: var(--color-surface-dark); --text: var(--color-text); --muted: var(--color-text-muted); --border: var(--color-border); --border-strong: var(--color-border); --icon: var(--color-text); --icon-hover: var(--color-text); --picker-bg: var(--color-surface); --picker-text: var(--color-text); --picker-border: var(--color-border); --code-bg: var(--color-surface-dark); --code-fg: var(--color-text); --html-bg: var(--color-surface); --html-fg: var(--color-text); --html-border: var(--color-border); }
 .qre *{ box-sizing:border-box; font-family:var(--sans); }
 .qre .panel{ background:var(--panel); border:1px solid var(--border); border-radius:10px; }
 .qre .head{ display:grid; gap:8px; grid-template-columns: 1fr auto; align-items:center; padding:8px 10px; border-bottom:1px solid var(--border); background:var(--toolbar); }
@@ -40,8 +40,11 @@
 .qre .m-body .ql-container{ height: var(--modal-h); border:none; }
 .qre .m-body .ql-editor{ height: 100%; overflow: auto; }
 
-/* Compact height inside notes panel */
-.qnp-panel .qre{ --editor-h: 120px; }
+/* Fill vertical space inside notes panel */
+.qnp-panel .qre{ height: 100%; }
+.qnp-panel .qre .panel{ height: 100%; display:flex; flex-direction: column; }
+.qnp-panel .qre .editor{ flex: 1; min-height: 0; }
+.qnp-panel .qre .editor .ql-container{ height: 100%; }
 
 /* Ensure header compacts nicely on small screens */
 .qre .actions .iconbtn{ display:inline-flex; align-items:center; justify-content:center; }

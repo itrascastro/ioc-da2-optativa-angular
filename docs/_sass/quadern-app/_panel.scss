@@ -40,22 +40,28 @@
 .qnp-row { margin-bottom: 8px; }
 #qnp-section, #qnp-title, #qnp-tags, #qnp-text { width: 100%; border: 1px solid var(--color-border); background: var(--color-background); color: var(--color-text); border-radius: 6px; padding: 8px; }
 #qnp-text { min-height: 140px; resize: vertical; }
-.qnp-split { display: grid; grid-template-columns: 280px 1fr; gap: 12px; }
+.qnp-split { display: grid; grid-template-columns: 320px 1fr; gap: 12px; min-height: 0; }
 .qnp-sidebar { display: flex; flex-direction: column; gap: 8px; }
-.qnp-list { border: 1px solid var(--color-border); border-radius: 6px; padding: 8px; background: var(--color-surface-dark); overflow-y: auto; max-height: 240px; flex: 1; }
-.qnp-item { background: var(--color-background); border: 1px solid var(--color-border); border-radius: 6px; padding: 8px; margin-bottom: 8px; cursor: pointer; }
+.qnp-list { border: 1px solid var(--color-border); border-radius: 6px; padding: 6px; background: var(--color-surface-dark); overflow-y: auto; flex: 1; min-height: 0; }
+.qnp-editor { display: flex; flex-direction: column; min-height: 0; }
+.qnp-item { background: var(--color-background); border: 1px solid var(--color-border); border-radius: 6px; padding: 6px 8px; margin-bottom: 6px; cursor: pointer; }
 .qnp-item:hover { background: var(--color-surface); }
 .qnp-item:last-child { margin-bottom: 0; }
-.qnp-item-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
-.qnp-item-title { font-weight: 600; overflow: hidden; flex: 1; }
-.qnp-item-actions { display: flex; gap: 4px; opacity: 0; transition: opacity 0.2s ease; }
+.qnp-item-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2px; gap: 8px; }
+.qnp-item-title { font-weight: 600; overflow: hidden; flex: 1; white-space: nowrap; text-overflow: ellipsis; font-size: 0.95rem; line-height: 1.2; }
+.qnp-item-title .qnp-item-time { color: var(--color-text-muted); font-weight: 500; font-size: 0.85em; margin-left: 6px; }
+.qnp-item-actions { display: flex; gap: 2px; opacity: 0; transition: opacity 0.2s ease; }
 .qnp-item:hover .qnp-item-actions { opacity: 1; }
-.qnp-btn-icon { background: none; border: none; color: var(--color-text-muted); cursor: pointer; padding: 2px; border-radius: 3px; transition: all 0.2s ease; }
+.qnp-btn-icon { background: none; border: none; color: var(--color-text-muted); cursor: pointer; padding: 1px; border-radius: 3px; transition: all 0.2s ease; }
 .qnp-btn-icon:hover { background: var(--color-surface-dark); color: var(--color-text); }
 .qnp-btn-delete:hover { color: var(--comp-error); }
-.qnp-item-meta { color: var(--color-text-muted); font-size: 0.85rem; }
-.qnp-item-tags { margin-top: 6px; display: flex; flex-wrap: wrap; gap: 6px; }
-.qnp-tag { background: var(--color-surface); border: 1px solid var(--color-border); color: var(--color-text); border-radius: 9999px; padding: 2px 8px; font-size: 0.8rem; }
+.qnp-item-meta { color: var(--color-text-muted); font-size: 0.75rem; line-height: 1.1; }
+.qnp-item-tags { margin-top: 4px; display: flex; flex-wrap: wrap; gap: 4px; }
+.qnp-tag { background: var(--color-surface); border: 1px solid var(--color-border); color: var(--color-text); border-radius: 9999px; padding: 1px 6px; font-size: 0.72rem; }
+
+@media (max-width: 900px){
+  .qnp-item-tags { display: none; }
+}
 .qnp-editor .qnp-editor-actions { display: flex; gap: 8px; margin-top: 8px; justify-content: flex-end; }
 
 /* Bot\u00f3 Nova nota sota sidebar */
