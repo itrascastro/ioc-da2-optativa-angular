@@ -319,6 +319,14 @@ function initializeBookmark(){
         // Forçar actualització d'estat (TOC actiu, progrés, etc.)
         try { window.dispatchEvent(new Event('hashchange')); } catch{}
         setTimeout(()=>{ try { window.dispatchEvent(new Event('scroll')); } catch{} }, 50);
+        // Si el panell està obert, sincronitzar la secció també al panell
+        try {
+          const panelEl = document.querySelector('.qnp-panel');
+          const isOpen = panelEl && getComputedStyle(panelEl).display !== 'none';
+          if (isOpen && window.Quadern && window.Quadern._panel && typeof window.Quadern._panel.selectSectionOnly === 'function') {
+            window.Quadern._panel.selectSectionOnly(existing.sectionId);
+          }
+        } catch {}
         return;
       }
     }
