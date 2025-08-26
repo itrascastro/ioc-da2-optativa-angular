@@ -144,9 +144,10 @@
       const item = document.createElement('div'); item.className='qnp-item'; item.setAttribute('data-id', n.id);
       const title = n.noteTitle || n.sectionTitle || n.sectionId || '';
       const truncatedTitle = title.length > 20 ? title.substring(0, 20) + '...' : title;
+      const time = U.timeAgo(n.updatedAt||n.createdAt||'');
       item.innerHTML = `
         <div class="qnp-item-header">
-          <div class="qnp-item-title">${truncatedTitle}</div>
+          <div class="qnp-item-title">${truncatedTitle} <span class="qnp-item-time">(${time})</span></div>
           <div class="qnp-item-actions">
             <button type="button" class="qnp-btn-icon" data-action="edit" data-id="${n.id}" title="Editar nota">
               <i class="bi bi-pencil"></i>
@@ -156,7 +157,7 @@
             </button>
           </div>
         </div>
-        <div class="qnp-item-meta">${U.timeAgo(n.updatedAt||n.createdAt||'')}</div>
+        
         <div class="qnp-item-tags">${(n.tags||[]).map(t=>`<span class="qnp-tag">${t}</span>`).join('')}</div>`;
       
       // Event listeners per als botons

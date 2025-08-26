@@ -5,6 +5,7 @@
 .qre *{ box-sizing:border-box; font-family:var(--sans); }
 .qre .panel{ background:var(--panel); border:1px solid var(--border); border-radius:10px; }
 .qre .head{ display:grid; gap:8px; grid-template-columns: 1fr auto; align-items:center; padding:8px 10px; border-bottom:1px solid var(--border); background:var(--toolbar); }
+.qnp-panel .qre .head{ position: relative; z-index: 1; }
 .qre .fields{ display:grid; gap:6px; grid-template-columns:1fr 1fr; align-items:center; }
 .qre .input{ width:100%; padding:8px 10px; border:1px solid var(--border-strong); border-radius:8px; background:var(--panel); color:var(--text); font-size:14px; }
 .qre .actions{ display:flex; gap:6px; }
@@ -40,11 +41,13 @@
 .qre .m-body .ql-container{ height: var(--modal-h); border:none; }
 .qre .m-body .ql-editor{ height: 100%; overflow: auto; }
 
-/* Fill vertical space inside notes panel */
-.qnp-panel .qre{ height: 100%; }
+/* Fixed form height with internal scroll (panel) */
+.qnp-panel .qre{ height: 280px; }
 .qnp-panel .qre .panel{ height: 100%; display:flex; flex-direction: column; }
-.qnp-panel .qre .editor{ flex: 1; min-height: 0; }
-.qnp-panel .qre .editor .ql-container{ height: 100%; }
+.qnp-panel .qre .editor{ flex: 1; min-height: 0; padding: 6px 10px 6px; overflow: hidden; }
+.qnp-panel .qre .editor .ql-container{ height: 100%; overflow: hidden; }
+.qnp-panel .qre .editor .ql-editor{ overflow: auto !important; }
+.qnp-panel .qre .ql-toolbar.ql-snow{ padding: 4px 6px; position: sticky; top: 0; z-index: 2; background: var(--toolbar); border-bottom: 1px solid var(--border); }
 
 /* Ensure header compacts nicely on small screens */
 .qre .actions .iconbtn{ display:inline-flex; align-items:center; justify-content:center; }

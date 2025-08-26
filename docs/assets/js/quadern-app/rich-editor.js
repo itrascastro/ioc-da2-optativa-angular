@@ -231,8 +231,9 @@
       quill.clipboard.dangerouslyPasteHTML(0, sanitized, 'api');
     });
 
-    // Sync Quill -> target, using guarded setter to avoid feedback loop
-    quill.on('text-change', function(){
+    // Sync Quill -> target, only for user edits to avoid autosave on programmatic loads
+    quill.on('text-change', function(delta, oldDelta, source){
+      if (source !== 'user') return;
       const html = quill.root.innerHTML.trim();
       bridge.setFromQuill(html);
       target.dispatchEvent(new Event('input', { bubbles:true }));

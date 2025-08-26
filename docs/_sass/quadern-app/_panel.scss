@@ -1,8 +1,8 @@
 /* Panell de notes v2 (prefix qnp-)
    Estils mínims i sobris; no afecta l'actual sistema. */
-.qnp-panel { position: fixed; left: 0; right: 0; bottom: 0; background: var(--color-surface); border-top: 1px solid var(--color-border); box-shadow: 0 -4px 10px rgba(0,0,0,0.08); max-height: 45vh; display: none; z-index: 1002; }
-.qnp-inner { max-width: 1100px; margin: 0 auto; padding: 12px 16px; }
-.qnp-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+.qnp-panel { position: fixed; left: 0; right: 0; bottom: 0; background: var(--color-surface); border-top: 1px solid var(--color-border); box-shadow: 0 -4px 10px rgba(0,0,0,0.08); max-height: 35vh; display: none; z-index: 1002; overflow: hidden; }
+.qnp-inner { max-width: 1100px; margin: 0 auto; padding: 8px 16px; }
+.qnp-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px; }
 .qnp-title { font-weight: 600; color: var(--color-text); display: flex; align-items: center; gap: 8px; }
 .qnp-actions { display: flex; align-items: center; gap: 8px; }
 .qnp-btn { background: var(--color-surface-dark); border: 1px solid var(--color-border); color: var(--color-text); border-radius: 6px; padding: 6px 10px; cursor: pointer; transition: all 0.2s ease; }
@@ -36,14 +36,14 @@
   transform: none !important;
 }
 .qnp-danger { color: var(--comp-error); border-color: var(--comp-error); }
-.qnp-body { display: block; }
+.qnp-body { display: flex; flex-direction: column; min-height: 0; overflow: hidden; }
 .qnp-row { margin-bottom: 8px; }
 #qnp-section, #qnp-title, #qnp-tags, #qnp-text { width: 100%; border: 1px solid var(--color-border); background: var(--color-background); color: var(--color-text); border-radius: 6px; padding: 8px; }
 #qnp-text { min-height: 140px; resize: vertical; }
-.qnp-split { display: grid; grid-template-columns: 320px 1fr; gap: 12px; min-height: 0; }
-.qnp-sidebar { display: flex; flex-direction: column; gap: 8px; }
-.qnp-list { border: 1px solid var(--color-border); border-radius: 6px; padding: 6px; background: var(--color-surface-dark); overflow-y: auto; flex: 1; min-height: 0; }
-.qnp-editor { display: flex; flex-direction: column; min-height: 0; }
+.qnp-split { display: grid; grid-template-columns: 320px 1fr; gap: 12px; flex: 1; min-height: 0; }
+.qnp-sidebar { display: flex; flex-direction: column; gap: 8px; min-height: 0; height: 100%; }
+.qnp-list { border: 1px solid var(--color-border); border-radius: 6px; padding: 6px; background: var(--color-surface-dark); overflow-y: auto; flex: 0 0 auto; max-height: 196px; }
+.qnp-editor { display: flex; flex-direction: column; min-height: 0; flex: 1; }
 .qnp-item { background: var(--color-background); border: 1px solid var(--color-border); border-radius: 6px; padding: 6px 8px; margin-bottom: 6px; cursor: pointer; }
 .qnp-item:hover { background: var(--color-surface); }
 .qnp-item:last-child { margin-bottom: 0; }
