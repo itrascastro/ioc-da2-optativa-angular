@@ -224,6 +224,18 @@
       }
     });
 
+    // Facilitar focus en clicar zones buides del contenidor
+    const qContainer = container.querySelector('#'+ids.editor+' + .ql-container, #'+ids.editor+' ~ .ql-container') || container.querySelector('.ql-container');
+    if (qContainer) {
+      qContainer.addEventListener('mousedown', function(e){
+        // Si es clica directament el contenidor (fora de .ql-editor), focus al quill
+        if (e.target.classList.contains('ql-container')) {
+          quill.focus();
+          try { quill.setSelection(quill.getLength(), 0, 'silent'); } catch {}
+        }
+      });
+    }
+
     // Bridge between target.value and Quill contents (avoids recursion)
     const bridge = createValueBridge(target, function(v){
       const sanitized = sanitizeHTML(v||'');
@@ -336,6 +348,15 @@
           modules:{ toolbar:{container:'#'+ids.toolbarFull}, syntax: (typeof hljs !== 'undefined') ? { highlight:function(t){ return hljs.highlightAuto(t).value; } } : undefined }
         });
         quillBig.on('text-change', function(d,o,src){ if (src==='user') quill.setContents(quillBig.getContents()); });
+        const bigContainer = modalBig.querySelector('.ql-container');
+        if (bigContainer) {
+          bigContainer.addEventListener('mousedown', function(e){
+            if (e.target.classList.contains('ql-container')) {
+              quillBig.focus();
+              try { quillBig.setSelection(quillBig.getLength(), 0, 'silent'); } catch {}
+            }
+          });
+        }
         quillBig.root.addEventListener('paste', function(e){
           if (!e.clipboardData) return; e.preventDefault();
           var html = e.clipboardData.getData('text/html') || '';
