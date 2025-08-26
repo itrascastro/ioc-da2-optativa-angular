@@ -20,6 +20,9 @@
 .qre .ql-snow .ql-picker-label{ border-color:var(--border-strong) !important; }
 .qre .ql-snow .ql-picker-options{ background:var(--picker-bg) !important; color:var(--picker-text) !important; border:1px solid var(--picker-border) !important; }
 .qre .ql-toolbar .ql-picker-options, .qre .ql-tooltip{ z-index:10000 !important; }
+.qre .ql-toolbar .ql-picker-options{ max-height: 220px; overflow-y: auto; }
+/* Limitar desplegable del tipus de text (Normal/H1/H2/...) a 3 opcions visibles */
+.qre .ql-toolbar .ql-picker.ql-header .ql-picker-options{ max-height: 90px; overflow-y: auto; }
 .qre .editor{ padding:8px 10px 10px; }
 .qre .editor .ql-container{ border:none; height:var(--editor-h); }
 .qre .editor .ql-editor{ height:100%; overflow:auto; line-height:1.45; color:var(--text); }
@@ -46,7 +49,7 @@
 /* Height controlled via JS to match sidebar; default auto */
 .qnp-panel .qre{ height: auto; }
 .qnp-panel .qre .panel{ height: 100%; display:flex; flex-direction: column; }
-.qnp-panel .qre .editor{ flex: 1; min-height: 0; padding: 6px 10px 6px; overflow: hidden; display:flex; flex-direction: column; }
+.qnp-panel .qre .editor{ flex: 1; min-height: 0; padding: 6px 10px 6px; overflow: visible; display:flex; flex-direction: column; }
 .qnp-panel .qre .editor .ql-toolbar{ position: relative; top: auto; z-index: 2; background: var(--toolbar); border-bottom: 1px solid var(--border); }
 .qnp-panel .qre .editor .ql-container{ flex: 1; min-height: 0; overflow: auto; cursor: default; position: relative; }
 .qnp-panel .qre .editor .ql-editor{ overflow: visible; min-height: 100%; height: auto; cursor: text; display: block; }
