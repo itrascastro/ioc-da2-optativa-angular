@@ -94,6 +94,13 @@ document.addEventListener('DOMContentLoaded', function () {
         const targetPosition = target.getBoundingClientRect().top + window.scrollY - headerHeight - additionalOffset;
         window.scrollTo({ top: targetPosition, behavior: 'smooth' });
       }
+      // Si clic als enllaços del sidebar (Contingut del Bloc) i el panell està obert, seleccionar la secció
+      const inSidebar = this.closest('.sidebar') !== null || this.closest('.nav-tree') !== null;
+      const panel = (window.Quadern && window.Quadern._panel) ? window.Quadern._panel : null;
+      const panelOpen = !!(document.querySelector('.qnp-panel') && getComputedStyle(document.querySelector('.qnp-panel')).display !== 'none');
+      if (inSidebar && panel && panelOpen && targetId) {
+        try { panel.selectSectionOnly(targetId); } catch (err) {}
+      }
     });
   });
   

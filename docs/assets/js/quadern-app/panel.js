@@ -376,6 +376,16 @@
     this.adjustOffsets();
     this.syncEditorHeight();
   };
+  // Selecciona la secció només si el panell ja està obert (no neteja editor)
+  Panel.prototype.selectSectionOnly = function(sectionId){
+    const sel = this.root.querySelector('#qnp-section');
+    if (sel) {
+      sel.value = sectionId;
+      this.refreshList();
+      this.updateHeadCounts();
+      this.syncEditorHeight();
+    }
+  };
   Panel.prototype.adjustOffsets = function(){
     const footer = document.querySelector('.footer, .quadern-footer');
     const h = footer ? footer.offsetHeight : 0;
