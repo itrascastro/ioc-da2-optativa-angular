@@ -4,8 +4,8 @@
 .qre[data-theme="dark"]{ --bg:#3b3f43; --panel:#2f3337; --text:#e7e9ec; --muted:#b3bac2; --border:#4a4f55; --border-strong:#5a6067; --toolbar:#3a3f44; --icon:#e8eaed; --icon-hover:#ffffff; --picker-bg:#2f3337; --picker-text:#e7e9ec; --picker-border:#5a6067; --code-bg:#262b2f; --code-fg:#e7e9ec; --html-bg:#1f2428; --html-fg:#e7e9ec; --html-border:#4a4f55; --scrollbar-bg:#2b2f33; --scrollbar-thumb:#52585e; --scrollbar-thumb-hover:#626970; }
 .qre *{ box-sizing:border-box; font-family:var(--sans); }
 .qre .panel{ background:var(--panel); border:1px solid var(--border); border-radius:10px; }
-.qre .head{ display:grid; gap:8px; grid-template-columns: 1fr auto auto; align-items:center; padding:8px 10px; border-bottom:1px solid var(--border); background:var(--toolbar); }
-.qre .fields{ display:grid; gap:6px; grid-template-columns:1fr 1fr; }
+.qre .head{ display:grid; gap:8px; grid-template-columns: 1fr auto; align-items:center; padding:8px 10px; border-bottom:1px solid var(--border); background:var(--toolbar); }
+.qre .fields{ display:grid; gap:6px; grid-template-columns:1fr 1fr; align-items:center; }
 .qre .input{ width:100%; padding:8px 10px; border:1px solid var(--border-strong); border-radius:8px; background:var(--panel); color:var(--text); font-size:14px; }
 .qre .actions{ display:flex; gap:6px; }
 .qre .iconbtn{ width:30px; height:30px; border:1px solid var(--border-strong); background:var(--panel); border-radius:8px; cursor:pointer; font:700 13px/1 var(--mono); color:var(--icon); }
@@ -33,8 +33,15 @@
 .qre #toolbar-full.ql-toolbar{ border:none; background:transparent; padding:0; }
 .qre .codebox{ width:100%; min-height:40vh; max-height:72vh; overflow:auto; background:var(--html-bg); color:var(--html-fg); border:1px solid var(--html-border); border-radius:8px; padding:12px; font:13px/1.45 var(--mono); white-space:pre; word-break:break-word; resize:none; }
 .qre .hint{ padding:6px 10px 10px; color:var(--muted); font-size:12px; border-top:1px dashed var(--border); }
-@media (max-width:720px){ .qre .fields{ grid-template-columns:1fr; } .qre{ --editor-h:190px; } }
+@media (max-width:900px){ .qre .fields{ grid-template-columns:1fr; } }
+@media (max-width:720px){ .qre{ --editor-h:160px; } }
 .qre dialog.c-modal{ max-height:92vh; overflow:hidden; }
 .qre .m-body{ padding:10px; overflow:hidden; }
 .qre .m-body .ql-container{ height: var(--modal-h); border:none; }
 .qre .m-body .ql-editor{ height: 100%; overflow: auto; }
+
+/* Compact height inside notes panel */
+.qnp-panel .qre{ --editor-h: 120px; }
+
+/* Ensure header compacts nicely on small screens */
+.qre .actions .iconbtn{ display:inline-flex; align-items:center; justify-content:center; }

@@ -31,8 +31,8 @@
       '  <div class="head">',
       '    <div class="fields" data-qre-slot="fields"></div>',
       '    <div class="actions" aria-label="Accions">',
-      `      <button class="iconbtn" id="${ids.btnHTML}" title="Veure/editar HTML">&lt;/&gt;</button>`,
-      `      <button class="iconbtn" id="${ids.btnExpand}" title="Editar en gran">⤢</button>`,
+        `      <button class="iconbtn" id="${ids.btnHTML}" title="Veure/editar HTML">&lt;/&gt;</button>`,
+        `      <button class="iconbtn" id="${ids.btnExpand}" title="Editar en gran">⤢</button>`,
       '    </div>',
       (noTheme ? '' : [
       '    <div class="theme-toggle">',
@@ -45,7 +45,7 @@
       ].join('')),
       '  </div>',
       '  <div class="editor">',
-      `    <div id="${ids.toolbarCompact}" class="ql-toolbar ql-snow">`,
+        `    <div id="${ids.toolbarCompact}" class="ql-toolbar ql-snow">`,
       '      <span class="ql-formats">',
       '        <select class="ql-header"><option selected></option><option value="1">H1</option><option value="2">H2</option><option value="3">H3</option><option value="4">H4</option><option value="5">H5</option><option value="6">H6</option></select>',
       '        <button class="ql-bold"></button><button class="ql-italic"></button><button class="ql-underline"></button>',
@@ -57,7 +57,6 @@
       '    </div>',
       `    <div id="${ids.editor}"></div>`,
       '  </div>',
-      '  <div class="hint">Consells: ⌘/Ctrl+B, I, U · ⤢ per expandir · &lt;/&gt; per veure/editar HTML.</div>',
       '</div>',
       `
       <dialog id="${ids.modalBig}" class="c-modal">
@@ -145,8 +144,25 @@
 
     // Theme
     (function initTheme(){
-      const saved = (function(){ try { return localStorage.getItem('notes_theme'); } catch(e){ return null; } })();
-      container.setAttribute('data-theme', saved || 'light');
+      const followApp = container.hasAttribute('data-no-theme');
+      const set = function(mode){ container.setAttribute('data-theme', mode); try{ localStorage.setItem('notes_theme', mode); }catch(e){}
+        const hlLight = document.getElementById('hljs-light'); const hlDark = document.getElementById('hljs-dark'); if (hlLight && hlDark){ hlDark.disabled = mode !== 'dark'; hlLight.disabled = mode === 'dark'; }
+      };
+      if (followApp){
+        const readMode = () => {
+          const body = document.body;
+          const mode = (body.getAttribute('data-theme') === 'dark' || body.classList.contains('dark-theme')) ? 'dark' : 'light';
+          set(mode);
+        };
+        readMode();
+        try{
+          const obs = new MutationObserver(readMode);
+          obs.observe(document.body, { attributes:true, attributeFilter:['data-theme','class'] });
+        }catch(e){}
+      } else {
+        const saved = (function(){ try { return localStorage.getItem('notes_theme'); } catch(e){ return null; } })();
+        set(saved || 'light');
+      }
     })();
 
     const ids = {
