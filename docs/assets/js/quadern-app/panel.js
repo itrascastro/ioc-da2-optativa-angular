@@ -28,19 +28,60 @@
       '   <div class="qnp-split">',
       '     <div class="qnp-sidebar">',
       '       <div class="qnp-list" id="qnp-list"></div>',
+      '       <button type="button" class="qnp-btn btn btn-primary qnp-new-note-btn" data-action="clear">',
+      '         <i class="bi bi-plus-lg"></i> Nova nota',
+      '       </button>',
       '     </div>',
       '     <div class="qnp-editor">',
       '       <input id="qnp-title" placeholder="Títol de la nota" />',
       '       <input id="qnp-tags" placeholder="Etiquetes (separades per comes)" />',
       '       <textarea id="qnp-text" placeholder="Escriu la teva nota…"></textarea>',
       '       <div class="qnp-editor-actions">',
-      '         <button type="button" class="qnp-btn btn btn-outline" data-action="clear"><i class="bi bi-arrow-clockwise"></i> Buidar</button>',
       '         <button type="button" class="qnp-btn qnp-primary btn btn-primary" data-action="save"><i class="bi bi-check-lg"></i> Guardar</button>',
-      '         <button type="button" class="qnp-btn qnp-danger" data-action="del"><i class="bi bi-trash"></i> Eliminar</button>',
       '       </div>',
       '     </div>',
       '   </div>',
       ' </div>',
+      '</div>',
+      '',
+      '<!-- Modal de confirmació d\'eliminació -->',
+      '<div class="qnp-modal" id="qnp-delete-modal" style="display: none;">',
+      '  <div class="qnp-modal-backdrop"></div>',
+      '  <div class="qnp-modal-content">',
+      '    <div class="qnp-modal-header">',
+      '      <h3>Eliminar nota</h3>',
+      '    </div>',
+      '    <div class="qnp-modal-body">',
+      '      <div class="qnp-modal-icon">',
+      '        <i class="bi bi-exclamation-triangle"></i>',
+      '      </div>',
+      '      <p id="qnp-delete-message">Estàs segur que vols eliminar aquesta nota?</p>',
+      '      <p class="qnp-modal-warning">Aquesta acció no es pot desfer.</p>',
+      '    </div>',
+      '    <div class="qnp-modal-footer">',
+      '      <button type="button" class="qnp-btn btn btn-outline" data-action="cancel">Cancel·lar</button>',
+      '      <button type="button" class="qnp-btn qnp-danger btn" data-action="confirm-delete">Eliminar</button>',
+      '    </div>',
+      '  </div>',
+      '</div>',
+      '',
+      '<!-- Modal d\'error de validació -->',
+      '<div class="qnp-modal" id="qnp-validation-modal" style="display: none;">',
+      '  <div class="qnp-modal-backdrop"></div>',
+      '  <div class="qnp-modal-content">',
+      '    <div class="qnp-modal-header">',
+      '      <h3>Formulari incomplet</h3>',
+      '    </div>',
+      '    <div class="qnp-modal-body">',
+      '      <div class="qnp-modal-icon">',
+      '        <i class="bi bi-exclamation-circle"></i>',
+      '      </div>',
+      '      <p id="qnp-validation-message">Afegeix un títol i contingut per desar la nota.</p>',
+      '    </div>',
+      '    <div class="qnp-modal-footer">',
+      '      <button type="button" class="qnp-btn btn btn-primary" data-action="ok">D\'acord</button>',
+      '    </div>',
+      '  </div>',
       '</div>'
     ].join('');
     document.body.appendChild(panel);
@@ -52,8 +93,18 @@
     r.querySelector('[data-action="close"]').addEventListener('click', ()=> this.toggle(false));
     r.querySelector('[data-action="clear"]').addEventListener('click', ()=> this.clearEditor());
     r.querySelector('[data-action="save"]').addEventListener('click', ()=> this.saveNote());
-    r.querySelector('[data-action="del"]').addEventListener('click', ()=> this.remove());
     r.querySelector('#qnp-section').addEventListener('change', ()=> this.refreshList());
+    
+    // Modal de confirmació
+    const deleteModal = document.querySelector('#qnp-delete-modal');
+    deleteModal.querySelector('[data-action="cancel"]').addEventListener('click', ()=> this.hideDeleteModal());
+    deleteModal.querySelector('[data-action="confirm-delete"]').addEventListener('click', ()=> this.executeDelete());
+    deleteModal.querySelector('.qnp-modal-backdrop').addEventListener('click', ()=> this.hideDeleteModal());
+    
+    // Modal de validació
+    const validationModal = document.querySelector('#qnp-validation-modal');
+    validationModal.querySelector('[data-action="ok"]').addEventListener('click', ()=> this.hideValidationModal());
+    validationModal.querySelector('.qnp-modal-backdrop').addEventListener('click', ()=> this.hideValidationModal());
   };
   Panel.prototype.toggle = function(show){ this.root.style.display = (show===false)?'none':'block'; };
   Panel.prototype.scanSections = function(){
@@ -87,10 +138,28 @@
       const item = document.createElement('div'); item.className='qnp-item'; item.setAttribute('data-id', n.id);
       const title = n.noteTitle || n.sectionTitle || n.sectionId || '';
       const truncatedTitle = title.length > 20 ? title.substring(0, 20) + '...' : title;
-      item.innerHTML = `<div class="qnp-item-title">${truncatedTitle}
-        <span class="qnp-item-meta">${U.timeAgo(n.updatedAt||n.createdAt||'')}</span></div>
+      item.innerHTML = `
+        <div class="qnp-item-header">
+          <div class="qnp-item-title">${truncatedTitle}</div>
+          <div class="qnp-item-actions">
+            <button type="button" class="qnp-btn-icon" data-action="edit" data-id="${n.id}" title="Editar nota">
+              <i class="bi bi-pencil"></i>
+            </button>
+            <button type="button" class="qnp-btn-icon qnp-btn-delete" data-action="delete" data-id="${n.id}" title="Eliminar nota">
+              <i class="bi bi-trash"></i>
+            </button>
+          </div>
+        </div>
+        <div class="qnp-item-meta">${U.timeAgo(n.updatedAt||n.createdAt||'')}</div>
         <div class="qnp-item-tags">${(n.tags||[]).map(t=>`<span class="qnp-tag">${t}</span>`).join('')}</div>`;
+      
+      // Event listeners per als botons
+      item.querySelector('[data-action="edit"]').addEventListener('click', (e)=> { e.stopPropagation(); this.loadEditor(n.id); });
+      item.querySelector('[data-action="delete"]').addEventListener('click', (e)=> { e.stopPropagation(); this.confirmDelete(n.id); });
+      
+      // Click a tota la nota per editar
       item.addEventListener('click', ()=> this.loadEditor(n.id));
+      
       list.appendChild(item);
     });
     
@@ -116,7 +185,7 @@
     
     // Validació: requereix títol I contingut
     if (!title || !content) {
-      alert('Afegeix un títol i contingut per desar la nota.');
+      this.showValidationModal('Afegeix un títol i contingut per desar la nota.');
       return;
     }
     
@@ -137,7 +206,7 @@
       // Crear nova nota
       const ctx = this.sectionContext();
       if (!ctx.sectionId) {
-        alert('Selecciona una secció per crear la nota.');
+        this.showValidationModal('Selecciona una secció per crear la nota.');
         return;
       }
       const n = Object.assign({
@@ -155,8 +224,70 @@
       this.clearEditor();
     }
   };
-  Panel.prototype.remove = function(){
-    if (!this.currentId) return; S.deleteNote(this.state, this.currentId); S.save(this.state); this.refreshList(); this.updateHeadCounts();
+  Panel.prototype.confirmDelete = function(noteId){
+    const note = this.state.notes.byId[noteId];
+    if (!note) return;
+    
+    // Guardar l'ID de la nota a eliminar
+    this.noteToDelete = noteId;
+    
+    // Truncar títol si és massa llarg
+    const title = note.noteTitle || 'Sense títol';
+    const truncatedTitle = title.length > 20 ? title.substring(0, 20) + '...' : title;
+    
+    // Actualitzar el missatge del modal
+    const messageEl = document.querySelector('#qnp-delete-message');
+    messageEl.textContent = `Estàs segur que vols eliminar la nota "${truncatedTitle}"?`;
+    
+    // Mostrar el modal
+    this.showDeleteModal();
+  };
+  
+  Panel.prototype.showDeleteModal = function(){
+    const modal = document.querySelector('#qnp-delete-modal');
+    modal.style.display = 'flex';
+    // Afegir classe per animació
+    setTimeout(() => modal.classList.add('qnp-modal-show'), 10);
+  };
+  
+  Panel.prototype.hideDeleteModal = function(){
+    const modal = document.querySelector('#qnp-delete-modal');
+    modal.classList.remove('qnp-modal-show');
+    setTimeout(() => modal.style.display = 'none', 300);
+    this.noteToDelete = null;
+  };
+  
+  Panel.prototype.executeDelete = function(){
+    if (this.noteToDelete) {
+      this.deleteNote(this.noteToDelete);
+      this.hideDeleteModal();
+    }
+  };
+  
+  Panel.prototype.showValidationModal = function(message){
+    const modal = document.querySelector('#qnp-validation-modal');
+    const messageEl = document.querySelector('#qnp-validation-message');
+    messageEl.textContent = message || 'Afegeix un títol i contingut per desar la nota.';
+    modal.style.display = 'flex';
+    setTimeout(() => modal.classList.add('qnp-modal-show'), 10);
+  };
+  
+  Panel.prototype.hideValidationModal = function(){
+    const modal = document.querySelector('#qnp-validation-modal');
+    modal.classList.remove('qnp-modal-show');
+    setTimeout(() => modal.style.display = 'none', 300);
+  };
+  
+  Panel.prototype.deleteNote = function(noteId){
+    S.deleteNote(this.state, noteId); 
+    S.save(this.state); 
+    this.refreshList(); 
+    this.updateHeadCounts();
+    
+    // Si s'està editant aquesta nota, netejar l'editor
+    if (this.currentId === noteId) {
+      this.clearEditor();
+    }
   };
 
   // H2 buttons with count badge
