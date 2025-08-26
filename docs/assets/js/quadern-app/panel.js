@@ -171,6 +171,7 @@
     });
     
     this.updateHeadCounts();
+    this.syncEditorHeight();
   };
   Panel.prototype.clearEditor = function(){
     this.root.querySelector('#qnp-title').value='';
@@ -360,6 +361,7 @@
     this.clearEditor();
     
     this.adjustOffsets();
+    this.syncEditorHeight();
   };
   Panel.prototype.adjustOffsets = function(){
     const footer = document.querySelector('.footer, .quadern-footer');
@@ -367,6 +369,25 @@
     this.root.style.bottom = h + 'px';
     const main = document.querySelector('.main-content, .quadern-main');
     if (main) main.style.paddingBottom = `calc(${h + (this.root.offsetHeight||0) + 20}px)`;
+    this.syncEditorHeight();
+  };
+
+  // Match editor height to sidebar height so bottoms align
+  Panel.prototype.syncEditorHeight = function(){
+    if (!this.root) return;
+    const qre = this.root.querySelector('#qre-panel');
+    const newBtn = this.root.querySelector('.qnp-new-note-btn');
+    const sidebar = this.root.querySelector('.qnp-sidebar');
+    if (!qre || !sidebar) return;
+    // Measure after layout to avoid intermediate states
+    requestAnimationFrame(()=>{
+      const qreTop = qre.getBoundingClientRect().top;
+      const targetBottom = (newBtn && newBtn.getBoundingClientRect().bottom) || sidebar.getBoundingClientRect().bottom;
+      const desired = Math.max(240, Math.floor(targetBottom - qreTop));
+      if (!desired || desired <= 0) return;
+      // Set QRE box height to match sidebar bottom; internal layout handled by CSS flex
+      qre.style.height = desired + 'px';
+    });
   };
 
   window.Quadern = window.Quadern || {};

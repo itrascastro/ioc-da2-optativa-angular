@@ -41,13 +41,13 @@
 .qre .m-body .ql-container{ height: var(--modal-h); border:none; }
 .qre .m-body .ql-editor{ height: 100%; overflow: auto; }
 
-/* Fixed form height with internal scroll (panel) */
-.qnp-panel .qre{ height: 280px; }
+/* Height controlled via JS to match sidebar; default auto */
+.qnp-panel .qre{ height: auto; }
 .qnp-panel .qre .panel{ height: 100%; display:flex; flex-direction: column; }
-.qnp-panel .qre .editor{ flex: 1; min-height: 0; padding: 6px 10px 6px; overflow: hidden; }
-.qnp-panel .qre .editor .ql-container{ height: 100%; overflow: hidden; }
-.qnp-panel .qre .editor .ql-editor{ overflow: auto !important; }
-.qnp-panel .qre .ql-toolbar.ql-snow{ padding: 4px 6px; position: sticky; top: 0; z-index: 2; background: var(--toolbar); border-bottom: 1px solid var(--border); }
+.qnp-panel .qre .editor{ flex: 1; min-height: 0; padding: 6px 10px 6px; overflow: hidden; display:flex; flex-direction: column; }
+.qnp-panel .qre .editor .ql-toolbar{ position: relative; top: auto; z-index: 2; background: var(--toolbar); border-bottom: 1px solid var(--border); }
+.qnp-panel .qre .editor .ql-container{ flex: 1; min-height: 0; overflow: auto; }
+.qnp-panel .qre .ql-toolbar.ql-snow{ padding: 4px 6px; background: var(--toolbar); border-bottom: 1px solid var(--border); }
 
 /* Ensure header compacts nicely on small screens */
 .qre .actions .iconbtn{ display:inline-flex; align-items:center; justify-content:center; }
