@@ -25,20 +25,24 @@
   }
 
   function buildMarkup(container, ids){
+    const noTheme = container.hasAttribute('data-no-theme');
     const html = [
       '<div class="panel">',
       '  <div class="head">',
+      '    <div class="fields" data-qre-slot="fields"></div>',
       '    <div class="actions" aria-label="Accions">',
       `      <button class="iconbtn" id="${ids.btnHTML}" title="Veure/editar HTML">&lt;/&gt;</button>`,
       `      <button class="iconbtn" id="${ids.btnExpand}" title="Editar en gran">⤢</button>`,
       '    </div>',
+      (noTheme ? '' : [
       '    <div class="theme-toggle">',
       '      <label for="'+ids.themeSel+'">Tema</label>',
       `      <select id="${ids.themeSel}" class="input" style="width:auto;padding:6px 8px;">`,
       '        <option value="light">Clar</option>',
       '        <option value="dark">Fosc</option>',
       '      </select>',
-      '    </div>',
+      '    </div>'
+      ].join('')),
       '  </div>',
       '  <div class="editor">',
       `    <div id="${ids.toolbarCompact}" class="ql-toolbar ql-snow">`,
@@ -154,16 +158,31 @@
     buildMarkup(container, ids);
 
     const themeSel = $(container, '#'+ids.themeSel);
-    const setTheme = function(mode){
-      container.setAttribute('data-theme', mode);
-      try{ localStorage.setItem('notes_theme', mode); }catch(e){}
-      // Toggle highlight CSS if present
-      const hlLight = document.getElementById('hljs-light');
-      const hlDark = document.getElementById('hljs-dark');
-      if (hlLight && hlDark){ hlDark.disabled = mode !== 'dark'; hlLight.disabled = mode === 'dark'; }
-    };
-    on(themeSel, 'change', function(e){ setTheme(e.target.value); });
-    if (themeSel) themeSel.value = container.getAttribute('data-theme') || 'light';
+    if (themeSel) {
+      const setTheme = function(mode){
+        container.setAttribute('data-theme', mode);
+        try{ localStorage.setItem('notes_theme', mode); }catch(e){}
+        const hlLight = document.getElementById('hljs-light');
+        const hlDark = document.getElementById('hljs-dark');
+        if (hlLight && hlDark){ hlDark.disabled = mode !== 'dark'; hlLight.disabled = mode === 'dark'; }
+      };
+      on(themeSel, 'change', function(e){ setTheme(e.target.value); });
+      themeSel.value = container.getAttribute('data-theme') || 'light';
+    }
+
+    // Adopt external field nodes into header slot (if requested)
+    const adoptSel = container.getAttribute('data-adopt-fields');
+    const slot = $(container, '[data-qre-slot="fields"]');
+    if (adoptSel && slot){
+      adoptSel.split(',').map(s=>s.trim()).filter(Boolean).forEach(function(sel){
+        const node = document.querySelector(sel);
+        if (node){
+          // Ensure visual consistency
+          node.classList.add('input');
+          slot.appendChild(node);
+        }
+      });
+    }
 
     // Init Quill (embedded)
     const quill = new Quill('#'+ids.editor, {

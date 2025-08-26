@@ -33,13 +33,10 @@
       '       </button>',
       '     </div>',
       '     <div class="qnp-editor">',
-      '       <input id="qnp-title" placeholder="Títol de la nota" />',
-      '       <input id="qnp-tags" placeholder="Etiquetes (separades per comes)" />',
+      '       <input id="qnp-title" class="input" placeholder="Títol de la nota" />',
+      '       <input id="qnp-tags" class="input" placeholder="Etiquetes (separades per comes)" />',
       '       <textarea id="qnp-text" placeholder="Escriu la teva nota…" hidden aria-hidden="true"></textarea>',
-      '       <div id="qre-panel" class="qre" data-sync-target="#qnp-text"></div>',
-      '       <div class="qnp-editor-actions">',
-      '         <button type="button" class="qnp-btn qnp-primary btn btn-primary" data-action="save"><i class="bi bi-check-lg"></i> Guardar</button>',
-      '       </div>',
+      '       <div id="qre-panel" class="qre" data-sync-target="#qnp-text" data-no-theme data-adopt-fields="#qnp-title,#qnp-tags"></div>',
       '     </div>',
       '   </div>',
       ' </div>',
@@ -93,7 +90,6 @@
     const r = this.root; if (!r) return;
     r.querySelector('[data-action="close"]').addEventListener('click', ()=> this.toggle(false));
     r.querySelector('[data-action="clear"]').addEventListener('click', ()=> this.clearEditor());
-    r.querySelector('[data-action="save"]').addEventListener('click', ()=> this.saveNote());
     r.querySelector('#qnp-section').addEventListener('change', ()=> this.refreshList());
     
     // Modal de confirmació
@@ -106,6 +102,15 @@
     const validationModal = document.querySelector('#qnp-validation-modal');
     validationModal.querySelector('[data-action="ok"]').addEventListener('click', ()=> this.hideValidationModal());
     validationModal.querySelector('.qnp-modal-backdrop').addEventListener('click', ()=> this.hideValidationModal());
+
+    // Autosave on input changes
+    const titleEl = r.querySelector('#qnp-title');
+    const tagsEl = r.querySelector('#qnp-tags');
+    const textEl = r.querySelector('#qnp-text');
+    const schedule = this.scheduleAutosave.bind(this);
+    if (titleEl) titleEl.addEventListener('input', schedule);
+    if (tagsEl) tagsEl.addEventListener('input', schedule);
+    if (textEl) textEl.addEventListener('input', schedule);
   };
   Panel.prototype.toggle = function(show){ this.root.style.display = (show===false)?'none':'block'; };
   Panel.prototype.scanSections = function(){
@@ -223,6 +228,30 @@
       this.refreshList();
       this.updateHeadCounts();
       this.clearEditor();
+    }
+  };
+  // Autosave helpers (no modals, no clearing editor)
+  Panel.prototype.scheduleAutosave = function(){
+    clearTimeout(this._autosaveTimer);
+    this._autosaveTimer = setTimeout(()=> this.saveNoteAuto(), 1200);
+  };
+  Panel.prototype.saveNoteAuto = function(){
+    const title = this.root.querySelector('#qnp-title').value.trim();
+    const contentHTML = (this.root.querySelector('#qnp-text')?.value || '').trim();
+    const contentText = contentHTML.replace(/<[^>]*>/g,'').trim();
+    const tags = (this.root.querySelector('#qnp-tags').value||'').split(',').map(s=>s.trim()).filter(Boolean);
+    if (!title || !contentText) return; // defer until both exist
+    if (this.currentId) {
+      const n = this.state.notes.byId[this.currentId];
+      if (n) {
+        n.noteTitle = title; n.tags = tags; n.content = contentHTML; n.updatedAt = U.nowISO();
+        S.save(this.state); this.refreshList(); this.updateHeadCounts();
+      }
+    } else {
+      const ctx = this.sectionContext(); if (!ctx.sectionId) return;
+      const n = Object.assign({ id:'', noteTitle:title, tags:tags, content:contentHTML, createdAt:U.nowISO(), updatedAt:U.nowISO() }, ctx);
+      const created = S.upsertNote(this.state, n); this.currentId = created.id; S.save(this.state);
+      this.refreshList(); this.updateHeadCounts();
     }
   };
   Panel.prototype.confirmDelete = function(noteId){
