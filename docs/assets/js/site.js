@@ -199,16 +199,14 @@ function initializeFooterProgress() {
         fill.style.width = '0%';
         return;
       }
-      // Trobar la secció més propera a la part superior (amb offset per header fix)
+      // Trobar la secció segons una línia de referència un 25% per sota del header
       const headerEl = document.querySelector('.header');
       const headerOffset = (headerEl ? headerEl.offsetHeight : 0) + 20;
-      const scrollY = window.scrollY + headerOffset;
+      const yRef = window.scrollY + headerOffset + (window.innerHeight - headerOffset) * 0.25;
       let idx = 0;
       for (let i = 0; i < total; i++) {
         const top = headers[i].getBoundingClientRect().top + window.scrollY;
-        if (top <= scrollY) {
-          idx = i;
-        }
+        if (top <= yRef) idx = i; else break;
       }
       current = Math.min(total, idx + 1);
       // Si estem al final de la pàgina, assegurar 100% (última secció)
@@ -347,11 +345,11 @@ function initializeTocActive() {
   const updateActive = () => {
     const headers = getHeaders();
     if (headers.length === 0) return;
-    const scrollY = window.scrollY + headerOffset;
+    const yRef = window.scrollY + headerOffset + (window.innerHeight - headerOffset) * 0.25;
     let idx = 0;
     for (let i = 0; i < headers.length; i++) {
       const top = headers[i].getBoundingClientRect().top + window.scrollY;
-      if (top <= scrollY) idx = i;
+      if (top <= yRef) idx = i; else break;
     }
     const docBottom = Math.ceil(window.innerHeight + window.scrollY);
     const fullHeight = Math.ceil(document.documentElement.scrollHeight || document.body.scrollHeight);
@@ -429,11 +427,11 @@ function initializeFooterNav() {
   const currentIndex = () => {
     const headers = getHeaders();
     if (headers.length === 0) return -1;
-    const scrollY = window.scrollY + headerOffset;
+    const yRef = window.scrollY + headerOffset + (window.innerHeight - headerOffset) * 0.25;
     let idx = 0;
     for (let i = 0; i < headers.length; i++) {
       const top = headers[i].getBoundingClientRect().top + window.scrollY;
-      if (top <= scrollY) idx = i;
+      if (top <= yRef) idx = i; else break;
     }
     // si al final de la pàgina, seleccionar l'última
     const docBottom = Math.ceil(window.innerHeight + window.scrollY);
