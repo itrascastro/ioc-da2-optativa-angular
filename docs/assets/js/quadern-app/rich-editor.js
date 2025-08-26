@@ -61,7 +61,7 @@
       `
       <dialog id="${ids.modalBig}" class="c-modal">
         <div class="m-head">
-          <div class="m-title">Edició en gran</div>
+          <div class="m-title"></div>
           <div id="${ids.toolbarFull}" class="ql-toolbar ql-snow">
             <span class="ql-formats">
               <select class="ql-header">
@@ -266,8 +266,70 @@
     const btnExpand = $(container, '#'+ids.btnExpand);
     const btnCloseBig = $(container, '#'+ids.btnCloseBig);
     let quillBig = null;
+
+    function panelElement(){ return document.querySelector('.qnp-panel'); }
+    function isPanelVisible(){ const p = panelElement(); return p && window.getComputedStyle(p).display !== 'none'; }
+    function anchorAbovePanel(modal){
+      try{
+        if (!modal || !isPanelVisible()) return;
+        modal.style.position = 'fixed';
+        modal.style.margin = '0';
+        modal.style.left = '50%';
+        modal.style.transform = 'translateX(-50%)';
+        modal.style.zIndex = '3000';
+        const reposition = () => {
+          const p = panelElement(); if (!p) return;
+          const rect = p.getBoundingClientRect();
+          const mh = modal.offsetHeight || 300;
+          const gap = 24;
+          let top = rect.top - mh - gap;
+          if (top < 8) top = 8;
+          modal.style.top = top + 'px';
+        };
+        reposition();
+        modal._reposition = reposition;
+        window.addEventListener('resize', reposition);
+        // Reintents per assegurar posicionament després del layout del contingut
+        setTimeout(reposition, 50);
+        setTimeout(reposition, 200);
+      }catch(e){}
+    }
+    function makeDraggable(modal){
+      try{
+        const head = modal.querySelector('.m-head');
+        if (!head) return;
+        head.style.cursor = 'move';
+        let dragging=false, startX=0, startY=0, startTop=0, startLeft=0;
+        const onDown = (e)=>{
+          dragging = true;
+          const rect = modal.getBoundingClientRect();
+          startX = e.clientX; startY = e.clientY; startTop = rect.top; startLeft = rect.left;
+          modal.style.position = 'fixed'; modal.style.margin='0';
+          document.addEventListener('mousemove', onMove);
+          document.addEventListener('mouseup', onUp, { once:true });
+        };
+        const onMove = (e)=>{
+          if (!dragging) return;
+          const dx = e.clientX - startX, dy = e.clientY - startY;
+          const vw = window.innerWidth, vh = window.innerHeight;
+          let left = startLeft + dx, top = startTop + dy;
+          const rect = modal.getBoundingClientRect();
+          if (left < 8) left = 8; if (top < 8) top = 8;
+          if (left + rect.width > vw - 8) left = vw - rect.width - 8;
+          if (top + rect.height > vh - 8) top = vh - rect.height - 8;
+          modal.style.left = left + 'px';
+          modal.style.top = top + 'px';
+          modal.style.transform = 'none';
+        };
+        const onUp = ()=>{ dragging=false; document.removeEventListener('mousemove', onMove); };
+        head.addEventListener('mousedown', onDown);
+      }catch(e){}
+    }
+
     on(btnExpand, 'click', function(){
       if (modalBig && modalBig.showModal) modalBig.showModal();
+      anchorAbovePanel(modalBig);
+      makeDraggable(modalBig);
       if (!quillBig){
         quillBig = new Quill('#'+ids.modalEditor, {
           theme:'snow',
@@ -300,7 +362,7 @@
     function compactHTML(html){ return html.replace(/>\s+</g,'><').trim(); }
     function pretty(html){ return compactHTML(html).replace(/></g,'>\n<'); }
 
-    on(btnHTML, 'click', function(){ if (!htmlEditor || !modalHTML) return; htmlEditor.value = pretty(quill.root.innerHTML); modalHTML.showModal(); htmlEditor.focus(); htmlEditor.setSelectionRange(0,0); });
+    on(btnHTML, 'click', function(){ if (!htmlEditor || !modalHTML) return; htmlEditor.value = pretty(quill.root.innerHTML); modalHTML.showModal(); anchorAbovePanel(modalHTML); makeDraggable(modalHTML); htmlEditor.focus(); htmlEditor.setSelectionRange(0,0); });
     on(btnCloseHTML, 'click', function(){ if (modalHTML) modalHTML.close(); });
     on(btnCopyHTML, 'click', function(){ if (!htmlEditor) return; try{ navigator.clipboard.writeText(htmlEditor.value).then(function(){ btnCopyHTML.textContent='✓'; setTimeout(function(){ btnCopyHTML.textContent='⧉'; },900); }); }catch(e){} });
     on(btnApplyHTML, 'click', function(){ if (!htmlEditor || !modalHTML) return; var sanitized = sanitizeHTML(htmlEditor.value); quill.setText(''); quill.clipboard.dangerouslyPasteHTML(0, sanitized, 'api'); modalHTML.close(); });
