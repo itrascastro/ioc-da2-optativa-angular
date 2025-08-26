@@ -4,6 +4,7 @@
   Panel.prototype.init = function(){
     this.state = S.load();
     this.ensurePanel();
+    this.updateTitle();
     this.installHeads();
     this.populateSections();
     this.adjustOffsets();
@@ -128,6 +129,18 @@
     const sectionId = this.root.querySelector('#qnp-section')?.value || '';
     const sectionTitle = (document.getElementById(sectionId)?.textContent||'').trim();
     return { unitat, bloc, pageUrl, sectionId, sectionTitle };
+  };
+  Panel.prototype.updateTitle = function(){
+    if (!this.root) return;
+    const el = this.root.querySelector('.qnp-title');
+    if (!el) return;
+    const ctx = this.sectionContext();
+    let label = "Notes d'aquesta pàgina";
+    const parts = [];
+    if (Number.isFinite(ctx.unitat)) parts.push(`Unitat ${ctx.unitat}`);
+    if (Number.isFinite(ctx.bloc)) parts.push(`Bloc ${ctx.bloc}`);
+    if (parts.length) label = parts.join(' > ');
+    el.innerHTML = `<i class="bi bi-journal-text" aria-hidden="true"></i> ${label}`;
   };
   Panel.prototype.refresh = function(){ this.populateSections(); this.refreshList(); };
   Panel.prototype.refreshList = function(){
