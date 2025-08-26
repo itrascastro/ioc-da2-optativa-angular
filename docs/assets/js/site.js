@@ -67,6 +67,7 @@ document.addEventListener('DOMContentLoaded', function () {
   initializePromptCopy();
   initializeTocActive();
   initializeFooterNav();
+  initializeBookmark();
 
   // Smooth scroll amb offset per header fix
   document.querySelectorAll('a[href^="#"]').forEach(anchor => {
@@ -151,7 +152,21 @@ document.addEventListener('DOMContentLoaded', function () {
 
 // Assegurar posició 0,0 inicial
 window.addEventListener('load', function () {
-  window.scrollTo(0, 0);
+  // Si no hi ha hash, mantenir posició inicial a dalt
+  if (!window.location.hash) {
+    window.scrollTo(0, 0);
+    return;
+  }
+  // Si hi ha hash, ajustar posició per header fix perquè no tapi el títol
+  const id = window.location.hash.slice(1);
+  const target = id ? document.getElementById(id) : null;
+  if (target) {
+    const headerEl = document.querySelector('.header');
+    const headerOffset = (headerEl ? headerEl.offsetHeight : 0) + 20;
+    const y = target.getBoundingClientRect().top + window.scrollY - headerOffset;
+    // Ajust després del primer paint
+    requestAnimationFrame(() => { window.scrollTo({ top: y, behavior: 'instant' }); });
+  }
 });
 // Barra de progrés: inicialitza grups (curs/unitat) a partir d'atributs data-*
 function initializeFooterProgress() {
@@ -224,6 +239,100 @@ function initializeFooterProgress() {
     window.addEventListener('resize', update);
     window.addEventListener('hashchange', update);
   }
+}
+
+// Marcador: guarda Unitat/Bloc/Secció actual i permet saltar-hi
+function initializeBookmark(){
+  const btn = document.getElementById('footer-btn-bookmark');
+  if (!btn) return;
+
+  const STORE_KEY = 'quadern_bookmark';
+  function loadStore(){ try { return window.Quadern?.Store?.load?.() || null; } catch{return null;} }
+  function saveStore(state){ try { if (window.Quadern?.Store?.save) window.Quadern.Store.save(state); } catch{} }
+  function getBookmark(){
+    const state = loadStore();
+    if (state?.ui?.bookmark) return state.ui.bookmark;
+    try { return JSON.parse(localStorage.getItem(STORE_KEY) || 'null'); } catch { return null; }
+  }
+  function setBookmark(bm){
+    const state = loadStore();
+    if (state) { state.ui = state.ui || {}; state.ui.bookmark = bm; saveStore(state); }
+    try { localStorage.setItem(STORE_KEY, JSON.stringify(bm)); } catch{}
+  }
+  function clearBookmark(){
+    const state = loadStore();
+    if (state && state.ui) { delete state.ui.bookmark; saveStore(state); }
+    try { localStorage.removeItem(STORE_KEY); } catch{}
+  }
+  function cleanHeaderText(h2){
+    try{ const c=h2.cloneNode(true); c.querySelectorAll('.qnp-add, .add-note-btn, .qnp-badge, button, .btn, .badge').forEach(n=>n.remove()); return (c.textContent||'').trim(); }catch{ return (h2.textContent||'').trim(); }
+  }
+  function getCurrentSection(){
+    const headers = Array.from(document.querySelectorAll('.content-body h2'));
+    if (!headers.length) return null;
+    const headerEl = document.querySelector('.header');
+    const headerOffset = (headerEl ? headerEl.offsetHeight : 0) + 20;
+    const scrollY = window.scrollY + headerOffset;
+    let best = headers[0];
+    for (let i=0;i<headers.length;i++){
+      const top = headers[i].getBoundingClientRect().top + window.scrollY;
+      if (top <= scrollY) best = headers[i]; else break;
+    }
+    return best || headers[0];
+  }
+  function getPageContext(){
+    const unitat = Number(document.querySelector('meta[name="page-unitat"]')?.getAttribute('content')) || undefined;
+    const bloc = Number(document.querySelector('meta[name="page-bloc"]')?.getAttribute('content')) || undefined;
+    const base = document.body.getAttribute('data-baseurl')||''; const pageUrl = base + (location.pathname||'');
+    const h2 = getCurrentSection();
+    const sectionId = h2?.id || '';
+    const sectionTitle = h2 ? cleanHeaderText(h2) : '';
+    return { unitat, bloc, pageUrl, sectionId, sectionTitle, savedAt: new Date().toISOString() };
+  }
+  function sameLocation(a,b){ if(!a||!b) return false; return a.pageUrl===b.pageUrl && a.sectionId===b.sectionId; }
+  function syncUI(){
+    const bm = getBookmark();
+    const icon = btn.querySelector('i');
+    if (bm) {
+      btn.setAttribute('title', `Marcador: ${bm.unitat?`Unitat ${bm.unitat}`:''}${bm.unitat&&bm.bloc?' · ':''}${bm.bloc?`Bloc ${bm.bloc}`:''}${bm.sectionTitle?` · ${bm.sectionTitle}`:''}\nClic: anar-hi · Shift+Clic: eliminar`);
+      btn.setAttribute('aria-label', 'Anar al marcador');
+      if (icon) icon.className = 'bi bi-bookmark-check';
+    } else {
+      btn.setAttribute('title', 'Desar marcador en la secció actual');
+      btn.setAttribute('aria-label', 'Desar marcador');
+      if (icon) icon.className = 'bi bi-bookmark';
+    }
+  }
+  btn.addEventListener('click', function(e){
+    e.preventDefault();
+    const existing = getBookmark();
+    if (existing && e.shiftKey){ clearBookmark(); syncUI(); return; }
+    if (!existing){ const ctx = getPageContext(); setBookmark(ctx); syncUI(); return; }
+    // Existe marcador: sempre anar al marcador (no esborrem en clic normal)
+    const baseurl = document.body.getAttribute('data-baseurl')||''; const hereUrl = baseurl + (location.pathname||'');
+    if (existing.pageUrl === hereUrl && existing.sectionId){
+      const target = document.getElementById(existing.sectionId);
+      if (target){
+        const headerEl = document.querySelector('.header');
+        const headerOffset = (headerEl ? headerEl.offsetHeight : 0) + 20;
+        const top = target.getBoundingClientRect().top + window.scrollY - headerOffset;
+        window.scrollTo({ top, behavior: 'smooth' });
+        try { history.replaceState(null, '', '#'+existing.sectionId); } catch{}
+        // Forçar actualització d'estat (TOC actiu, progrés, etc.)
+        try { window.dispatchEvent(new Event('hashchange')); } catch{}
+        setTimeout(()=>{ try { window.dispatchEvent(new Event('scroll')); } catch{} }, 50);
+        return;
+      }
+    }
+    const hash = existing.sectionId ? ('#'+existing.sectionId) : '';
+    window.location.href = existing.pageUrl + hash;
+  });
+  window.addEventListener('scroll', ()=>{ // opcional: reflectir si estem exactament al marcador
+    const bm = getBookmark(); if (!bm) return;
+    const here = getPageContext();
+    if (sameLocation(bm, here)) btn.classList.add('active'); else btn.classList.remove('active');
+  }, { passive:true });
+  syncUI();
 }
 
 // Resaltat de la secció actual al TOC del sidebar (H2)
