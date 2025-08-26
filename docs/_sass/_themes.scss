@@ -91,3 +91,18 @@
 [data-theme="dark"] .block-action:hover { background-color: #353535; }
 /* Barra de progrés en fosc: farcit amb to blau per contrast */
 [data-theme="dark"] .progress-fill-footer { background-color: #7aa2e3; }
+[data-theme="light"] .sidebar-section h3 {
+  /* Amplia el contrast del separador en mode clar */
+  border-bottom-color: rgba(0, 0, 0, 0.22);
+}
+[data-theme="light"] .sidebar .sidebar-section {
+  /* Fer visibles els 4 costats en mode clar */
+  border: 1px solid rgba(0, 0, 0, 0.22) !important;
+  border-radius: var(--border-radius);
+}
+[data-theme="light"] .sidebar .sidebar-section:last-child {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.22) !important;
+}
+
+/* En el layout per defecte, assegurar els 4 costats visibles (override de regles de quadern) */
+/* (ja no cal limitar-ho a default-layout) */
