@@ -114,9 +114,20 @@
     if (textEl) textEl.addEventListener('input', schedule);
   };
   Panel.prototype.toggle = function(show){ this.root.style.display = (show===false)?'none':'block'; };
+  // Netejar text d'un H2 eliminant botons/badges afegits al DOM
+  function cleanHeaderText(h2){
+    try {
+      const clone = h2.cloneNode(true);
+      // Eliminar botons i badges que afegeixen números o icones
+      clone.querySelectorAll('.qnp-add, .add-note-btn, .qnp-badge, button, .btn, .badge').forEach(n=> n.remove());
+      return (clone.textContent||'').trim();
+    } catch(e){
+      return (h2.textContent||'').trim();
+    }
+  }
   Panel.prototype.scanSections = function(){
     const headers = U.$all('.content-body h2');
-    return headers.map(h2 => ({ id: h2.id||'', title: (h2.textContent||'').trim() }));
+    return headers.map(h2 => ({ id: h2.id||'', title: cleanHeaderText(h2) }));
   };
   Panel.prototype.populateSections = function(){
     const sel = this.root.querySelector('#qnp-section'); sel.innerHTML='';
@@ -127,7 +138,8 @@
     const bloc = Number(document.querySelector('meta[name="page-bloc"]')?.getAttribute('content')) || undefined;
     const base = document.body.getAttribute('data-baseurl')||''; const pageUrl = base + (location.pathname||'');
     const sectionId = this.root.querySelector('#qnp-section')?.value || '';
-    const sectionTitle = (document.getElementById(sectionId)?.textContent||'').trim();
+    const h2 = document.getElementById(sectionId);
+    const sectionTitle = h2 ? cleanHeaderText(h2) : '';
     return { unitat, bloc, pageUrl, sectionId, sectionTitle };
   };
   Panel.prototype.updateTitle = function(){
