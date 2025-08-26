@@ -1,0 +1,40 @@
+/* Scoped Rich Editor styles (qre) based on dev-resources/rich-12.html */
+.qre{ --editor-h:240px; --modal-h:70vh; --radius:10px; --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace; --sans: system-ui, -apple-system, "Segoe UI", Roboto, Ubuntu, Cantarell, Arial, "Noto Sans", sans-serif; --scrollbar-bg:#eef0f2; --scrollbar-thumb:#c2c6cc; --scrollbar-thumb-hover:#aeb3ba; }
+.qre[data-theme="light"]{ --bg:#f6f7f9; --panel:#fff; --text:#111827; --muted:#7a8699; --border:#e5e7eb; --border-strong:#d1d5db; --toolbar:#f3f4f6; --icon:#374151; --icon-hover:#111827; --picker-bg:#ffffff; --picker-text:#111827; --picker-border:#d1d5db; --code-bg:#f6f8fa; --code-fg:#24292f; --html-bg:#ffffff; --html-fg:#0f172a; --html-border:#d1d5db; }
+.qre[data-theme="dark"]{ --bg:#3b3f43; --panel:#2f3337; --text:#e7e9ec; --muted:#b3bac2; --border:#4a4f55; --border-strong:#5a6067; --toolbar:#3a3f44; --icon:#e8eaed; --icon-hover:#ffffff; --picker-bg:#2f3337; --picker-text:#e7e9ec; --picker-border:#5a6067; --code-bg:#262b2f; --code-fg:#e7e9ec; --html-bg:#1f2428; --html-fg:#e7e9ec; --html-border:#4a4f55; --scrollbar-bg:#2b2f33; --scrollbar-thumb:#52585e; --scrollbar-thumb-hover:#626970; }
+.qre *{ box-sizing:border-box; font-family:var(--sans); }
+.qre .panel{ background:var(--panel); border:1px solid var(--border); border-radius:10px; }
+.qre .head{ display:grid; gap:8px; grid-template-columns: 1fr auto auto; align-items:center; padding:8px 10px; border-bottom:1px solid var(--border); background:var(--toolbar); }
+.qre .fields{ display:grid; gap:6px; grid-template-columns:1fr 1fr; }
+.qre .input{ width:100%; padding:8px 10px; border:1px solid var(--border-strong); border-radius:8px; background:var(--panel); color:var(--text); font-size:14px; }
+.qre .actions{ display:flex; gap:6px; }
+.qre .iconbtn{ width:30px; height:30px; border:1px solid var(--border-strong); background:var(--panel); border-radius:8px; cursor:pointer; font:700 13px/1 var(--mono); color:var(--icon); }
+.qre .iconbtn:hover{ color:var(--icon-hover); }
+.qre .theme-toggle{ margin-left:6px; gap:6px; display:flex; align-items:center; }
+.qre .theme-toggle label{ font-size:12px; color:var(--muted); }
+.qre .ql-toolbar.ql-snow{ border:none; border-bottom:1px solid var(--border); background:var(--toolbar); padding:6px 8px; }
+.qre .ql-snow .ql-stroke{ stroke:var(--icon) !important; }
+.qre .ql-snow .ql-fill{ fill:var(--icon) !important; }
+.qre .ql-snow .ql-picker{ color:var(--text) !important; }
+.qre .ql-snow .ql-picker-label{ border-color:var(--border-strong) !important; }
+.qre .ql-snow .ql-picker-options{ background:var(--picker-bg) !important; color:var(--picker-text) !important; border:1px solid var(--picker-border) !important; }
+.qre .ql-toolbar .ql-picker-options, .qre .ql-tooltip{ z-index:10000 !important; }
+.qre .editor{ padding:8px 10px 10px; }
+.qre .editor .ql-container{ border:none; height:var(--editor-h); }
+.qre .editor .ql-editor{ height:100%; overflow:auto; line-height:1.45; color:var(--text); }
+.qre .ql-editor pre{ border:1px solid var(--border); border-radius:8px; padding:10px 12px; background:var(--code-bg); }
+.qre .ql-editor pre.ql-syntax{ background:var(--code-bg)!important; color:var(--code-fg)!important; font:13px/1.35 var(--mono); white-space:pre; overflow:auto; }
+.qre dialog.c-modal{ border:1px solid var(--border); border-radius:12px; padding:0; width:min(1100px,96vw); max-height:92vh; background:var(--panel); }
+.qre dialog::backdrop{ background:rgba(0,0,0,.35); }
+.qre .m-head{ display:flex; align-items:center; gap:8px; padding:8px 10px; border-bottom:1px solid var(--border); background:var(--toolbar); position:sticky; top:0; z-index:4; }
+.qre .m-title{ font-weight:600; font-size:14px; }
+.qre .m-actions{ margin-left:auto; display:flex; gap:6px; }
+.qre .m-body{ padding:10px; }
+.qre #toolbar-full.ql-toolbar{ border:none; background:transparent; padding:0; }
+.qre .codebox{ width:100%; min-height:40vh; max-height:72vh; overflow:auto; background:var(--html-bg); color:var(--html-fg); border:1px solid var(--html-border); border-radius:8px; padding:12px; font:13px/1.45 var(--mono); white-space:pre; word-break:break-word; resize:none; }
+.qre .hint{ padding:6px 10px 10px; color:var(--muted); font-size:12px; border-top:1px dashed var(--border); }
+@media (max-width:720px){ .qre .fields{ grid-template-columns:1fr; } .qre{ --editor-h:190px; } }
+.qre dialog.c-modal{ max-height:92vh; overflow:hidden; }
+.qre .m-body{ padding:10px; overflow:hidden; }
+.qre .m-body .ql-container{ height: var(--modal-h); border:none; }
+.qre .m-body .ql-editor{ height: 100%; overflow: auto; }

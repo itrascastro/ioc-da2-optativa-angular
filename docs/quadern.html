@@ -142,38 +142,10 @@ breadcrumb: false
                 </div>
             </div>
             <div class="panel-body">
-                <div class="editor-toolbar">
-                    <div class="toolbar-group">
-                        <button class="toolbar-btn" data-command="bold" aria-label="Negreta" title="Negreta">
-                            <i class="bi bi-type-bold" aria-hidden="true"></i>
-                        </button>
-                        <button class="toolbar-btn" data-command="italic" aria-label="Cursiva" title="Cursiva">
-                            <i class="bi bi-type-italic" aria-hidden="true"></i>
-                        </button>
-                        <button class="toolbar-btn" data-command="underline" aria-label="Subratllat" title="Subratllat">
-                            <i class="bi bi-type-underline" aria-hidden="true"></i>
-                        </button>
-                    </div>
-                    <div class="toolbar-group">
-                        <button class="toolbar-btn" data-command="insertUnorderedList" aria-label="Llista amb punts" title="Llista amb punts">
-                            <i class="bi bi-list-ul" aria-hidden="true"></i>
-                        </button>
-                        <button class="toolbar-btn" data-command="insertOrderedList" aria-label="Llista numerada" title="Llista numerada">
-                            <i class="bi bi-list-ol" aria-hidden="true"></i>
-                        </button>
-                    </div>
-                    <div class="toolbar-group">
-                        <button class="toolbar-btn" data-command="createLink" aria-label="Enllaç" title="Enllaç">
-                            <i class="bi bi-link-45deg" aria-hidden="true"></i>
-                        </button>
-                        <button class="toolbar-btn" data-command="removeFormat" aria-label="Neteja format" title="Neteja format">
-                            <i class="bi bi-eraser" aria-hidden="true"></i>
-                        </button>
-                    </div>
-                </div>
-                <div class="editor-content" contenteditable="true" id="note-content" aria-label="Contingut de la nota">
-                    <p>Selecciona una nota per editar o crea una nova nota.</p>
-                </div>
+                <!-- Hidden sync field for compatibility with existing JS -->
+                <textarea id="note-content" aria-hidden="true" hidden></textarea>
+                <!-- Rich editor container (auto-initialized by Quadern.RichEditor) -->
+                <div id="qre-editor" class="qre" data-sync-target="#note-content"></div>
             </div>
         </div>
     </div>
