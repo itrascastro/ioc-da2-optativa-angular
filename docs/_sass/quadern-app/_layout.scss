@@ -18,11 +18,22 @@
 }
 
 .quadern-layout {
-  font-family: var(--font-family-base);
+  /* Tipografia alineada amb el mock (Inter) */
+  font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   background: var(--color-background);
   color: var(--color-text);
   overflow-x: hidden;
 }
+
+/* Ajust de mida per controls comuns dins Quadern */
+.quadern-layout .view-btn,
+.quadern-layout .btn,
+.quadern-layout .nav-button,
+.quadern-layout .theme-toggle { font-size: 0.95rem; }
 
 /* Reset de espacio global heredado y margen UA en páginas de Quadern */
 body.quadern-layout {
@@ -237,26 +248,20 @@ body.quadern-layout {
   align-items: center;
   gap: 10px;
   padding: 10px 15px;
-  background: none;
-  border: none;
+  background: transparent;
+  border: 1px solid var(--color-border);
   border-radius: var(--border-radius);
   color: var(--color-text);
   font-size: 0.9rem;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: color .15s ease, border-color .15s ease, background-color .15s ease;
   text-align: left;
   width: 100%;
 }
 
-.view-btn:hover {
-  background: rgba(52, 152, 219, 0.1);
-  color: var(--quadern-accent);
-}
+.view-btn:hover { background: transparent; border-color: var(--quadern-accent); color: var(--quadern-accent); }
 
-.view-btn.active {
-  background: var(--quadern-accent);
-  color: white;
-}
+.view-btn.active { background: transparent; border-color: var(--quadern-accent); color: var(--quadern-accent); }
 
 .view-btn i {
   font-size: 1rem;
@@ -721,7 +726,7 @@ body.quadern-layout {
   color: var(--color-text);
   cursor: pointer;
 }
-.footer-icon-btn:hover { background-color: var(--color-surface-dark); }
+.footer-icon-btn:hover { background-color: transparent; border-color: var(--quadern-accent); color: var(--quadern-accent); }
 
 /* Responsive (ocultar sidebar en pantallas pequeñas) */
 @media (max-width: 900px) {

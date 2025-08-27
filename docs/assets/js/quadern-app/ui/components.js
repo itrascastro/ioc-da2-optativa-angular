@@ -84,17 +84,17 @@
       }
     },
 
-    showModal(title, content, actions = []) {
+    showModal(title, content, actions = [], options = {}) {
       console.log('🎨 Modal:', title);
       
       // Eliminar modals anteriors
       this.closeModal();
 
-      // Crear modal
+      // Estructura compatible amb els estils (modal + modal-content)
       const modal = document.createElement('div');
-      modal.className = 'modal-backdrop';
+      modal.className = 'modal active';
       modal.innerHTML = `
-        <div class="modal">
+        <div class="modal-content">
           <div class="modal-header">
             <h3 class="modal-title">${title}</h3>
             <button class="modal-close" type="button">
@@ -118,26 +118,24 @@
 
       document.body.appendChild(modal);
 
-      // Mostrar amb animació
-      setTimeout(() => modal.classList.add('show'), 10);
-
-      // Bind events
-      const closeBtn = modal.querySelector('.modal-close');
-      if (closeBtn) {
-        closeBtn.addEventListener('click', () => this.closeModal());
+      // Click fora per tancar
+      if (options.backdropClose !== false) {
+        modal.addEventListener('click', (e) => {
+          if (e.target === modal) {
+            this.closeModal();
+          }
+        });
       }
 
-      modal.addEventListener('click', (e) => {
-        if (e.target === modal) {
-          this.closeModal();
-        }
-      });
+      // Botó tancar
+      const closeBtn = modal.querySelector('.modal-close');
+      if (closeBtn) closeBtn.addEventListener('click', () => this.closeModal());
 
-      // Bind action buttons
+      // Botons d'acció
       const actionBtns = modal.querySelectorAll('[data-action]');
       actionBtns.forEach(btn => {
         btn.addEventListener('click', (e) => {
-          const action = e.target.dataset.action;
+          const action = e.currentTarget.dataset.action;
           this._handleModalAction(action, modal);
         });
       });
@@ -146,14 +144,9 @@
     },
 
     closeModal() {
-      const modal = document.querySelector('.modal-backdrop.show');
-      if (modal) {
-        modal.classList.remove('show');
-        setTimeout(() => {
-          if (modal.parentNode) {
-            modal.parentNode.removeChild(modal);
-          }
-        }, 300);
+      const modal = document.querySelector('.modal.active');
+      if (modal && modal.parentNode) {
+        modal.parentNode.removeChild(modal);
       }
     },
 

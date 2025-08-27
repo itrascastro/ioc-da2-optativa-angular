@@ -8,7 +8,7 @@
 .dash-header .dash-actions { display:flex; gap:8px; flex-shrink:0; }
 .search-wrapper { position:relative; flex:1; }
 .search-wrapper i { position:absolute; left:12px; top:50%; transform:translateY(-50%); color: var(--color-text-muted); }
-.search-input { width:100%; padding: 10px 12px 10px 36px; border:1px solid var(--color-border); background: var(--color-background); color: var(--color-text); border-radius: 10px; }
+.search-input { width:100%; padding: 10px 12px 10px 36px; border:1px solid var(--color-border); background: var(--color-background); color: var(--color-text); border-radius: 10px; font-size: 0.98rem; }
 .search-input:focus { outline:none; border-color: var(--quadern-accent); box-shadow: 0 0 0 3px rgba(59,130,246,0.12); }
 
 .tag-filters { display:flex; flex-wrap:wrap; gap:8px; padding: 2px 0 10px; margin-bottom: 14px; }
@@ -28,10 +28,7 @@
   transition: all 0.3s ease;
 }
 
-.card:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-medium);
-}
+.card:hover { /* sense moviment en hover */ }
 
 .card-header {
   display: flex;
@@ -66,14 +63,14 @@
 .recent-notes-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px; }
 /* Targeta de nota (mockup) */
 .note-card { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 12px; padding: 16px; box-shadow: var(--shadow-light); transition: transform .2s, box-shadow .2s; }
-.note-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-medium); }
+.note-card:hover { /* sense moviment en hover */ }
 .note-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; margin-bottom: 8px; }
-.note-title { margin: 0; font-weight: 700; color: var(--color-text); font-size: 1.05rem; }
+.note-title { margin: 0; font-weight: 700; color: var(--color-text); font-size: 1.15rem; }
 .note-actions { display: inline-flex; gap: 8px; }
 .icon-btn { width: 30px; height: 30px; display: inline-flex; align-items: center; justify-content: center; border: 1px solid var(--color-border); background: var(--color-background); color: var(--color-text-muted); border-radius: 8px; cursor: pointer; }
 .icon-btn:hover { color: var(--color-text); }
 .icon-btn.danger:hover { border-color: var(--quadern-danger); color: var(--quadern-danger); }
-.note-content { color: var(--color-text); margin: 8px 0; line-height: 1.5; }
+.note-content { color: var(--color-text); margin: 8px 0; line-height: 1.6; font-size: 0.98rem; }
 .note-tags { display: flex; flex-wrap: wrap; gap: 6px; margin: 6px 0 8px; }
 .note-footer { color: var(--color-text-muted); font-size: .85rem; margin-top: 4px; }
 /* Timeline */
@@ -117,7 +114,6 @@
   border-color: var(--quadern-accent);
   background: var(--quadern-accent);
   color: white;
-  transform: scale(1.02);
 }
 
 .action-btn i {
@@ -174,7 +170,7 @@
   color: var(--color-text);
   border: 1px solid var(--color-border);
   border-radius: 999px;
-  font-size: 0.85rem;
+  font-size: 0.9rem;
   cursor: pointer;
   transition: all 0.2s ease;
   text-decoration: none;

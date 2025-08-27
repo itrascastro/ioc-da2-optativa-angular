@@ -47,27 +47,27 @@
   align-items: center;
   gap: 6px;
   padding: 8px 16px;
-  border: none;
+  border: 1px solid var(--color-border);
   border-radius: 6px;
   font-size: 0.9rem;
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: color .15s ease, border-color .15s ease, background-color .15s ease;
   text-decoration: none;
 }
 
 .btn-primary {
-  background: var(--quadern-accent);
-  color: white;
+  background: transparent;
+  color: var(--quadern-accent);
+  border-color: var(--quadern-accent);
 }
 
 .btn-primary:hover {
-  background: var(--quadern-accent-hover);
-  transform: translateY(-1px);
+  background: transparent;
 }
 
 .btn-outline {
-  background: var(--color-background);
+  background: transparent;
   color: var(--color-text);
   border: 1px solid var(--color-border);
 }
@@ -79,35 +79,34 @@
 
 .btn-icon {
   padding: 6px;
-  background: none;
-  border: none;
+  background: transparent;
+  border: 1px solid var(--color-border);
   color: var(--color-text);
   cursor: pointer;
   border-radius: 4px;
-  transition: all 0.3s ease;
+  transition: color .15s ease, border-color .15s ease, background-color .15s ease;
 }
 
 .btn-icon:hover {
-  background: rgba(52, 152, 219, 0.1);
+  background: transparent;
+  border-color: var(--quadern-accent);
   color: var(--quadern-accent);
 }
 
 .save-btn {
-  background: var(--quadern-accent);
-  color: white;
-  border: none;
+  background: transparent;
+  color: var(--quadern-accent);
+  border: 1px solid var(--quadern-accent);
   padding: 12px 24px;
   border-radius: 6px;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 0 20px rgba(52, 152, 219, 0.3);
+  transition: color .15s ease, border-color .15s ease, background-color .15s ease;
+  box-shadow: none;
 }
 
 .save-btn:hover {
-  background: var(--quadern-accent-hover);
-  box-shadow: 0 0 30px rgba(52, 152, 219, 0.5);
-  transform: translateY(-2px);
+  background: transparent;
 }
 
 /* Estados Vacíos */
@@ -158,16 +157,6 @@
   justify-content: center;
 }
 
-.modal-backdrop {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.6);
-  backdrop-filter: blur(4px);
-}
-
 .modal-content {
   background: var(--color-surface);
   border: 1px solid var(--color-border);
@@ -179,6 +168,7 @@
   position: relative;
   z-index: 1;
   animation: slideUp 0.3s ease;
+  box-shadow: var(--shadow-medium);
 }
 
 @keyframes slideUp {
@@ -233,6 +223,32 @@
   border-top: 1px solid var(--color-border);
   background: var(--color-surface-dark);
 }
+
+/* Botons dins del modal (estil transparent, només vora; sense moviment) */
+.modal .btn {
+  background: transparent;
+  border: 1px solid var(--color-border);
+  color: var(--color-text);
+  transition: color .15s ease, border-color .15s ease, background-color .15s ease;
+}
+.modal .btn:hover { background: transparent; border-color: var(--quadern-accent); color: var(--quadern-accent); }
+.modal .btn:active { transform: none; }
+
+.modal .btn-primary { background: transparent; border: 1px solid var(--quadern-accent); color: var(--quadern-accent); }
+.modal .btn-primary:hover { background: transparent; border-color: var(--quadern-accent); color: var(--quadern-accent); }
+
+.modal .btn-outline { background: transparent; border: 1px solid var(--color-border); color: var(--color-text); }
+.modal .btn-outline:hover { background: transparent; border-color: var(--quadern-accent); color: var(--quadern-accent); }
+
+/* Filter modal (Etiquetes) */
+.filter-modal { display: flex; flex-direction: column; gap: 12px; }
+.filter-modal .input-search { width: 100%; padding: 10px 12px; border: 1px solid var(--color-border); background: var(--color-background); color: var(--color-text); border-radius: 10px; font-size: 0.98rem; }
+.filter-modal .input-search:focus { outline: none; border-color: var(--quadern-accent); box-shadow: 0 0 0 3px rgba(59,130,246,0.12); }
+.filter-modal .filter-tags { max-height: 260px; overflow: auto; display: flex; flex-direction: column; gap: 8px; }
+.filter-modal .filter-row { display: flex; align-items: center; gap: 10px; padding: 6px 2px; }
+.filter-modal .filter-checkbox { width: 16px; height: 16px; accent-color: var(--quadern-accent); }
+.filter-modal .tag-name { font-weight: 500; }
+.filter-modal .tag-count { margin-left: auto; opacity: .7; font-size: .85rem; }
 
 /* Toast Notification */
 .toast {

@@ -280,30 +280,38 @@
       const tags = Object.entries(tagCounts).sort((a,b)=> b[1]-a[1]);
       const content = `
         <div class="filter-modal">
-          <input type="text" id="filter-search" placeholder="Cerca etiqueta..." class="input" style="width:100%;margin-bottom:10px;" />
-          <div class="filter-tags" style="max-height:260px; overflow:auto; display:flex; flex-direction:column; gap:6px;">
+          <div class="filter-search">
+            <input type="text" id="filter-search" class="input-search" placeholder="Cerca etiqueta..." />
+          </div>
+          <div class="filter-tags">
             ${tags.map(([tag,count])=>`
-              <label style="display:flex; align-items:center; gap:8px;">
-                <input type="checkbox" class="filter-tag" value="${tag}" ${this._tagFilter?.includes(tag)?'checked':''} />
-                <span>#${tag}</span>
-                <span style="margin-left:auto; opacity:.7;">${count}</span>
-              </label>
+              <div class=\"filter-row\"> 
+                <input type=\"checkbox\" class=\"filter-checkbox\" value=\"${tag}\" ${this._tagFilter?.includes(tag)?'checked':''} />
+                <span class=\"tag-name\">#${tag}</span>
+                <span class=\"tag-count\">${count}</span>
+              </div>
             `).join('')}
           </div>
         </div>`;
       const modal = window.Quadern?.Components?.showModal
         ? window.Quadern.Components.showModal('Filtrar per etiqueta', content, [
-            { text: 'Netejar', action: 'clear', class: 'btn-secondary' },
+            { text: 'Netejar', action: 'clear', class: 'btn-outline' },
             { text: 'Aplicar', action: 'apply', class: 'btn-primary' }
-          ])
+          ], { backdropClose: false })
         : null;
       if (!modal) return;
       modal.addEventListener('click', (e)=>{
-        const act = e.target?.dataset?.action;
+        const btn = e.target.closest('[data-action]');
+        const act = btn?.dataset?.action;
         if (!act) return;
-        if (act === 'clear') { this._tagFilter = null; this.loadData(); }
+        if (act === 'clear') {
+          this._tagFilter = null;
+          // Netejar checks visuals
+          modal.querySelectorAll('.filter-checkbox:checked').forEach(cb => { cb.checked = false; });
+          this.loadData();
+        }
         if (act === 'apply') {
-          const selected = Array.from(modal.querySelectorAll('.filter-tag:checked')).map(i=>i.value);
+          const selected = Array.from(modal.querySelectorAll('.filter-checkbox:checked')).map(i=>i.value);
           this._tagFilter = selected;
           this.loadData();
         }
@@ -313,8 +321,8 @@
       if (search) {
         search.addEventListener('input', ()=>{
           const q = search.value.toLowerCase();
-          modal.querySelectorAll('.filter-tag').forEach(cb => {
-            const row = cb.closest('label');
+          modal.querySelectorAll('.filter-checkbox').forEach(cb => {
+            const row = cb.closest('.filter-row');
             row.style.display = cb.value.toLowerCase().includes(q) ? '' : 'none';
           });
         });
