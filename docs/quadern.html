@@ -16,6 +16,17 @@ breadcrumb: false
             <div class="card-header">
                 <i class="bi bi-clock-history" aria-hidden="true"></i>
                 <h3>Notes Recents</h3>
+                <div class="header-spacer" style="flex:1"></div>
+                <div class="card-actions">
+                    <button class="btn btn-outline btn-sm" data-action="open-filter" aria-label="Filtrar per etiqueta">
+                        <i class="bi bi-funnel"></i>
+                        <span class="hide-sm">Filtrar</span>
+                    </button>
+                    <button class="btn btn-primary btn-sm" data-action="create-note" aria-label="Nova Nota">
+                        <i class="bi bi-plus-lg"></i>
+                        <span class="hide-sm">Nova Nota</span>
+                    </button>
+                </div>
             </div>
             <div class="card-body" id="recent-notes">
                 <div class="empty-state">
@@ -24,65 +35,6 @@ breadcrumb: false
             </div>
         </div>
 
-        <!-- Accions Ràpides -->
-        <div class="card">
-            <div class="card-header">
-                <i class="bi bi-lightning" aria-hidden="true"></i>
-                <h3>Accions Ràpides</h3>
-            </div>
-            <div class="card-body">
-                <div class="quick-actions">
-                    <button class="action-btn" data-action="create-note" aria-label="Crear nova nota">
-                        <i class="bi bi-plus-lg" aria-hidden="true"></i>
-                        <span>Nova Nota</span>
-                    </button>
-                    <button class="action-btn" data-action="view-all-notes" aria-label="Cercar notes">
-                        <i class="bi bi-search" aria-hidden="true"></i>
-                        <span>Cercar</span>
-                    </button>
-                    <button class="action-btn" data-action="import-notes" aria-label="Importar notes">
-                        <i class="bi bi-upload" aria-hidden="true"></i>
-                        <span>Importar</span>
-                    </button>
-                    <button class="action-btn" data-action="export-notes" aria-label="Exportar notes">
-                        <i class="bi bi-download" aria-hidden="true"></i>
-                        <span>Exportar</span>
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Estadístiques -->
-        <div class="card">
-            <div class="card-header">
-                <i class="bi bi-graph-up" aria-hidden="true"></i>
-                <h3>Estadístiques</h3>
-            </div>
-            <div class="card-body">
-                <div class="stats-grid" id="stats-grid">
-                    <div class="stat">
-                        <span class="stat-label">Total de Notes:</span>
-                        <span class="stat-value" id="stat-total-notes">0</span>
-                    </div>
-                    <div class="stat">
-                        <span class="stat-label">Unitats:</span>
-                        <span class="stat-value" id="stat-units">0</span>
-                    </div>
-                    <div class="stat">
-                        <span class="stat-label">Blocs:</span>
-                        <span class="stat-value" id="stat-blocks">0</span>
-                    </div>
-                    <div class="stat">
-                        <span class="stat-label">Última edició:</span>
-                        <span class="stat-value" id="stat-last-edit">Mai</span>
-                    </div>
-                    <div class="stat">
-                        <span class="stat-label">Espai utilitzat:</span>
-                        <span class="stat-value" id="stat-storage">0 KB</span>
-                    </div>
-                </div>
-            </div>
-        </div>
 
         <!-- Etiquetes Populars -->
         <div class="card">

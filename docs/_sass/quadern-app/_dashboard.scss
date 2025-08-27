@@ -2,12 +2,7 @@
    VISTA DASHBOARD
    ============================= */
 
-.dashboard-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 25px;
-  margin-top: 0; /* evitar solapaments amb el header */
-}
+.dashboard-grid { display: grid; grid-template-columns: 1fr; gap: 20px; margin: 0 auto; max-width: 960px; }
 
 .card {
   background: var(--color-surface);
@@ -30,6 +25,11 @@
   border-bottom: 1px solid var(--color-border);
 }
 
+.card-header .card-actions { display: inline-flex; align-items: center; gap: 8px; }
+.btn-sm { padding: 6px 10px; font-size: .85rem; }
+.hide-sm { display: inline; }
+@media (max-width: 640px) { .hide-sm { display: none; } }
+
 .card-header i {
   font-size: 1.2rem;
   color: var(--quadern-accent);
@@ -46,70 +46,33 @@
   padding: 20px;
 }
 
-/* Notes Recents */
-.recent-note-item {
-  padding: 12px;
-  background: var(--color-background);
-  border: 1px solid var(--color-border);
-  border-radius: 6px;
-  margin-bottom: 10px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
+/* Notes Recents com targetes en graella */
+.recent-notes-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px; }
+.recent-note-card { background: var(--color-surface); border: 1px solid var(--color-border); border-left: 4px solid var(--quadern-accent); border-radius: 10px; padding: 14px; display: flex; flex-direction: column; gap: 8px; box-shadow: var(--shadow-light); transition: border-color .2s, transform .2s, box-shadow .2s; }
+.recent-note-card:hover { border-color: var(--quadern-accent); transform: translateY(-2px); box-shadow: var(--shadow-medium); }
+.recent-note-card .card-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.recent-note-card .title { font-weight: 600; color: var(--color-text); overflow-wrap: anywhere; font-size: 1rem; }
+.recent-note-card .time { color: var(--color-text-muted); font-size: .85rem; }
+.recent-note-card .location { font-size: .85rem; color: var(--color-text-muted); }
+.recent-note-card .location a { color: var(--color-accent); text-decoration: none; }
+.recent-note-card .location a:hover { color: var(--color-primary); }
+.recent-note-card .meta { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
+.recent-note-card .actions { margin-top: 6px; display: flex; gap: 6px; }
+.recent-note-card .btn-icon { width: 28px; height: 28px; border-radius: 6px; display: inline-flex; align-items: center; justify-content: center; background: var(--color-surface-dark); border: 1px solid var(--color-border); color: var(--color-text); cursor: pointer; }
+.recent-note-card .btn-icon:hover { background: var(--color-surface-dark); }
+/* Timeline */
+.timeline { position: relative; padding-left: 36px; }
+.timeline::before { content: ''; position: absolute; left: 16px; top: 0; bottom: 0; width: 2px; background: var(--color-border); }
+.date-group { position: relative; margin-bottom: 20px; }
+.date-marker { position: absolute; left: 7px; top: 4px; width: 18px; height: 18px; border-radius: 50%; background: var(--color-surface); border: 2px solid var(--quadern-accent); box-shadow: var(--shadow-light); }
+.date-title { margin-left: 12px; font-weight: 600; color: var(--color-text); margin-bottom: 10px; text-transform: none; letter-spacing: .2px; }
+.date-notes { display: flex; flex-direction: column; gap: 12px; }
 
-.recent-note-item:hover {
-  background: var(--color-surface-dark);
-  border-color: var(--quadern-accent);
-}
-
-.recent-note-item:last-child {
-  margin-bottom: 0;
-}
-
-/* Llista recent: altura fixa (~5 elements) amb scroll */
-.recent-notes-list {
-  max-height: 500px; /* aproximadament 7-8 targetes */
-  overflow-y: auto;
-  padding-right: 4px; /* espai per a scroll */
-}
-
-.recent-note-title {
-  font-weight: 600;
-  color: var(--color-text);
-  margin-bottom: 4px;
-  overflow-wrap: anywhere; /* trenca paraules llargues sense espais */
-  word-break: break-word;
-}
-.recent-note-title .recent-note-time { color: var(--color-text-muted); font-weight: 500; font-size: 0.9em; margin-left: 6px; }
-
-.recent-note-preview {
-  font-size: 0.85rem;
-  color: var(--color-text-muted);
-  line-height: 1.4;
-}
-
-.recent-note-meta {
-  font-size: 0.75rem;
-  color: var(--color-text-muted);
-  margin-top: 6px;
-}
-
-.recent-note-location {
-  font-size: 0.8rem;
-  color: var(--color-text-muted);
-}
-.recent-note-location a { color: var(--color-accent); text-decoration: none; }
-.recent-note-location a:hover { color: var(--color-primary); }
-.recent-note-location .sep { margin: 0 6px; opacity: 0.7; }
-
-.recent-note-actions {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.recent-note-item { display: flex; justify-content: space-between; align-items: center; }
-.recent-note-content { flex: 1; min-width: 0; }
+/* Punto conector por nota */
+.recent-note-card { position: relative; margin-left: 4px; }
+.date-notes .recent-note-card::before { content: ''; position: absolute; left: -28px; top: 18px; width: 10px; height: 10px; border-radius: 50%; background: var(--color-surface); border: 2px solid var(--color-border); }
+/* Preview truncado a 2-3 líneas */
+.recent-note-card .preview { font-size: .9rem; color: var(--color-text-muted); line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
 
 /* Accions Ràpides */
 .quick-actions {

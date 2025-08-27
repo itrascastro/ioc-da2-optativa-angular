@@ -8,6 +8,7 @@
 
   const Dashboard = {
     app: null,
+    _tagFilter: null,
 
     // =============================
     // INICIALITZACIÓ
@@ -63,7 +64,14 @@
       const container = document.getElementById('recent-notes');
       if (!container) return;
 
-      const recentNotes = notes
+      // Aplicar filtre per etiqueta si cal
+      let filtered = notes;
+      if (this._tagFilter && this._tagFilter.length) {
+        const set = new Set(this._tagFilter.map(t=>t.toLowerCase()));
+        filtered = notes.filter(n => (n.tags||[]).some(t => set.has(String(t).toLowerCase())));
+      }
+
+      const recentNotes = filtered
         .filter(note => note.content && note.content.trim()) // Només notes amb contingut
         .sort((a, b) => new Date(b.updatedAt || b.createdAt) - new Date(a.updatedAt || a.createdAt))
         .slice(0, 100); // mostrarem scroll per veure més, però limitem per rendiment
@@ -84,26 +92,51 @@
         return;
       }
 
+      // Construir vista timeline agrupada per data relativa
+      const groups = this._groupByRelativeDate(recentNotes);
       container.innerHTML = `
-        <div class="recent-notes-list" aria-label="Llista de notes recents">
-          ${recentNotes.map(note => this._renderRecentNoteItem(note)).join('')}
+        <div class="timeline" aria-label="Línia de temps de notes">
+          ${groups.map(g => `
+            <section class="date-group">
+              <div class="date-marker" aria-hidden="true"></div>
+              <h4 class="date-title">${g.title}</h4>
+              <div class="date-notes">
+                ${g.items.map(n => this._renderRecentNoteCard(n)).join('')}
+              </div>
+            </section>
+          `).join('')}
         </div>
       `;
     },
-
-    _renderRecentNoteItem(note) {
+    _groupByRelativeDate(notes){
+      const today = new Date();
+      const isSameDay = (a,b) => a.getFullYear()===b.getFullYear() && a.getMonth()===b.getMonth() && a.getDate()===b.getDate();
+      const yesterday = new Date(today); yesterday.setDate(today.getDate()-1);
+      const groupsMap = new Map();
+      const pushTo = (key, note) => { if(!groupsMap.has(key)) groupsMap.set(key, []); groupsMap.get(key).push(note); };
+      notes.forEach(n=>{
+        const d = new Date(n.updatedAt || n.createdAt);
+        if (isSameDay(d, today)) pushTo('Avui', n);
+        else if (isSameDay(d, yesterday)) pushTo('Ahir', n);
+        else pushTo(d.toLocaleDateString('ca-ES', { weekday:'long', day:'2-digit', month:'short', year:'numeric' }), n);
+      });
+      return Array.from(groupsMap.entries()).map(([title, items])=>({title, items}));
+    },
+    _renderRecentNoteCard(note) {
       const tags = (note.tags||[]).map(t=>`<span class="tag">#${t}</span>`).join(' ');
       const time = this._formatDate(note.updatedAt || note.createdAt);
+      const title = this._escapeHtml(note.noteTitle || 'Sense títol');
+      const preview = this._getContentPreview(note.content || '', 180);
       return `
-        <div class="recent-note-item" data-note-id="${note.id}">
-          <div class="recent-note-content">
-            <div class="recent-note-title">${this._escapeHtml(note.noteTitle || 'Sense títol')} <span class="recent-note-time">(${time})</span></div>
-            <div class="recent-note-location">${this._formatLocationLinks(note)}</div>
-            <div class="recent-note-meta">
-              ${tags ? `<span class="tags-preview">${tags}</span>` : ''}
-            </div>
+        <div class="recent-note-card" data-note-id="${note.id}">
+          <div class="card-head">
+            <div class="title">${title}</div>
+            <div class="time">${time}</div>
           </div>
-          <div class="recent-note-actions">
+          <div class="location">${this._formatLocationLinks(note)}</div>
+          ${preview ? `<div class="preview">${this._escapeHtml(preview)}</div>` : ''}
+          ${tags ? `<div class="meta">${tags}</div>` : ''}
+          <div class="actions">
             <button class="btn-icon" title="Editar" data-action="edit-note" data-note-id="${note.id}">
               <i class="bi bi-pencil"></i>
             </button>
@@ -150,8 +183,83 @@
           this._editNote(noteId);
         } else if (action === 'delete-note') {
           this._deleteNote(noteId);
+        } else if (action === 'open-filter') {
+          this._openFilterModal();
+        } else if (action === 'create-note') {
+          this._createNewNote();
         }
       });
+      // Click en targeta completa para editar
+      container.addEventListener('click', (e)=>{
+        if (e.target.closest('[data-action]')) return; // ya gestionado por botones
+        const card = e.target.closest('.recent-note-card');
+        if (!card) return;
+        const noteId = card.getAttribute('data-note-id');
+        if (noteId) this._editNote(noteId);
+      });
+      // Delegació: botons de la capçalera (fora de recent-notes)
+      const listCard = container.closest('.card');
+      if (listCard) {
+        listCard.addEventListener('click', (e)=>{
+          const btn = e.target.closest('[data-action]');
+          if (!btn) return;
+          const action = btn.getAttribute('data-action');
+          if (action === 'open-filter') this._openFilterModal();
+          if (action === 'create-note') this._createNewNote();
+        });
+      }
+    },
+    _openFilterModal(){
+      const tagCounts = this._extractTags(this._getAllNotesSync());
+      const tags = Object.entries(tagCounts).sort((a,b)=> b[1]-a[1]);
+      const content = `
+        <div class="filter-modal">
+          <input type="text" id="filter-search" placeholder="Cerca etiqueta..." class="input" style="width:100%;margin-bottom:10px;" />
+          <div class="filter-tags" style="max-height:260px; overflow:auto; display:flex; flex-direction:column; gap:6px;">
+            ${tags.map(([tag,count])=>`
+              <label style="display:flex; align-items:center; gap:8px;">
+                <input type="checkbox" class="filter-tag" value="${tag}" ${this._tagFilter?.includes(tag)?'checked':''} />
+                <span>#${tag}</span>
+                <span style="margin-left:auto; opacity:.7;">${count}</span>
+              </label>
+            `).join('')}
+          </div>
+        </div>`;
+      const modal = window.Quadern?.Components?.showModal
+        ? window.Quadern.Components.showModal('Filtrar per etiqueta', content, [
+            { text: 'Netejar', action: 'clear', class: 'btn-secondary' },
+            { text: 'Aplicar', action: 'apply', class: 'btn-primary' }
+          ])
+        : null;
+      if (!modal) return;
+      modal.addEventListener('click', (e)=>{
+        const act = e.target?.dataset?.action;
+        if (!act) return;
+        if (act === 'clear') { this._tagFilter = null; this.loadData(); }
+        if (act === 'apply') {
+          const selected = Array.from(modal.querySelectorAll('.filter-tag:checked')).map(i=>i.value);
+          this._tagFilter = selected;
+          this.loadData();
+        }
+      });
+      // Filtre per text
+      const search = modal.querySelector('#filter-search');
+      if (search) {
+        search.addEventListener('input', ()=>{
+          const q = search.value.toLowerCase();
+          modal.querySelectorAll('.filter-tag').forEach(cb => {
+            const row = cb.closest('label');
+            row.style.display = cb.value.toLowerCase().includes(q) ? '' : 'none';
+          });
+        });
+      }
+    },
+    _getAllNotesSync(){
+      if (window.Quadern && window.Quadern.Store) {
+        const state = window.Quadern.Store.load();
+        return Object.values(state.notes.byId || {});
+      }
+      return [];
     },
     _editNote(noteId){
       if (!noteId) return;
