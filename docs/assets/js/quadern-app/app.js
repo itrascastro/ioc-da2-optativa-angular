@@ -846,6 +846,10 @@
           module.refreshData();
         }
       });
+
+      // Actualitzar peu i estructura sense recàrrega
+      try { this._updateFooterStats(); } catch {}
+      try { if (window.Quadern?.NavigationTree?.refreshData) window.Quadern.NavigationTree.refreshData(); } catch {}
     },
 
     // Bridge amb el sistema de panells

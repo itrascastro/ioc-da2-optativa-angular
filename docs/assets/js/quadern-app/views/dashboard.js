@@ -10,6 +10,7 @@
     app: null,
     _tagFilter: null,
     _searchQuery: '',
+    _structureFilter: null, // { unitId?, blocId?, sectionId? }
 
     // =============================
     // INICIALITZACIÓ
@@ -154,6 +155,19 @@
         </section>
       `).join('');
       container.innerHTML = html;
+    },
+    // Establir filtre per estructura i mostrar al dashboard
+    setStructureFilter(filter){
+      this._structureFilter = filter || null;
+      // Netejar altres filtres per claredat visual
+      this._tagFilter = null;
+      this._searchQuery = '';
+      try {
+        if (this.app && typeof this.app.switchView === 'function') {
+          this.app.switchView('dashboard');
+        }
+      } catch {}
+      this.loadData();
     },
     _groupByDateLabel(notes){
       const map = new Map();
@@ -661,18 +675,20 @@
 
     _getContentPreview(content, maxLength = 150) {
       if (!content) return 'Sense contingut';
-      
-      // Netejar markdown/html bàsic
-      const clean = content
-        .replace(/#+\s*/g, '') // Headers markdown
-        .replace(/\*\*(.*?)\*\*/g, '$1') // Bold
-        .replace(/\*(.*?)\*/g, '$1') // Italic
-        .replace(/`(.*?)`/g, '$1') // Inline code
-        .trim();
-      
-      return clean.length > maxLength 
-        ? clean.substring(0, maxLength) + '...'
-        : clean;
+
+      // Convertir HTML a text pla preservant només el contingut llegible
+      let text = '';
+      try {
+        const div = document.createElement('div');
+        div.innerHTML = content;
+        text = (div.textContent || div.innerText || '').replace(/\s+/g, ' ').trim();
+      } catch {
+        text = String(content).replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+      }
+
+      if (!text) return 'Sense contingut';
+
+      return text.length > maxLength ? (text.slice(0, maxLength).trim() + '...') : text;
     },
 
     _formatLocation(note) {
@@ -732,6 +748,16 @@
     // =============================
 
     onViewActivated() {
+      // Filtre per estructura (unitat/bloc/secció)
+      if (this._structureFilter) {
+        const f = this._structureFilter;
+        filtered = filtered.filter(n => {
+          const unitOk = f.unitId ? Number(n.unitat||0) === Number(f.unitId) : true;
+          const blocOk = f.blocId ? Number(n.bloc||0) === Number(f.blocId) : true;
+          const sectOk = f.sectionId ? String(n.sectionId||'') === String(f.sectionId) : true;
+          return unitOk && blocOk && sectOk;
+        });
+      }
       this.loadData();
     },
 

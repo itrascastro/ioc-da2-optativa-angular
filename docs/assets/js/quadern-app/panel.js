@@ -340,6 +340,7 @@
     S.save(this.state); 
     this.refreshList(); 
     this.updateHeadCounts();
+    try { if (window.Quadern?.App?.refreshData) window.Quadern.App.refreshData(); } catch {}
     
     // Si s'està editant aquesta nota, netejar l'editor
     if (this.currentId === noteId) {

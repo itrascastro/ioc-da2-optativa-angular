@@ -143,12 +143,17 @@
             if (!isLast) {
               crumbButton.addEventListener('click', () => {
                 this.activePath = this.activePath.slice(0, index + 1);
+                this._applyFilterForActivePath();
                 this.render();
               });
             } else {
               crumbButton.addEventListener('click', () => {
                 if (this.activePath.length === 1) {
                   this.activePath = [];
+                  // Tornar a arrel: eliminar filtre
+                  if (window.Quadern?.Dashboard?.setStructureFilter) {
+                    window.Quadern.Dashboard.setStructureFilter(null);
+                  }
                   this.render();
                 }
               });
@@ -210,15 +215,49 @@
           } else {
             this.activePath.push(node); // Anida dins del mateix arbre
           }
+          // Aplicar filtre al dashboard per unitat o bloc
+          const unitMatch = /^unit-(\d+)/.exec(node.id || '');
+          if (unitMatch) {
+            this._setDashboardFilter({ unitId: unitMatch[1] });
+          } else if (node.id && node.id.startsWith('bloc-')) {
+            this._setDashboardFilter({ unitId: node.unitId, blocId: String(node.id).replace('bloc-','') });
+          }
         } else {
           this.activeItemId = node.id;
-          // És una secció final - seleccionar
-          this.selectSection(li);
+          // És una secció final - filtrar dashboard per aquesta secció
+          this._setDashboardFilter({ unitId: node.unitId, blocId: node.blocId, sectionId: node.sectionId });
         }
         this.render();
       });
       
       return li;
+    },
+
+    _applyFilterForActivePath(){
+      // Detectar nivell actual i aplicar filtre adequat
+      const last = this.activePath[this.activePath.length - 1];
+      if (!last) { this._setDashboardFilter(null); return; }
+      const unitMatch = /^unit-(\d+)/.exec(last.id || '');
+      if (unitMatch) {
+        this._setDashboardFilter({ unitId: unitMatch[1] });
+        return;
+      }
+      if (last.id && last.id.startsWith('bloc-')) {
+        this._setDashboardFilter({ unitId: last.unitId, blocId: String(last.id).replace('bloc-','') });
+      }
+    },
+
+    _setDashboardFilter(filter){
+      try {
+        if (window.Quadern?.App?.modules?.dashboard?.setStructureFilter) {
+          window.Quadern.App.modules.dashboard.setStructureFilter(filter);
+          return;
+        }
+        if (window.Quadern?.Dashboard?.setStructureFilter) {
+          window.Quadern.Dashboard.setStructureFilter(filter);
+          return;
+        }
+      } catch(e) { console.warn('NavigationDrillDown: error aplicant filtre dashboard', e); }
     },
 
     selectSection(sectionElement) {
