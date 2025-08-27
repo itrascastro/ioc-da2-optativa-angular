@@ -8,49 +8,35 @@ breadcrumb: false
 
 <!-- Vista Dashboard -->
 <div id="dashboard-view" class="view active" role="tabpanel" aria-labelledby="dashboard-btn">
-    
-
-    <div class="dashboard-grid">
-        <!-- Notes Recents -->
-        <div class="card">
-            <div class="card-header">
-                <i class="bi bi-clock-history" aria-hidden="true"></i>
-                <h3>Notes Recents</h3>
-                <div class="header-spacer" style="flex:1"></div>
-                <div class="card-actions">
-                    <button class="btn btn-outline btn-sm" data-action="open-filter" aria-label="Filtrar per etiqueta">
-                        <i class="bi bi-funnel"></i>
-                        <span class="hide-sm">Filtrar</span>
-                    </button>
-                    <button class="btn btn-primary btn-sm" data-action="create-note" aria-label="Nova Nota">
-                        <i class="bi bi-plus-lg"></i>
-                        <span class="hide-sm">Nova Nota</span>
-                    </button>
-                </div>
-            </div>
-            <div class="card-body" id="recent-notes">
-                <div class="empty-state">
-                    <p>Encara no tens notes. Crea la teva primera nota!</p>
-                </div>
-            </div>
-        </div>
-
-
-        <!-- Etiquetes Populars -->
-        <div class="card">
-            <div class="card-header">
-                <i class="bi bi-tags" aria-hidden="true"></i>
-                <h3>Etiquetes Populars</h3>
-            </div>
-            <div class="card-body">
-                <div class="tags-container" id="popular-tags">
-                    <div class="empty-state">
-                        <p>Les etiquetes apareixeran quan tinguis notes.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
+  <div class="dashboard-container">
+    <!-- Capçalera: Cerca i Filtres -->
+    <div class="dash-header" role="region" aria-label="Cerca i filtres">
+      <div class="search-wrapper">
+        <i class="bi bi-search" aria-hidden="true"></i>
+        <input type="text" id="dashboard-search" class="search-input" placeholder="Buscar notes..." aria-label="Buscar notes">
+      </div>
+      <div class="dash-actions">
+        <button class="btn btn-outline" data-action="open-filter" aria-label="Filtrar per etiquetes">
+          <i class="bi bi-funnel" aria-hidden="true"></i>
+          <span class="hide-sm">Etiquetes</span>
+        </button>
+        <button class="btn btn-primary" data-action="create-note" aria-label="Nova Nota">
+          <i class="bi bi-plus-lg" aria-hidden="true"></i>
+          <span class="hide-sm">Nova Nota</span>
+        </button>
+      </div>
     </div>
+
+    <!-- Navegació per etiquetes (píndoles) -->
+    <nav class="tag-filters" id="dashboard-tag-filters" aria-label="Filtre ràpid per etiqueta"></nav>
+
+    <!-- Llista de notes agrupades per data -->
+    <section id="recent-notes" class="notes-timeline" aria-live="polite">
+      <div class="empty-state">
+        <p>Encara no tens notes. Crea la teva primera nota!</p>
+      </div>
+    </section>
+  </div>
 </div>
 
 <!-- Vista Editor (3 Panells) -->

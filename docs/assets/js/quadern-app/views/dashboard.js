@@ -9,6 +9,7 @@
   const Dashboard = {
     app: null,
     _tagFilter: null,
+    _searchQuery: '',
 
     // =============================
     // INICIALITZACIÓ
@@ -22,8 +23,46 @@
     },
 
     _bindEvents() {
-      // Els esdeveniments globals ja es gestionen a events.js
-      // Aquí només els específics del dashboard
+      // Esdeveniments específics del dashboard
+      const view = document.getElementById('dashboard-view');
+      if (view) {
+        view.addEventListener('click', (e)=>{
+          const btn = e.target.closest('[data-action]');
+          if (!btn) return;
+          const action = btn.getAttribute('data-action');
+          if (action === 'open-filter') this._openFilterModal();
+          if (action === 'create-note') this._createNewNote();
+        });
+      }
+
+      // Cerca en temps real
+      const search = document.getElementById('dashboard-search');
+      if (search) {
+        search.addEventListener('input', () => {
+          this._searchQuery = (search.value || '').trim().toLowerCase();
+          this.loadData();
+        });
+      }
+
+      // Click en etiquetes (fila superior)
+      const tagFilters = document.getElementById('dashboard-tag-filters');
+      if (tagFilters) {
+        tagFilters.addEventListener('click', (e)=>{
+          const tagBtn = e.target.closest('.tag-item');
+          if (!tagBtn) return;
+          const tag = tagBtn.getAttribute('data-tag');
+          if (!tag) return;
+          // Toggle simple: seleccionar/deseleccionar
+          if (this._tagFilter && this._tagFilter[0] === tag) {
+            this._tagFilter = null;
+          } else {
+            this._tagFilter = [tag];
+          }
+          this.loadData();
+        });
+      }
+      // Bind de la llista de notes (accions i click)
+      this._bindListEvents();
     },
 
     // =============================
@@ -38,7 +77,8 @@
         
         this._updateRecentNotes(notes);
         this._updateDashboardStats(notes);
-        this._updatePopularTags(notes);
+        this._updateRecentTags(notes);
+        this._renderTagFilters(notes);
         this._updateActivityChart(notes);
         
       } catch (error) {
@@ -71,6 +111,17 @@
         filtered = notes.filter(n => (n.tags||[]).some(t => set.has(String(t).toLowerCase())));
       }
 
+      // Filtre per text (títol, contingut, etiquetes)
+      if (this._searchQuery && this._searchQuery.length > 0) {
+        const q = this._searchQuery;
+        filtered = filtered.filter(n => {
+          const title = String(n.noteTitle || '').toLowerCase();
+          const content = String(n.content || '').toLowerCase();
+          const tags = (n.tags||[]).join(' ').toLowerCase();
+          return title.includes(q) || content.includes(q) || tags.includes(q);
+        });
+      }
+
       const recentNotes = filtered
         .filter(note => note.content && note.content.trim()) // Només notes amb contingut
         .sort((a, b) => new Date(b.updatedAt || b.createdAt) - new Date(a.updatedAt || a.createdAt))
@@ -92,21 +143,28 @@
         return;
       }
 
-      // Construir vista timeline agrupada per data relativa
-      const groups = this._groupByRelativeDate(recentNotes);
-      container.innerHTML = `
-        <div class="timeline" aria-label="Línia de temps de notes">
-          ${groups.map(g => `
-            <section class="date-group">
-              <div class="date-marker" aria-hidden="true"></div>
-              <h4 class="date-title">${g.title}</h4>
-              <div class="date-notes">
-                ${g.items.map(n => this._renderRecentNoteCard(n)).join('')}
-              </div>
-            </section>
-          `).join('')}
-        </div>
-      `;
+      // Agrupar per data i construir llista per dates (sense línia temporal)
+      const groups = this._groupByDateLabel(recentNotes);
+      const html = groups.map(g => `
+        <section class="date-group">
+          <div class="date-title">${this._escapeHtml(g.title)}</div>
+          <div class="date-notes">
+            ${g.items.map(n => this._renderRecentNoteCard(n)).join('')}
+          </div>
+        </section>
+      `).join('');
+      container.innerHTML = html;
+    },
+    _groupByDateLabel(notes){
+      const map = new Map();
+      const fmt = (d) => d.toLocaleDateString('ca-ES', { day:'2-digit', month:'long', year:'numeric' });
+      notes.forEach(n=>{
+        const d = new Date(n.updatedAt || n.createdAt || Date.now());
+        const key = fmt(d);
+        if (!map.has(key)) map.set(key, []);
+        map.get(key).push(n);
+      });
+      return Array.from(map.entries()).map(([title, items])=>({title, items}));
     },
     _groupByRelativeDate(notes){
       const today = new Date();
@@ -123,28 +181,23 @@
       return Array.from(groupsMap.entries()).map(([title, items])=>({title, items}));
     },
     _renderRecentNoteCard(note) {
-      const tags = (note.tags||[]).map(t=>`<span class="tag">#${t}</span>`).join(' ');
-      const time = this._formatDate(note.updatedAt || note.createdAt);
+      const tags = (note.tags||[]).map(t=>`<span class="tag note-tag">#${t}</span>`).join(' ');
       const title = this._escapeHtml(note.noteTitle || 'Sense títol');
-      const preview = this._getContentPreview(note.content || '', 180);
+      const preview = this._getContentPreview(note.content || '', 240);
+      const footer = this._escapeHtml(this._cleanSectionTitle(note.sectionTitle || ''));
       return `
-        <div class="recent-note-card" data-note-id="${note.id}">
-          <div class="card-head">
-            <div class="title">${title}</div>
-            <div class="time">${time}</div>
-          </div>
-          <div class="location">${this._formatLocationLinks(note)}</div>
-          ${preview ? `<div class="preview">${this._escapeHtml(preview)}</div>` : ''}
-          ${tags ? `<div class="meta">${tags}</div>` : ''}
-          <div class="actions">
-            <button class="btn-icon" title="Editar" data-action="edit-note" data-note-id="${note.id}">
-              <i class="bi bi-pencil"></i>
-            </button>
-            <button class="btn-icon btn-danger" title="Eliminar" data-action="delete-note" data-note-id="${note.id}">
-              <i class="bi bi-trash"></i>
-            </button>
-          </div>
-        </div>
+        <article class="note-card" data-note-id="${note.id}">
+          <header class="note-head">
+            <h3 class="note-title">${title}</h3>
+            <div class="note-actions">
+              <button class="icon-btn" title="Editar" data-action="edit-note" data-note-id="${note.id}"><i class="bi bi-pencil"></i></button>
+              <button class="icon-btn danger" title="Eliminar" data-action="delete-note" data-note-id="${note.id}"><i class="bi bi-trash"></i></button>
+            </div>
+          </header>
+          ${preview ? `<p class="note-content">${this._escapeHtml(preview)}</p>` : ''}
+          ${tags ? `<div class="note-tags">${tags}</div>` : ''}
+          ${footer ? `<footer class="note-footer">${footer}</footer>` : ''}
+        </article>
       `;
     },
     _formatLocationLinks(note) {
@@ -171,7 +224,7 @@
         .replace(/\s*(?:\(\d+\)|\[\d+\]|\d+)\s*$/, '')
         .trim();
     },
-    _bindEvents() {
+    _bindListEvents() {
       const container = document.getElementById('recent-notes');
       if (!container) return;
       container.addEventListener('click', (e)=>{
@@ -192,7 +245,7 @@
       // Click en targeta completa para editar
       container.addEventListener('click', (e)=>{
         if (e.target.closest('[data-action]')) return; // ya gestionado por botones
-        const card = e.target.closest('.recent-note-card');
+        const card = e.target.closest('.note-card');
         if (!card) return;
         const noteId = card.getAttribute('data-note-id');
         if (noteId) this._editNote(noteId);
@@ -206,6 +259,19 @@
           const action = btn.getAttribute('data-action');
           if (action === 'open-filter') this._openFilterModal();
           if (action === 'create-note') this._createNewNote();
+        });
+      }
+
+      // Click en etiquetes recents per filtrar
+      const tagsContainer = document.getElementById('recent-tags');
+      if (tagsContainer) {
+        tagsContainer.addEventListener('click', (e)=>{
+          const tagBtn = e.target.closest('.tag-item');
+          if (!tagBtn) return;
+          const tag = tagBtn.getAttribute('data-tag');
+          if (!tag) return;
+          this._tagFilter = [tag];
+          this.loadData();
         });
       }
     },
@@ -378,16 +444,28 @@
     // ETIQUETES POPULARS
     // =============================
 
-    _updatePopularTags(notes) {
-      const container = document.getElementById('popular-tags');
+    _updateRecentTags(notes) {
+      const container = document.getElementById('recent-tags');
       if (!container) return;
 
-      const tagCounts = this._extractTags(notes);
-      const popularTags = Object.entries(tagCounts)
-        .sort(([,a], [,b]) => b - a)
-        .slice(0, 8);
+      // Recents: tags únicos ordenados por recencia + contador global
+      const ordered = [...notes]
+        .filter(n => (n.tags && n.tags.length))
+        .sort((a,b)=> new Date(b.updatedAt||b.createdAt) - new Date(a.updatedAt||a.createdAt));
+      const counts = this._extractTags(notes);
+      const seen = new Set();
+      const recentTags = [];
+      for (const n of ordered) {
+        for (const t of n.tags) {
+          const tt = String(t).trim().toLowerCase();
+          if (!tt) continue;
+          if (!seen.has(tt)) { seen.add(tt); recentTags.push([tt, counts[tt]||0]); }
+          if (recentTags.length >= 28) break;
+        }
+        if (recentTags.length >= 28) break;
+      }
 
-      if (popularTags.length === 0) {
+      if (recentTags.length === 0) {
         container.innerHTML = `
           <div class="empty-tags">
             <p>No hi ha etiquetes encara. Afegeix #etiquetes a les teves notes!</p>
@@ -398,14 +476,35 @@
 
       container.innerHTML = `
         <div class="tags-cloud">
-          ${popularTags.map(([tag, count]) => `
-            <button class="tag-item" data-tag="${tag}" data-count="${count}">
-              #${tag}
-              <span class="tag-count">${count}</span>
-            </button>
+          ${recentTags.map(([tag,count]) => `
+            <button class="tag-item" data-tag="${tag}">#${tag} <span class="tag-count">${count}</span></button>
           `).join('')}
         </div>
       `;
+
+      // Filtro por texto
+      const search = document.getElementById('recent-tags-search');
+      if (search) {
+        search.oninput = () => {
+          const q = search.value.trim().toLowerCase();
+          container.querySelectorAll('.tag-item').forEach(el => {
+            const t = el.getAttribute('data-tag') || '';
+            el.style.display = t.includes(q) ? '' : 'none';
+          });
+        };
+      }
+    },
+    // Fila superior de filtres d'etiquetes (píndoles simples)
+    _renderTagFilters(notes) {
+      const cont = document.getElementById('dashboard-tag-filters');
+      if (!cont) return;
+      const counts = this._extractTags(notes);
+      const tags = Object.keys(counts).sort((a,b)=> counts[b]-counts[a]).slice(0, 30);
+      if (tags.length === 0) { cont.innerHTML = ''; return; }
+      cont.innerHTML = tags.map(t=>{
+        const active = this._tagFilter && this._tagFilter[0] === t;
+        return `<button class="tag-item tag${active?' active':''}" data-tag="${t}"># ${this._escapeHtml(t)}</button>`;
+      }).join('');
     },
 
     _extractTags(notes) {
