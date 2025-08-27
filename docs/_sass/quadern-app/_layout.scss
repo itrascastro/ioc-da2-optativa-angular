@@ -66,8 +66,10 @@ body.quadern-layout {
   height: var(--quadern-header-height);
   background: var(--color-surface);
   border-bottom: 1px solid var(--color-border);
-  display: flex;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
   align-items: center;
+  gap: 16px;
   padding: 0 20px;
   box-shadow: var(--shadow-light);
   /* Full-bleed: ocupa todo el ancho del viewport */
@@ -87,10 +89,7 @@ body.quadern-layout {
   align-items: center;
 }
 
-.quadern-header .logo {
-  height: 32px;
-  width: auto;
-}
+.quadern-header .logo { height: 50px; width: auto; }
 
 .quadern-logo {
   display: flex;
@@ -106,13 +105,7 @@ body.quadern-layout {
 }
 
 /* Cerca Global */
-.header-search {
-  flex: 1;
-  display: flex;
-  justify-content: center;
-  max-width: 500px;
-  margin: 0 20px;
-}
+.header-search { justify-self: center; display: flex; justify-content: center; width: 100%; max-width: 700px; margin: 0 20px; }
 
 .global-search {
   position: relative;
@@ -147,10 +140,12 @@ body.quadern-layout {
 }
 
 /* Controls del Header */
-.header-controls {
-  display: flex;
-  align-items: center;
-  gap: 15px;
+.header-brand { justify-self: start; }
+.header-controls { display: flex; align-items: center; gap: 15px; justify-self: end; }
+
+/* Responsive: logo más pequeño en pantallas pequeñas */
+@media (max-width: 768px) {
+  .quadern-header .logo { height: 40px; }
 }
 
 /* =============================
@@ -167,11 +162,54 @@ body.quadern-layout {
   border-radius: var(--border-radius);
   overflow: auto;
   max-height: 100%;
+  padding: 12px; /* aire interior para un look más moderno */
 }
 
+/* Sidebar visual refresh and overrides for nav-tree inside Quadern */
+.quadern-sidebar .nav-tree {
+  background: transparent; /* quitar fondo blanco del componente */
+  border: none; /* integrar con la tarjeta contenedora */
+  border-radius: var(--border-radius);
+}
+
+.quadern-sidebar .tree-content { padding: 8px; }
+
+.quadern-sidebar .tree-item { border-radius: 8px; }
+.quadern-sidebar .tree-item:hover { background-color: var(--color-surface-dark) !important; }
+.quadern-sidebar .tree-item.active {
+  background-color: rgba(var(--color-primary-rgb, 52, 152, 219), 0.18) !important;
+  color: var(--color-text) !important;
+}
+.quadern-sidebar .tree-item .item-text { color: var(--color-text); }
+.quadern-sidebar .tree-item .item-icon { color: var(--color-text-muted); }
+.quadern-sidebar .tree-item.active .item-icon { color: var(--color-primary) !important; }
+
+.quadern-sidebar .breadcrumb-button {
+  color: var(--color-text);
+}
+.quadern-sidebar .breadcrumb-button:hover:not(:disabled) {
+  background-color: var(--color-surface-dark);
+  color: var(--color-text);
+}
+.quadern-sidebar .breadcrumb-button:disabled {
+  color: var(--color-text);
+}
+.quadern-sidebar .breadcrumb-separator { color: var(--color-text-muted); }
+
+.quadern-sidebar .badge { border: 1px solid var(--color-border); }
+
+/* Mejor uso del ancho */
+.quadern-sidebar .tree-list,
+.quadern-sidebar .tree-item,
+.quadern-sidebar .tree-header-item,
+.quadern-sidebar .header-title-container { width: 100%; }
+
 .sidebar-section {
-  padding: 20px;
-  border-bottom: 1px solid var(--color-border);
+  padding: 14px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius);
+  background: var(--color-surface);
+  margin-bottom: 12px;
 }
 
 .sidebar-section:last-child {
@@ -179,7 +217,7 @@ body.quadern-layout {
 }
 
 .sidebar-section h3 {
-  margin: 0 0 15px 0;
+  margin: 0 0 10px 0;
   font-size: 0.9rem;
   font-weight: 600;
   color: var(--color-text);
@@ -228,12 +266,12 @@ body.quadern-layout {
 
 /* Arbre de Navegació */
 .nav-tree {
-  font-size: 0.85rem;
+  font-size: 0.9rem;
 }
 
 /* Navegació Jeràrquica Completa */
 .nav-tree-complete {
-  font-size: 0.85rem;
+  font-size: 0.9rem;
 }
 
 /* Estats de càrrega */
