@@ -220,6 +220,31 @@
           const now = new Date();
           lastSyncEl.textContent = `Ara (${now.toLocaleTimeString('ca-ES', { hour: '2-digit', minute: '2-digit' })})`;
         }
+
+        // Estadístiques de curs: unitats, blocs, seccions
+        try {
+          let stats = null;
+          if (window.Quadern?.Discovery?.getStructureStats) {
+            stats = window.Quadern.Discovery.getStructureStats();
+          }
+          if (!stats && window.courseData) {
+            // Fallback aproximat des de site.curs
+            const unitats = (window.courseData.unitats || []).length || 0;
+            const blocs = (window.courseData.unitats || []).reduce((sum, u) => sum + (u.blocs || []).length, 0);
+            const seccions = 0; // no disponible sense escanejar
+            stats = { unitats, blocs, seccions };
+          }
+          if (stats) {
+            const uEl = document.getElementById('footer-units');
+            const bEl = document.getElementById('footer-blocks');
+            const sEl = document.getElementById('footer-sections');
+            if (uEl) uEl.textContent = `${stats.unitats || 0} unitats`;
+            if (bEl) bEl.textContent = `${stats.blocs || 0} blocs`;
+            if (sEl) sEl.textContent = `${stats.seccions || 0} seccions`;
+          }
+        } catch (e) {
+          console.warn('Footer stats (course) unavailable:', e);
+        }
       }
     },
 

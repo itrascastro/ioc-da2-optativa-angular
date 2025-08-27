@@ -44,7 +44,15 @@ body.default-mod-layout { padding-top: 0; padding-bottom: 0; }
 
 /* Footer fix */
 .footer { position: fixed; bottom: 0; left: 0; right: 0; z-index: 999; background-color: var(--color-surface); border-top: 1px solid var(--color-border); padding: 8px 20px; box-shadow: 0 -2px 4px rgba(0,0,0,0.03); }
-.footer-content { display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; }
+.footer-content {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  font-size: 0.8rem;
+}
+.footer-info { justify-self: start; }
+.footer-progress { justify-self: center; text-align: center; }
+.footer-actions { justify-self: end; }
 .footer-info { color: var(--color-text-muted); }
 .footer-progress { display: flex; align-items: center; gap: 14px; }
 .progress-group { display: flex; align-items: center; gap: 8px; }

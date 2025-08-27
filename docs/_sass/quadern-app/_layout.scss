@@ -671,43 +671,55 @@ body.quadern-layout {
   height: var(--quadern-footer-height);
   background: var(--color-surface);
   border-top: 1px solid var(--color-border);
-  display: flex;
-  align-items: center;
-  padding: 0 20px;
+  padding: 0 12px;
   font-size: 0.8rem;
+  display: flex;
+  align-items: center; /* centrat vertical dels continguts */
   /* Full-bleed: ocupa todo el ancho del viewport */
   width: 100vw;
   margin-left: calc(50% - 50vw);
   margin-right: calc(50% - 50vw);
 }
 
-.footer-content {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-}
+.footer-content { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 8px; width: 100%; height: 100%; }
+.footer-left { justify-self: start; }
+.footer-center { justify-self: center; }
+.footer-right { justify-self: end; }
 
 .stats-container {
   display: flex;
-  gap: 20px;
+  gap: 14px;
 }
 
 .stat-item {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 6px;
   color: var(--color-text-muted);
+  line-height: 1; /* centrat vertical millor amb icones */
 }
 
 .stat-item i {
-  font-size: 0.9rem;
+  font-size: 0.95rem;
+  display: inline-flex;
+  align-items: center;
 }
 
 .footer-version {
   color: var(--color-text-muted);
   font-size: 0.75rem;
 }
+
+.footer-actions { display: flex; align-items: center; gap: 8px; }
+.footer-icon-btn {
+  width: 28px; height: 28px; border-radius: 6px;
+  display: inline-flex; align-items: center; justify-content: center;
+  background-color: var(--color-surface-dark);
+  border: 1px solid var(--color-border);
+  color: var(--color-text);
+  cursor: pointer;
+}
+.footer-icon-btn:hover { background-color: var(--color-surface-dark); }
 
 /* Responsive (ocultar sidebar en pantallas pequeñas) */
 @media (max-width: 900px) {

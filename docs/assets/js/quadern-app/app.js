@@ -160,11 +160,32 @@
       
       // Actualitzar estadístiques del peu
       this._updateFooterStats();
+
+      // Accions ràpides del peu
+      this._bindFooterActions();
       
       // Assegurar que la vista per defecte està visible
       if (this.modules.navigation) {
         this.modules.navigation.switchView('dashboard');
       }
+    },
+
+    _bindFooterActions() {
+      const footer = document.querySelector('.quadern-footer');
+      if (!footer) return;
+      footer.addEventListener('click', (e) => {
+        const btn = e.target.closest('[data-quick-action]');
+        if (!btn) return;
+        const action = btn.getAttribute('data-quick-action');
+        if (!action) return;
+        try {
+          if (this.modules?.dashboard?.handleQuickAction) {
+            this.modules.dashboard.handleQuickAction(action);
+          }
+        } catch (err) {
+          console.error('Footer quick action error:', err);
+        }
+      });
     },
 
     _initializeNavTree() {
@@ -259,6 +280,8 @@
           }
           
           console.log('✅ App: Estructura completa carregada');
+          // Actualitzar estadístiques del peu un cop carregada l'estructura
+          this._updateFooterStats();
         } else {
           throw new Error('Discovery module no disponible');
         }
@@ -846,6 +869,7 @@
     async refreshCourseStructure() {
       console.log('🟦 App: Refrescant estructura del curs...');
       await this._loadCourseStructure();
+      this._updateFooterStats();
     }
   };
 

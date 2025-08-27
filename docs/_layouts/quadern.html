@@ -75,11 +75,11 @@
               </div>
           </div>
           <div class="header-controls">
-              <button class="theme-toggle" id="theme-toggle">Mode Fosc</button>
               <a href="{{ '/' | relative_url }}" class="btn btn-outline" aria-label="Tornar al curs">
                   <i class="bi bi-arrow-left" aria-hidden="true"></i>
                   Tornar al Curs
               </a>
+              <button class="theme-toggle" id="theme-toggle">Mode Fosc</button>
           </div>
       </header>
 
@@ -131,23 +131,53 @@
 
       <!-- Footer no fijo -->
       <footer class="quadern-footer quadern-footer--unfixed">
-          <div class="footer-content">
-              <div class="stats-container">
-                  <div class="stat-item">
-                      <i class="bi bi-journal-text" aria-hidden="true"></i>
-                      <span id="total-notes">0 notes</span>
-                  </div>
-                  <div class="stat-item">
-                      <i class="bi bi-hdd" aria-hidden="true"></i>
-                      <span id="storage-size">0 KB</span>
-                  </div>
-                  <div class="stat-item">
-                      <i class="bi bi-clock" aria-hidden="true"></i>
-                      <span id="last-sync">Mai sincronitzat</span>
+          <div class="footer-content" role="contentinfo">
+              <div class="footer-left">
+                  <div class="footer-version">Versió {{ site.version }}</div>
+              </div>
+              <div class="footer-center">
+                  <div class="stats-container" aria-label="Estadístiques del quadern">
+                      <div class="stat-item">
+                          <i class="bi bi-collection" aria-hidden="true"></i>
+                          <span id="footer-units">0 unitats</span>
+                      </div>
+                      <div class="stat-item">
+                          <i class="bi bi-folder2" aria-hidden="true"></i>
+                          <span id="footer-blocks">0 blocs</span>
+                      </div>
+                      <div class="stat-item">
+                          <i class="bi bi-list-ol" aria-hidden="true"></i>
+                          <span id="footer-sections">0 seccions</span>
+                      </div>
+                      <div class="stat-item">
+                          <i class="bi bi-journal-text" aria-hidden="true"></i>
+                          <span id="total-notes">0 notes</span>
+                      </div>
+                      <div class="stat-item">
+                          <i class="bi bi-hdd" aria-hidden="true"></i>
+                          <span id="storage-size">0 KB</span>
+                      </div>
+                      <div class="stat-item">
+                          <i class="bi bi-clock" aria-hidden="true"></i>
+                          <span id="last-sync">Mai sincronitzat</span>
+                      </div>
                   </div>
               </div>
-              <div class="footer-version">
-                  Versió {{ site.version }}
+              <div class="footer-right">
+                  <div class="footer-actions" aria-label="Accions ràpides">
+                      <button class="footer-icon-btn" title="Nova nota" data-quick-action="create-note">
+                          <i class="bi bi-plus-circle" aria-hidden="true"></i>
+                      </button>
+                      <button class="footer-icon-btn" title="Veure totes les notes" data-quick-action="view-all-notes">
+                          <i class="bi bi-card-list" aria-hidden="true"></i>
+                      </button>
+                      <button class="footer-icon-btn" title="Exportar notes" data-quick-action="export-notes">
+                          <i class="bi bi-cloud-download" aria-hidden="true"></i>
+                      </button>
+                      <button class="footer-icon-btn" title="Importar notes" data-quick-action="import-notes">
+                          <i class="bi bi-cloud-upload" aria-hidden="true"></i>
+                      </button>
+                  </div>
               </div>
           </div>
       </footer>
