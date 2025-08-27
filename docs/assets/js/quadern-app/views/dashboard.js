@@ -32,7 +32,7 @@
           if (!btn) return;
           const action = btn.getAttribute('data-action');
           if (action === 'open-filter') this._openFilterModal();
-          if (action === 'create-note') this._createNewNote();
+          if (action === 'open-study') this._openStudyView();
         });
       }
 
@@ -142,11 +142,8 @@
             <div class="empty-icon">
               <i class="bi bi-journal-text"></i>
             </div>
-            <h3>Encara no tens notes</h3>
-            <p>Crea la teva primera nota per començar!</p>
-            <button class="btn btn-primary" data-action="create-note">
-              <i class="bi bi-plus"></i> Crear Nova Nota
-            </button>
+            <h3>No hi ha notes en aquesta selecció</h3>
+            <p>Selecciona una altra part del curs o modifica els filtres.</p>
           </div>
         `;
         return;
@@ -166,10 +163,9 @@
     },
     // Establir filtre per estructura i mostrar al dashboard
     setStructureFilter(filter){
+      // Estableix la branca activa de l'arbre; cerca i etiquetes es mantenen
+      // i s'apliquen només sobre aquesta branca
       this._structureFilter = filter || null;
-      // Netejar altres filtres per claredat visual
-      this._tagFilter = null;
-      this._searchQuery = '';
       try {
         if (this.app && typeof this.app.switchView === 'function') {
           this.app.switchView('dashboard');
@@ -625,9 +621,6 @@
 
     handleQuickAction(action) {
       switch(action) {
-        case 'create-note':
-          this._createNewNote();
-          break;
         case 'view-all-notes':
           this._viewAllNotes();
           break;
@@ -637,20 +630,17 @@
         case 'import-notes':
           this._importNotes();
           break;
+        case 'study-view':
+          this._openStudyView();
+          break;
         default:
           console.warn('Dashboard: Acció desconeguda:', action);
       }
     },
 
-    _createNewNote() {
+    _openStudyView() {
       if (this.app && this.app.switchView) {
-        this.app.switchView('editor');
-        // Crear nova nota a l'editor
-        setTimeout(() => {
-          if (this.app.modules.editor && this.app.modules.editor.createNewNote) {
-            this.app.modules.editor.createNewNote();
-          }
-        }, 100);
+        this.app.switchView('study');
       }
     },
 
