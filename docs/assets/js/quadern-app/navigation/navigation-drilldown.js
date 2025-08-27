@@ -218,14 +218,14 @@
           // Aplicar filtre al dashboard per unitat o bloc
           const unitMatch = /^unit-(\d+)/.exec(node.id || '');
           if (unitMatch) {
-            this._setDashboardFilter({ unitId: unitMatch[1] });
+            this._setDashboardFilter({ unitId: parseInt(unitMatch[1], 10) });
           } else if (node.id && node.id.startsWith('bloc-')) {
-            this._setDashboardFilter({ unitId: node.unitId, blocId: String(node.id).replace('bloc-','') });
+            this._setDashboardFilter({ unitId: parseInt(node.unitId, 10), blocId: parseInt(String(node.id).replace('bloc-',''), 10) });
           }
         } else {
           this.activeItemId = node.id;
           // És una secció final - filtrar dashboard per aquesta secció
-          this._setDashboardFilter({ unitId: node.unitId, blocId: node.blocId, sectionId: node.sectionId });
+          this._setDashboardFilter({ unitId: parseInt(node.unitId,10), blocId: parseInt(node.blocId,10), sectionId: String(node.sectionId) });
         }
         this.render();
       });
@@ -239,23 +239,23 @@
       if (!last) { this._setDashboardFilter(null); return; }
       const unitMatch = /^unit-(\d+)/.exec(last.id || '');
       if (unitMatch) {
-        this._setDashboardFilter({ unitId: unitMatch[1] });
+        this._setDashboardFilter({ unitId: parseInt(unitMatch[1], 10) });
         return;
       }
       if (last.id && last.id.startsWith('bloc-')) {
-        this._setDashboardFilter({ unitId: last.unitId, blocId: String(last.id).replace('bloc-','') });
+        this._setDashboardFilter({ unitId: parseInt(last.unitId,10), blocId: parseInt(String(last.id).replace('bloc-',''),10) });
       }
     },
 
     _setDashboardFilter(filter){
       try {
-        if (window.Quadern?.App?.modules?.dashboard?.setStructureFilter) {
-          window.Quadern.App.modules.dashboard.setStructureFilter(filter);
-          return;
-        }
-        if (window.Quadern?.Dashboard?.setStructureFilter) {
-          window.Quadern.Dashboard.setStructureFilter(filter);
-          return;
+        const dash = window.Quadern?.App?.modules?.dashboard || window.Quadern?.Dashboard;
+        if (dash?.setStructureFilter) {
+          dash.setStructureFilter(filter);
+          // Forçar càrrega després d'un breu retard per evitar condicions de carrera
+          setTimeout(()=>{
+            try { dash.loadData && dash.loadData(); } catch {}
+          }, 30);
         }
       } catch(e) { console.warn('NavigationDrillDown: error aplicant filtre dashboard', e); }
     },

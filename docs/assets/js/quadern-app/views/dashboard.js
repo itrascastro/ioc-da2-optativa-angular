@@ -89,6 +89,14 @@
     },
 
     async _getAllNotes() {
+      // Si hi ha filtre d'estructura, retornar només aquestes notes (preferent)
+      if (this._structureFilter) {
+        const ids = this._collectNoteIdsForStructure(this._structureFilter);
+        if (ids && window.Quadern?.Store) {
+          const state = window.Quadern.Store.load();
+          return ids.map(id => state.notes.byId[id]).filter(Boolean);
+        }
+      }
       // Usar el store per obtenir totes les notes
       if (window.Quadern && window.Quadern.Store) {
         const state = window.Quadern.Store.load();
@@ -167,7 +175,8 @@
           this.app.switchView('dashboard');
         }
       } catch {}
-      this.loadData();
+      // Donar un petit marge per si Discovery encara s'està carregant
+      setTimeout(()=> this.loadData(), 30);
     },
     _groupByDateLabel(notes){
       const map = new Map();
@@ -748,17 +757,53 @@
     // =============================
 
     onViewActivated() {
-      // Filtre per estructura (unitat/bloc/secció)
+      // Filtre per estructura (unitat/bloc/secció) – preferir Discovery
       if (this._structureFilter) {
-        const f = this._structureFilter;
-        filtered = filtered.filter(n => {
-          const unitOk = f.unitId ? Number(n.unitat||0) === Number(f.unitId) : true;
-          const blocOk = f.blocId ? Number(n.bloc||0) === Number(f.blocId) : true;
-          const sectOk = f.sectionId ? String(n.sectionId||'') === String(f.sectionId) : true;
-          return unitOk && blocOk && sectOk;
-        });
+        const byIds = this._collectNoteIdsForStructure(this._structureFilter);
+        if (byIds) {
+          const allow = new Set(byIds);
+          filtered = filtered.filter(n => allow.has(n.id));
+        } else {
+          const f = this._structureFilter;
+          filtered = filtered.filter(n => {
+            const unitOk = f.unitId ? Number(n.unitat||0) === Number(f.unitId) : true;
+            const blocOk = f.blocId ? Number(n.bloc||0) === Number(f.blocId) : true;
+            const sectOk = f.sectionId ? String(n.sectionId||'') === String(f.sectionId) : true;
+            return unitOk && blocOk && sectOk;
+          });
+        }
       }
       this.loadData();
+    },
+    _collectNoteIdsForStructure(f){
+      try {
+        const D = window.Quadern?.Discovery;
+        const CS = D?.getCourseStructure?.();
+        if (!D || !CS) return null;
+        const ids = [];
+        const unitId = f.unitId != null ? parseInt(f.unitId,10) : null;
+        const blocId = f.blocId != null ? parseInt(f.blocId,10) : null;
+        const sectionId = f.sectionId != null ? String(f.sectionId) : null;
+        if (sectionId && unitId && blocId) {
+          const notes = D.getNotesForSection(unitId, blocId, sectionId) || [];
+          notes.forEach(n => ids.push(n.id));
+          return ids;
+        }
+        if (blocId != null && unitId != null) {
+          const sections = D.getSectionsForBlock(unitId, blocId) || {};
+          Object.values(sections).forEach(sec => (sec.notes||[]).forEach(n => ids.push(n.id)));
+          return ids;
+        }
+        if (unitId != null) {
+          const unit = CS[`unitat-${unitId}`];
+          if (!unit) return [];
+          Object.values(unit.blocs||{}).forEach(bloc => {
+            Object.values(bloc.seccions||{}).forEach(sec => (sec.notes||[]).forEach(n => ids.push(n.id)));
+          });
+          return ids;
+        }
+        return null;
+      } catch { return null; }
     },
 
     refreshData() {
