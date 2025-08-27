@@ -53,12 +53,11 @@
           if (!tagBtn) return;
           const tag = tagBtn.getAttribute('data-tag');
           if (!tag) return;
-          // Toggle simple: seleccionar/deseleccionar
-          if (this._tagFilter && this._tagFilter[0] === tag) {
-            this._tagFilter = null;
-          } else {
-            this._tagFilter = [tag];
-          }
+          // Toggle multi-selecció: afegir o treure etiqueta
+          const current = Array.isArray(this._tagFilter) ? [...this._tagFilter] : [];
+          const idx = current.findIndex(t => String(t).toLowerCase() === String(tag).toLowerCase());
+          if (idx >= 0) current.splice(idx, 1); else current.push(tag);
+          this._tagFilter = current.length ? current : null;
           this.loadData();
         });
       }
@@ -503,9 +502,10 @@
 
       container.innerHTML = `
         <div class="tags-cloud">
-          ${recentTags.map(([tag,count]) => `
-            <button class="tag-item" data-tag="${tag}">#${tag} <span class="tag-count">${count}</span></button>
-          `).join('')}
+          ${recentTags.map(([tag,count]) => {
+            const active = Array.isArray(this._tagFilter) && this._tagFilter.map(t=>String(t).toLowerCase()).includes(String(tag).toLowerCase());
+            return `<button class="tag-item${active?' active':''}" data-tag="${tag}">#${tag} <span class="tag-count">${count}</span></button>`;
+          }).join('')}
         </div>
       `;
 
@@ -520,6 +520,18 @@
           });
         };
       }
+      // Delegació: toggle multi per etiquetes recents
+      container.addEventListener('click', (e)=>{
+        const tagBtn = e.target.closest('.tag-item');
+        if (!tagBtn) return;
+        const tag = tagBtn.getAttribute('data-tag');
+        if (!tag) return;
+        const current = Array.isArray(this._tagFilter) ? [...this._tagFilter] : [];
+        const idx = current.findIndex(t => String(t).toLowerCase() === String(tag).toLowerCase());
+        if (idx >= 0) current.splice(idx, 1); else current.push(tag);
+        this._tagFilter = current.length ? current : null;
+        this.loadData();
+      });
     },
     // Fila superior de filtres d'etiquetes (píndoles simples)
     _renderTagFilters(notes) {
@@ -529,7 +541,7 @@
       const tags = Object.keys(counts).sort((a,b)=> counts[b]-counts[a]).slice(0, 30);
       if (tags.length === 0) { cont.innerHTML = ''; return; }
       cont.innerHTML = tags.map(t=>{
-        const active = this._tagFilter && this._tagFilter[0] === t;
+        const active = Array.isArray(this._tagFilter) && this._tagFilter.map(x=>String(x).toLowerCase()).includes(String(t).toLowerCase());
         return `<button class="tag-item tag${active?' active':''}" data-tag="${t}"># ${this._escapeHtml(t)}</button>`;
       }).join('');
     },
