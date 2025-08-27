@@ -73,7 +73,9 @@ body.quadern-layout {
 .quadern-shell { display: flex; flex-direction: column; min-height: 100vh; }
 
 .quadern-header {
-  /* no fixed; sigue visible arriba */
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 1100;
   height: var(--quadern-header-height);
   background: var(--color-surface);
   border-bottom: 1px solid var(--color-border);
@@ -163,16 +165,19 @@ body.quadern-layout {
    CONTAINER PRINCIPAL
    ============================= */
 
-.quadern-body { display: flex; flex: 1; gap: 24px; padding: 20px; background: var(--color-background); }
+.quadern-body { display: flex; flex: 1; gap: 24px; padding: 20px; padding-top: calc(20px + var(--quadern-header-height)); background: var(--color-background); }
 
 /* Sidebar */
 .quadern-sidebar {
+  position: fixed;
+  top: calc(20px + var(--quadern-header-height));
+  bottom: calc(20px + var(--quadern-footer-height));
+  left: 20px;
   width: var(--quadern-sidebar-width);
   background: var(--color-surface-dark);
   border: 1px solid var(--color-border);
   border-radius: var(--border-radius);
   overflow: auto;
-  max-height: 100%;
   padding: 12px; /* aire interior para un look más moderno */
 }
 
@@ -665,7 +670,7 @@ body.quadern-layout {
 }
 
 /* Main Content */
-.quadern-main { flex: 1; padding: 8px 0 calc(var(--quadern-footer-height) + 12px); overflow: auto; background: var(--color-background); }
+.quadern-main { flex: 1; padding: 8px 0 calc(var(--quadern-footer-height) + 20px); overflow: auto; background: var(--color-background); margin-left: calc(var(--quadern-sidebar-width) + 24px); }
 
 /* =============================
    FOOTER DEL QUADERN
@@ -732,5 +737,5 @@ body.quadern-layout {
 @media (max-width: 900px) {
   .quadern-body { flex-direction: column; gap: 12px; padding: 12px; }
   .quadern-sidebar { display: none; }
-  .quadern-main { padding-top: 0; }
+  .quadern-main { padding-top: 0; margin-left: 0; }
 }
