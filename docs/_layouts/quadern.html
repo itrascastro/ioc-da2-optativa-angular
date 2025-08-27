@@ -50,107 +50,108 @@
 
 <body class="quadern-layout">
     <!-- Skip to content for accessibility -->
-    <a class="skip-link" href="#main-content">Salta al contingut principal</a>
-    
-    <!-- Header fix -->
-    <header class="quadern-header" role="banner" id="top">
-        <div class="header-brand">
-            <a href="{{ '/' | relative_url }}" class="logo-link">
-                <img src="{{ '/assets/images/logo_IOC_light.jpg' | relative_url }}" 
-                     alt="Institut Obert de Catalunya" 
-                     class="logo logo-light">
-                <img src="{{ '/assets/images/logo_IOC_dark.png' | relative_url }}" 
-                     alt="Institut Obert de Catalunya" 
-                     class="logo logo-dark">
-            </a>
-            <div class="quadern-logo">
-                <i class="bi bi-journal-text" aria-hidden="true"></i>
-                <span>Quadern de Notes</span>
-            </div>
-        </div>
-        <div class="header-search">
-            <div class="global-search">
-                <input type="text" id="global-search-input" placeholder="Cerca en totes les notes..." aria-label="Cerca global">
-                <i class="bi bi-search search-icon" aria-hidden="true"></i>
-            </div>
-        </div>
-        <div class="header-controls">
-            <button class="theme-toggle" id="theme-toggle">Mode Fosc</button>
-            <a href="{{ '/' | relative_url }}" class="btn btn-outline" aria-label="Tornar al curs">
-                <i class="bi bi-arrow-left" aria-hidden="true"></i>
-                Tornar al Curs
-            </a>
-        </div>
-    </header>
+    {% include skip-link.html %}
+    <div class="quadern-shell">
+      <!-- Header no fijo -->
+      <header class="quadern-header quadern-header--unfixed" role="banner" id="top">
+          <div class="header-brand">
+              <a href="{{ '/' | relative_url }}" class="logo-link">
+                  <img src="{{ '/assets/images/logo_IOC_light.jpg' | relative_url }}" 
+                       alt="Institut Obert de Catalunya" 
+                       class="logo logo-light">
+                  <img src="{{ '/assets/images/logo_IOC_dark.png' | relative_url }}" 
+                       alt="Institut Obert de Catalunya" 
+                       class="logo logo-dark">
+              </a>
+              <div class="quadern-logo">
+                  <i class="bi bi-journal-text" aria-hidden="true"></i>
+                  <span>Quadern de Notes</span>
+              </div>
+          </div>
+          <div class="header-search">
+              <div class="global-search">
+                  <input type="text" id="global-search-input" placeholder="Cerca en totes les notes..." aria-label="Cerca global">
+                  <i class="bi bi-search search-icon" aria-hidden="true"></i>
+              </div>
+          </div>
+          <div class="header-controls">
+              <button class="theme-toggle" id="theme-toggle">Mode Fosc</button>
+              <a href="{{ '/' | relative_url }}" class="btn btn-outline" aria-label="Tornar al curs">
+                  <i class="bi bi-arrow-left" aria-hidden="true"></i>
+                  Tornar al Curs
+              </a>
+          </div>
+      </header>
 
-    <div class="quadern-container">
-        <!-- Sidebar Navegació -->
-        <aside class="quadern-sidebar" role="navigation" aria-label="Navegació del quadern">
-            <!-- Controls de Vista -->
-            <div class="sidebar-section">
-                <h3>Vistes</h3>
-                <div class="view-nav">
-                    <button class="view-btn active" data-view="dashboard" aria-pressed="true">
-                        <i class="bi bi-house" aria-hidden="true"></i>
-                        <span>Dashboard</span>
-                    </button>
-                    <button class="view-btn" data-view="editor" aria-pressed="false">
-                        <i class="bi bi-pencil-square" aria-hidden="true"></i>
-                        <span>Editor</span>
-                    </button>
-                    <button class="view-btn" data-view="search" aria-pressed="false">
-                        <i class="bi bi-search" aria-hidden="true"></i>
-                        <span>Cerca</span>
-                    </button>
-                    <button class="view-btn" data-view="import-export" aria-pressed="false">
-                        <i class="bi bi-arrow-left-right" aria-hidden="true"></i>
-                        <span>Import/Export</span>
-                    </button>
-                    <button class="view-btn" data-view="study" aria-pressed="false">
-                        <i class="bi bi-book" aria-hidden="true"></i>
-                        <span>Vista d'Estudi</span>
-                    </button>
-                </div>
-            </div>
+      <!-- Cuerpo: sidebar + main -->
+      <div class="quadern-body">
+          <aside class="quadern-sidebar" role="navigation" aria-label="Navegació del quadern">
+              <!-- Controls de Vista -->
+              <div class="sidebar-section">
+                  <h3>Vistes</h3>
+                  <div class="view-nav">
+                      <button class="view-btn active" data-view="dashboard" aria-pressed="true">
+                          <i class="bi bi-house" aria-hidden="true"></i>
+                          <span>Dashboard</span>
+                      </button>
+                      <button class="view-btn" data-view="editor" aria-pressed="false">
+                          <i class="bi bi-pencil-square" aria-hidden="true"></i>
+                          <span>Editor</span>
+                      </button>
+                      <button class="view-btn" data-view="search" aria-pressed="false">
+                          <i class="bi bi-search" aria-hidden="true"></i>
+                          <span>Cerca</span>
+                      </button>
+                      <button class="view-btn" data-view="import-export" aria-pressed="false">
+                          <i class="bi bi-arrow-left-right" aria-hidden="true"></i>
+                          <span>Import/Export</span>
+                      </button>
+                      <button class="view-btn" data-view="study" aria-pressed="false">
+                          <i class="bi bi-book" aria-hidden="true"></i>
+                          <span>Vista d'Estudi</span>
+                      </button>
+                  </div>
+              </div>
 
-            <!-- Navegació Jeràrquica -->
-            <div class="sidebar-section">
-                <h3>Estructura del Curs</h3>
-                <div class="nav-tree" id="nav-tree">
-                    <div class="loading-state">
-                        <p>Carregant estructura...</p>
-                    </div>
-                </div>
-            </div>
-        </aside>
+              <!-- Navegació Jeràrquica -->
+              <div class="sidebar-section">
+                  <h3>Estructura del Curs</h3>
+                  <div class="nav-tree" id="nav-tree">
+                      <div class="loading-state">
+                          <p>Carregant estructura...</p>
+                      </div>
+                  </div>
+              </div>
+          </aside>
 
-        <main class="quadern-main" role="main" id="main-content">
-            {{ content }}
-        </main>
+          <main class="quadern-main" role="main" id="main-content">
+              {{ content }}
+          </main>
+      </div>
+
+      <!-- Footer no fijo -->
+      <footer class="quadern-footer quadern-footer--unfixed">
+          <div class="footer-content">
+              <div class="stats-container">
+                  <div class="stat-item">
+                      <i class="bi bi-journal-text" aria-hidden="true"></i>
+                      <span id="total-notes">0 notes</span>
+                  </div>
+                  <div class="stat-item">
+                      <i class="bi bi-hdd" aria-hidden="true"></i>
+                      <span id="storage-size">0 KB</span>
+                  </div>
+                  <div class="stat-item">
+                      <i class="bi bi-clock" aria-hidden="true"></i>
+                      <span id="last-sync">Mai sincronitzat</span>
+                  </div>
+              </div>
+              <div class="footer-version">
+                  Versió {{ site.version }}
+              </div>
+          </div>
+      </footer>
     </div>
-
-    <!-- Footer amb estadístiques -->
-    <footer class="quadern-footer">
-        <div class="footer-content">
-            <div class="stats-container">
-                <div class="stat-item">
-                    <i class="bi bi-journal-text" aria-hidden="true"></i>
-                    <span id="total-notes">0 notes</span>
-                </div>
-                <div class="stat-item">
-                    <i class="bi bi-hdd" aria-hidden="true"></i>
-                    <span id="storage-size">0 KB</span>
-                </div>
-                <div class="stat-item">
-                    <i class="bi bi-clock" aria-hidden="true"></i>
-                    <span id="last-sync">Mai sincronitzat</span>
-                </div>
-            </div>
-            <div class="footer-version">
-                Versió {{ site.version }}
-            </div>
-        </div>
-    </footer>
 
     <!-- Dades del curs per JavaScript -->
     <script>

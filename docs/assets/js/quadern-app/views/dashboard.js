@@ -66,7 +66,7 @@
       const recentNotes = notes
         .filter(note => note.content && note.content.trim()) // Només notes amb contingut
         .sort((a, b) => new Date(b.updatedAt || b.createdAt) - new Date(a.updatedAt || a.createdAt))
-        .slice(0, this.app.config.maxRecentNotes);
+        .slice(0, 100); // mostrarem scroll per veure més, però limitem per rendiment
 
       if (recentNotes.length === 0) {
         container.innerHTML = `
@@ -85,42 +85,93 @@
       }
 
       container.innerHTML = `
-        <div class="recent-notes-header">
-          <h3>Notes Recents</h3>
-          <a href="#" class="view-all-link" data-action="view-all-notes">Veure totes</a>
-        </div>
-        <div class="recent-notes-list">
+        <div class="recent-notes-list" aria-label="Llista de notes recents">
           ${recentNotes.map(note => this._renderRecentNoteItem(note)).join('')}
         </div>
       `;
     },
 
     _renderRecentNoteItem(note) {
+      const tags = (note.tags||[]).map(t=>`<span class="tag">#${t}</span>`).join(' ');
+      const time = this._formatDate(note.updatedAt || note.createdAt);
       return `
         <div class="recent-note-item" data-note-id="${note.id}">
           <div class="recent-note-content">
-            <div class="recent-note-title">${this._escapeHtml(note.noteTitle || 'Sense títol')}</div>
-            <div class="recent-note-preview">${this._getContentPreview(note.content)}</div>
+            <div class="recent-note-title">${this._escapeHtml(note.noteTitle || 'Sense títol')} <span class="recent-note-time">(${time})</span></div>
+            <div class="recent-note-location">${this._formatLocationLinks(note)}</div>
             <div class="recent-note-meta">
-              <span class="location">${this._formatLocation(note)}</span>
-              <span class="separator">•</span>
-              <span class="date">${this._formatDate(note.updatedAt || note.createdAt)}</span>
-              ${note.tags && note.tags.length > 0 ? `
-                <span class="separator">•</span>
-                <div class="tags-preview">
-                  ${note.tags.slice(0, 2).map(tag => `<span class="tag">#${tag}</span>`).join(' ')}
-                  ${note.tags.length > 2 ? `<span class="tag-count">+${note.tags.length - 2}</span>` : ''}
-                </div>
-              ` : ''}
+              ${tags ? `<span class="tags-preview">${tags}</span>` : ''}
             </div>
           </div>
           <div class="recent-note-actions">
             <button class="btn-icon" title="Editar" data-action="edit-note" data-note-id="${note.id}">
               <i class="bi bi-pencil"></i>
             </button>
+            <button class="btn-icon btn-danger" title="Eliminar" data-action="delete-note" data-note-id="${note.id}">
+              <i class="bi bi-trash"></i>
+            </button>
           </div>
         </div>
       `;
+    },
+    _formatLocationLinks(note) {
+      const base = (document.body.getAttribute('data-baseurl')||'');
+      const unit = (note.unitat ? Number(note.unitat) : null);
+      const bloc = (note.bloc ? Number(note.bloc) : null);
+      const pageUrl = note.pageUrl || '';
+      const sectionId = note.sectionId || '';
+      const sectionTitle = this._escapeHtml(note.sectionTitle || (sectionId ? ('Secció ' + sectionId) : 'Secció'));
+      const unitHref = unit ? `${base}/unitat-${unit}/` : null;
+      const blocHref = pageUrl || null;
+      const sectHref = sectionId && pageUrl ? `${pageUrl}#${sectionId}` : (pageUrl || '#');
+      const parts = [];
+      if (unitHref) parts.push(`<a href="${unitHref}">Unitat ${unit}</a>`); else if (unit) parts.push(`Unitat ${unit}`);
+      if (blocHref && bloc) parts.push(`<a href="${blocHref}">Bloc ${bloc}</a>`);
+      if (sectHref) parts.push(`<a href="${sectHref}">${sectionTitle || 'Secció'}</a>`);
+      return parts.join(' <span class="sep">&gt;</span> ');
+    },
+    _bindEvents() {
+      const container = document.getElementById('recent-notes');
+      if (!container) return;
+      container.addEventListener('click', (e)=>{
+        const btn = e.target.closest('[data-action]');
+        if (!btn) return;
+        const action = btn.getAttribute('data-action');
+        const noteId = btn.getAttribute('data-note-id');
+        if (action === 'edit-note') {
+          this._editNote(noteId);
+        } else if (action === 'delete-note') {
+          this._deleteNote(noteId);
+        }
+      });
+    },
+    _editNote(noteId){
+      if (!noteId) return;
+      if (this.app && this.app.switchView) {
+        this.app.switchView('editor');
+        setTimeout(()=>{
+          if (this.app.modules.editor && this.app.modules.editor.selectNote) {
+            this.app.modules.editor.selectNote(noteId);
+          }
+        }, 50);
+      }
+    },
+    _deleteNote(noteId){
+      if (!noteId) return;
+      const doDelete = () => {
+        try {
+          const state = window.Quadern.Store.load();
+          window.Quadern.Store.deleteNote(state, noteId);
+          window.Quadern.Store.save(state);
+          this.loadData();
+          if (this.app.refreshData) this.app.refreshData();
+        } catch (e) { console.error(e); }
+      };
+      if (window.Quadern?.Components?.showConfirmDialog) {
+        window.Quadern.Components.showConfirmDialog('Eliminar aquesta nota?', doDelete);
+      } else {
+        if (confirm('Eliminar aquesta nota?')) doDelete();
+      }
     },
 
     // =============================

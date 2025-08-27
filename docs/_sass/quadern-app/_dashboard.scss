@@ -6,6 +6,7 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
   gap: 25px;
+  margin-top: 0; /* evitar solapaments amb el header */
 }
 
 .card {
@@ -59,18 +60,27 @@
 .recent-note-item:hover {
   background: var(--color-surface-dark);
   border-color: var(--quadern-accent);
-  transform: translateX(3px);
 }
 
 .recent-note-item:last-child {
   margin-bottom: 0;
 }
 
+/* Llista recent: altura fixa (~5 elements) amb scroll */
+.recent-notes-list {
+  max-height: 500px; /* aproximadament 7-8 targetes */
+  overflow-y: auto;
+  padding-right: 4px; /* espai per a scroll */
+}
+
 .recent-note-title {
   font-weight: 600;
   color: var(--color-text);
   margin-bottom: 4px;
+  overflow-wrap: anywhere; /* trenca paraules llargues sense espais */
+  word-break: break-word;
 }
+.recent-note-title .recent-note-time { color: var(--color-text-muted); font-weight: 500; font-size: 0.9em; margin-left: 6px; }
 
 .recent-note-preview {
   font-size: 0.85rem;
@@ -83,6 +93,23 @@
   color: var(--color-text-muted);
   margin-top: 6px;
 }
+
+.recent-note-location {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+}
+.recent-note-location a { color: var(--color-accent); text-decoration: none; }
+.recent-note-location a:hover { color: var(--color-primary); }
+.recent-note-location .sep { margin: 0 6px; opacity: 0.7; }
+
+.recent-note-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.recent-note-item { display: flex; justify-content: space-between; align-items: center; }
+.recent-note-content { flex: 1; min-width: 0; }
 
 /* Accions Ràpides */
 .quick-actions {
