@@ -2,7 +2,8 @@
    VISTA DASHBOARD
    ============================= */
 
-.dashboard-container { max-width: 900px; margin: 0 auto; padding: 6px 0 10px; }
+#dashboard-view { height: calc(100vh - var(--quadern-header-height) - var(--quadern-footer-height) - 52px); overflow: hidden; }
+.dashboard-container { max-width: 900px; margin: 0 auto; padding: 6px 0 0; height: 100%; display: flex; flex-direction: column; }
 
 .dash-header { display:flex; gap:14px; align-items:center; justify-content:space-between; margin-bottom: 14px; }
 .dash-header .dash-actions { display:flex; gap:8px; flex-shrink:0; }
@@ -11,9 +12,22 @@
 .search-input { width:100%; padding: 10px 12px 10px 36px; border:1px solid var(--color-border); background: var(--color-background); color: var(--color-text); border-radius: 10px; font-size: 0.98rem; }
 .search-input:focus { outline:none; border-color: var(--quadern-accent); box-shadow: 0 0 0 3px rgba(59,130,246,0.12); }
 
-.tag-filters { display:flex; flex-wrap:wrap; gap:8px; padding: 2px 0 10px; margin-bottom: 14px; }
+.tag-filters { display:flex; flex-wrap:wrap; gap:8px; padding: 2px 0 10px; margin-bottom: 14px; flex-shrink: 0; }
 
-.notes-timeline { position: relative; }
+.notes-timeline {
+  position: relative;
+  flex: 1 1 auto;
+  overflow: auto;
+  /* Separació visual entre notes i la barra de scroll */
+  padding-right: 12px;
+  /* Espai inferior simètric al marge sota les etiquetes */
+  padding-bottom: 20px; /* igual al marge de seguretat del layout */
+  /* Reserva espai estable per a la scrollbar on sigui possible */
+  scrollbar-gutter: stable both-edges;
+}
+
+/* Un pèl més d'aire al final de la llista */
+.date-group:last-child { margin-bottom: 0; }
 
 .dashboard-grid { display: grid; gap: 22px; margin: 0 auto; max-width: 1200px; }
 @media (min-width: 1024px) {

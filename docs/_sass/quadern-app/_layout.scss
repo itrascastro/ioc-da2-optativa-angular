@@ -70,7 +70,7 @@ body.quadern-layout {
 }
 
 /* Header del Quadern */
-.quadern-shell { display: flex; flex-direction: column; min-height: 100vh; }
+.quadern-shell { display: flex; flex-direction: column; height: 100vh; }
 
 .quadern-header {
   position: fixed;
@@ -165,7 +165,17 @@ body.quadern-layout {
    CONTAINER PRINCIPAL
    ============================= */
 
-.quadern-body { display: flex; flex: 1; gap: 24px; padding: 20px; padding-top: calc(20px + var(--quadern-header-height)); background: var(--color-background); }
+.quadern-body {
+  display: flex;
+  flex: 1;
+  gap: 24px;
+  padding: 20px;
+  padding-top: calc(20px + var(--quadern-header-height));
+  padding-bottom: 20px;
+  height: calc(100vh - var(--quadern-header-height) - var(--quadern-footer-height) - 40px);
+  background: var(--color-background);
+  overflow: hidden;
+}
 
 /* Sidebar */
 .quadern-sidebar {
@@ -670,7 +680,7 @@ body.quadern-layout {
 }
 
 /* Main Content */
-.quadern-main { flex: 1; padding: 8px 0 calc(var(--quadern-footer-height) + 20px); overflow: auto; background: var(--color-background); margin-left: calc(var(--quadern-sidebar-width) + 24px); }
+.quadern-main { flex: 1; padding: 8px 0 0; overflow: hidden; background: var(--color-background); margin-left: calc(var(--quadern-sidebar-width) + 24px); }
 
 /* =============================
    FOOTER DEL QUADERN
