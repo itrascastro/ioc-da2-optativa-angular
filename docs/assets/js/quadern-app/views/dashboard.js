@@ -120,7 +120,8 @@
       const bloc = (note.bloc ? Number(note.bloc) : null);
       const pageUrl = note.pageUrl || '';
       const sectionId = note.sectionId || '';
-      const sectionTitle = this._escapeHtml(note.sectionTitle || (sectionId ? ('Secció ' + sectionId) : 'Secció'));
+      const rawSectionTitle = note.sectionTitle || (sectionId ? ('Secció ' + sectionId) : 'Secció');
+      const sectionTitle = this._escapeHtml(this._cleanSectionTitle(rawSectionTitle));
       const unitHref = unit ? `${base}/unitat-${unit}/` : null;
       const blocHref = pageUrl || null;
       const sectHref = sectionId && pageUrl ? `${pageUrl}#${sectionId}` : (pageUrl || '#');
@@ -129,6 +130,13 @@
       if (blocHref && bloc) parts.push(`<a href="${blocHref}">Bloc ${bloc}</a>`);
       if (sectHref) parts.push(`<a href="${sectHref}">${sectionTitle || 'Secció'}</a>`);
       return parts.join(' <span class="sep">&gt;</span> ');
+    },
+    _cleanSectionTitle(title) {
+      if (!title) return '';
+      // Neteja números de comptadors al final, p.ex. "Secció X 3" o "Secció X (3)"
+      return String(title)
+        .replace(/\s*(?:\(\d+\)|\[\d+\]|\d+)\s*$/, '')
+        .trim();
     },
     _bindEvents() {
       const container = document.getElementById('recent-notes');
