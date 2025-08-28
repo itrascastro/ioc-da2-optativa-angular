@@ -36,10 +36,9 @@
 
       // Auto-guardat
       const noteContent = document.getElementById('note-content');
-      const noteTitle = document.getElementById('note-title');
       const noteTags = document.getElementById('note-tags');
 
-      [noteContent, noteTitle, noteTags].forEach(element => {
+      [noteContent, noteTags].forEach(element => {
         if (element) {
           element.addEventListener('input', () => this._scheduleAutosave());
         }
@@ -256,11 +255,9 @@
 
     _loadNoteInEditor(note) {
       // Carregar contingut als camps
-      const titleField = document.getElementById('note-title');
       const tagsField = document.getElementById('note-tags');
       const contentField = document.getElementById('note-content');
 
-      if (titleField) titleField.value = note.noteTitle || '';
       if (tagsField) tagsField.value = (note.tags || []).join(', ');
       if (contentField) contentField.value = note.content || '';
 
@@ -302,12 +299,9 @@
       this._loadNoteInEditor(newNote);
       this._clearActiveNoteInList();
       
-      // Focus al títol
-      const titleField = document.getElementById('note-title');
-      if (titleField) {
-        titleField.focus();
-        titleField.select();
-      }
+      // Focus inicial al selector de notes si existeix
+      const sel = document.getElementById('note-select');
+      if (sel) sel.focus();
     },
 
     _clearActiveNoteInList() {
@@ -321,11 +315,9 @@
       console.log('✏️ Editor: Guardant nota...');
       
       // Obtenir dades dels camps
-      const titleField = document.getElementById('note-title');
       const tagsField = document.getElementById('note-tags');
       const contentField = document.getElementById('note-content');
 
-      if (titleField) this.currentNote.noteTitle = titleField.value.trim();
       if (contentField) this.currentNote.content = contentField.value;
       
       if (tagsField) {
@@ -377,22 +369,10 @@
       }, 2000);
     },
 
-    _cancelEdit() {
-      if (this.currentNote) {
-        this._loadNoteInEditor(this.currentNote); // Recarregar dades originals
-      } else {
-        // Netejar editor
-        this._clearEditor();
-      }
-      this._updateEditorStatus('Cancel·lat');
-    },
-
     _clearEditor() {
-      const titleField = document.getElementById('note-title');
       const tagsField = document.getElementById('note-tags');
       const contentField = document.getElementById('note-content');
 
-      if (titleField) titleField.value = '';
       if (tagsField) tagsField.value = '';
       if (contentField) contentField.value = '';
 
@@ -414,31 +394,6 @@
     // =============================
     // UTILITATS
     // =============================
-
-    _formatLocation(note) {
-      if (note.unitat && note.bloc) {
-        return `U${note.unitat} - B${note.bloc}`;
-      } else if (note.unitat) {
-        return `Unitat ${note.unitat}`;
-      }
-      return 'Ubicació';
-    },
-
-    _formatDate(dateStr) {
-      if (!dateStr) return 'Data desconeguda';
-      
-      const date = new Date(dateStr);
-      const now = new Date();
-      const diffMs = now - date;
-      const diffMins = Math.floor(diffMs / 60000);
-      const diffHours = Math.floor(diffMs / 3600000);
-
-      if (diffMins < 1) return 'ara mateix';
-      if (diffMins < 60) return `fa ${diffMins} min`;
-      if (diffHours < 24) return `fa ${diffHours}h`;
-      
-      return date.toLocaleDateString('ca-ES');
-    },
 
     // =============================
     // INTEGRACIÓ AMB NAVIGATION TREE
@@ -498,17 +453,7 @@
 
     // Eliminat: _displaySectionNotes i createNoteForSection (llista clàssica/creació directa)
 
-    _clearEditor() {
-      const titleField = document.getElementById('note-title');
-      const tagsField = document.getElementById('note-tags');
-      const contentField = document.getElementById('note-content');
-
-      if (titleField) titleField.value = '';
-      if (tagsField) tagsField.value = '';
-      if (contentField) contentField.value = '';
-      
-      this.isEditing = false;
-    },
+    // (duplicated _clearEditor removed; single implementation above)
 
     // =============================
     // API PÚBLICA
