@@ -10,19 +10,7 @@
 
 .editor-single { width: 100%; }
 
-.editor-panel {
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--border-radius);
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-}
-
-.editor-list {
-  flex: 0 0 35%;
-  min-width: 280px;
-}
+/* legacy layout removed: .editor-panel, .editor-list */
 
 .editor-main { flex: 1; min-width: 480px; display: flex; flex-direction: column; min-height: 0; }
 
@@ -30,7 +18,7 @@
 .editor-form { display: flex; flex-direction: column; gap: 10px; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--border-radius); padding: 14px; flex: 1 1 auto; min-height: 0; }
 .editor-form input, .editor-form select { width: 100%; padding: 8px 12px; border: 1px solid var(--color-border); border-radius: 4px; background: var(--color-background); color: var(--color-text); font-size: 1rem; }
 .editor-form input#note-title { font-weight: 600; }
-.editor-actions-inline { display: flex; gap: 10px; margin-top: 8px; }
+/* legacy inline actions removed */
 
 /* Área del rich editor – ocupar l'alçada disponible (toolbar fixa, editor flexible) */
 #qre-editor { flex: 1 1 auto; min-height: 320px; display: flex; min-height: 0; }
@@ -45,149 +33,13 @@
 /* Llista de notes de la secció */
 #notes-list { margin-top: 16px; }
 
-.panel-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 15px 20px;
-  background: var(--color-surface-dark);
-  border-bottom: 1px solid var(--color-border);
-}
-
-.panel-header h3 {
-  margin: 0;
-  font-size: 1rem;
-  font-weight: 600;
-  color: var(--color-text);
-}
-
-.panel-body {
-  flex: 1;
-  padding: 15px 20px;
-  overflow-y: auto;
-}
+/* legacy panel header/body removed */
 
 /* Editor Specific */
-.editor-title-container {
-  flex: 1;
-}
+/* legacy editor title/actions removed */
 
-.editor-title-container input {
-  width: 100%;
-  padding: 8px 12px;
-  border: 1px solid var(--color-border);
-  border-radius: 4px;
-  background: var(--color-background);
-  color: var(--color-text);
-  font-size: 1rem;
-  font-weight: 600;
-}
+/* legacy custom toolbar removed (using Quill toolbar) */
 
-.editor-title-container input:focus {
-  outline: none;
-  border-color: var(--quadern-accent);
-}
+/* legacy custom content area removed */
 
-.editor-actions {
-  display: flex;
-  gap: 10px;
-}
-
-.editor-toolbar {
-  display: flex;
-  gap: 5px;
-  padding: 15px;
-  background: var(--color-surface-dark);
-  border-bottom: 1px solid var(--color-border);
-  border-radius: var(--border-radius);
-  margin-bottom: 15px;
-  flex-wrap: wrap;
-}
-
-.toolbar-group {
-  display: flex;
-  gap: 2px;
-  margin-right: 10px;
-}
-
-.toolbar-btn {
-  padding: 8px 10px;
-  background: var(--color-background);
-  border: 1px solid var(--color-border);
-  border-radius: 4px;
-  color: var(--color-text);
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.toolbar-btn:hover {
-  background: var(--quadern-accent);
-  color: white;
-}
-
-.toolbar-btn.active {
-  background: var(--quadern-accent);
-  color: white;
-}
-
-.editor-content {
-  flex: 1;
-  padding: 20px;
-  border: 2px solid var(--color-border);
-  border-radius: var(--border-radius);
-  background: var(--color-background);
-  color: var(--color-text);
-  line-height: 1.6;
-  font-size: 1rem;
-  outline: none;
-  overflow-y: auto;
-  min-height: 300px;
-}
-
-.editor-content:focus {
-  border-color: var(--quadern-accent);
-}
-
-/* Llista de Notes */
-.notes-list {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.note-preview {
-  padding: 12px;
-  background: var(--color-background);
-  border: 1px solid var(--color-border);
-  border-radius: 6px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.note-preview:hover {
-  background: var(--color-surface-dark);
-  border-color: var(--quadern-accent);
-}
-
-.note-preview.active {
-  background: var(--quadern-accent);
-  color: white;
-  border-color: var(--quadern-accent);
-}
-
-.note-preview-title {
-  font-weight: 600;
-  margin-bottom: 4px;
-}
-
-.note-preview-content {
-  font-size: 0.85rem;
-  opacity: 0.8;
-  line-height: 1.3;
-}
-
-.note-preview-meta {
-  font-size: 0.75rem;
-  opacity: 0.7;
-  margin-top: 6px;
-}
+/* legacy classic notes list styles removed */
