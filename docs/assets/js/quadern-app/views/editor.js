@@ -415,27 +415,6 @@
     // UTILITATS
     // =============================
 
-    _escapeHtml(text) {
-      const div = document.createElement('div');
-      div.textContent = text || '';
-      return div.innerHTML;
-    },
-
-    _getContentPreview(content, maxLength = 100) {
-      if (!content) return 'Sense contingut';
-      
-      const clean = content
-        .replace(/#+\s*/g, '')
-        .replace(/\*\*(.*?)\*\*/g, '$1')
-        .replace(/\*(.*?)\*/g, '$1')
-        .replace(/`(.*?)`/g, '$1')
-        .trim();
-      
-      return clean.length > maxLength 
-        ? clean.substring(0, maxLength) + '...'
-        : clean;
-    },
-
     _formatLocation(note) {
       if (note.unitat && note.bloc) {
         return `U${note.unitat} - B${note.bloc}`;
