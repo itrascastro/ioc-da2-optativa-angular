@@ -89,7 +89,7 @@
 .icon-btn { width: 30px; height: 30px; display: inline-flex; align-items: center; justify-content: center; border: 1px solid var(--color-border); background: var(--color-background); color: var(--color-text-muted); border-radius: 8px; cursor: pointer; }
 .icon-btn:hover { color: var(--color-text); }
 .icon-btn.danger:hover { border-color: var(--quadern-danger); color: var(--quadern-danger); }
-.note-content { color: var(--color-text); margin: 8px 0; line-height: 1.6; font-size: 0.98rem; }
+.note-content { color: var(--color-text); margin: 8px 0; line-height: 1.6; font-size: 0.98rem; white-space: pre-line; }
 .note-tags { display: flex; flex-wrap: wrap; gap: 6px; margin: 6px 0 8px; }
 .note-footer { color: var(--color-text-muted); font-size: .85rem; margin-top: 4px; }
 /* Timeline */
@@ -101,7 +101,7 @@
 /* sense línia temporal ni punts a l'esquerra */
 .note-card { position: relative; }
 /* Contingut truncat a 2-3 línies per previsualització */
-.note-content { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.note-content { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; white-space: pre-line; }
 
 /* Variant per etiquetes de nota (accent suau blau) */
 .tag.note-tag { background: rgba(59, 130, 246, 0.12); color: #1e40af; border-color: rgba(59,130,246,0.25); }

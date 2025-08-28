@@ -714,20 +714,40 @@
 
     _getContentPreview(content, maxLength = 150) {
       if (!content) return 'Sense contingut';
-
-      // Convertir HTML a text pla preservant només el contingut llegible
       let text = '';
       try {
+        // Substituir blocs de codi per [Bloc de codi]
+        let html = String(content);
+        if (/```/.test(html)) {
+          html = html.replace(/```[\s\S]*?```/g, '\n[Bloc de codi]\n');
+        }
         const div = document.createElement('div');
-        div.innerHTML = content;
-        text = (div.textContent || div.innerText || '').replace(/\s+/g, ' ').trim();
+        div.innerHTML = html;
+        div.querySelectorAll('pre, .ql-syntax, .ql-code-block, .ql-code-block-container').forEach(el => {
+          el.replaceWith(document.createTextNode('\n[Bloc de codi]\n'));
+        });
+        // innerText preserva salts de línia entre blocs
+        text = (div.innerText || div.textContent || '').replace(/\r\n|\r/g, '\n');
+        // Netejar múltiples línies buides
+        text = text.replace(/\n{3,}/g, '\n\n').trim();
       } catch {
-        text = String(content).replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+        // Fallback ràpid, preservar \n i substituir blocs simples
+        text = String(content)
+          .replace(/```[\s\S]*?```/g, '\n[Bloc de codi]\n')
+          .replace(/<\s*pre[\s\S]*?<\s*\/\s*pre\s*>/gi, '\n[Bloc de codi]\n')
+          .replace(/<[^>]*class=\"[^\"]*(ql-syntax|ql-code-block|ql-code-block-container)[^\"]*\"[^>]*>[\s\S]*?<\/[a-zA-Z0-9\-_:]+>/gi, '\n[Bloc de codi]\n')
+          .replace(/<\s*br\s*\/?>/gi, '\n')
+          .replace(/<\/(p|div|li)>/gi, '\n')
+          .replace(/<[^>]+>/g, '')
+          .replace(/\r\n|\r/g, '\n')
+          .replace(/\n{3,}/g, '\n\n')
+          .trim();
       }
-
       if (!text) return 'Sense contingut';
-
-      return text.length > maxLength ? (text.slice(0, maxLength).trim() + '...') : text;
+      if (text.length > maxLength) {
+        text = text.slice(0, maxLength).trim() + '...';
+      }
+      return text;
     },
 
     _formatLocation(note) {
