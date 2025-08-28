@@ -45,16 +45,7 @@
 
     _bindEditorEvents() {
       // Guardar nota
-      const saveBtn = document.getElementById('editor-save');
-      if (saveBtn) {
-        saveBtn.addEventListener('click', () => this.saveCurrentNote());
-      }
-
-      // Cancel·lar edició
-      const cancelBtn = document.getElementById('editor-cancel');
-      if (cancelBtn) {
-        cancelBtn.addEventListener('click', () => this._cancelEdit());
-      }
+      // Eliminar listeners obsolets (#editor-save / #editor-cancel)
 
       // Auto-guardat
       const noteContent = document.getElementById('note-content');
@@ -122,13 +113,8 @@
 
         const notesList = document.getElementById('notes-list');
         if (notesList) {
-          // En layout de 1 columna (editor-single) no renderitzem la llista antiga
-          const isSingle = !!document.querySelector('.editor-single');
-          if (isSingle) {
-            notesList.innerHTML = '';
-          } else {
-            this._updateNotesList(notes);
-          }
+          // Layout actual: 1 columna. La llista clàssica ja no s'usa.
+          notesList.innerHTML = '';
         }
       } catch (error) {
         console.error('❌ Editor: Error carregant navegació:', error);
@@ -222,75 +208,7 @@
       return html || '<div class="nav-empty">No hi ha notes encara</div>';
     },
 
-    _updateNotesList(notes) {
-      const notesList = document.getElementById('notes-list');
-      if (!notesList) return;
-
-      const recentNotes = notes
-        .filter(note => note.content && note.content.trim())
-        .sort((a, b) => new Date(b.updatedAt || b.createdAt) - new Date(a.updatedAt || a.createdAt));
-
-      if (recentNotes.length === 0) {
-        notesList.innerHTML = `
-          <div class="notes-empty">
-            <div class="empty-icon">
-              <i class="bi bi-journal-text"></i>
-            </div>
-            <p>No hi ha notes per mostrar en aquesta secció.</p>
-          </div>
-        `;
-        return;
-      }
-
-      notesList.innerHTML = `
-        <div class="notes-list-header">
-          <h4>Totes les Notes (${recentNotes.length})</h4>
-          <button class="btn-icon" id="refresh-notes" title="Actualitzar">
-            <i class="bi bi-arrow-clockwise"></i>
-          </button>
-        </div>
-        <div class="notes-items">
-          ${recentNotes.map(note => this._renderNoteListItem(note)).join('')}
-        </div>
-      `;
-
-      // Bind refresh button
-      const refreshBtn = notesList.querySelector('#refresh-notes');
-      if (refreshBtn) {
-        refreshBtn.addEventListener('click', () => this._loadEditorNavigation());
-      }
-    },
-
-    _renderNoteListItem(note) {
-      const isActive = this.currentNote && this.currentNote.id === note.id;
-      
-      return `
-        <div class="note-list-item ${isActive ? 'active' : ''}" data-note-id="${note.id}">
-          <div class="note-item-content">
-            <div class="note-item-title">${this._escapeHtml(note.noteTitle || 'Sense títol')}</div>
-            <div class="note-item-preview">${this._getContentPreview(note.content, 80)}</div>
-            <div class="note-item-meta">
-              <span class="note-location">${this._formatLocation(note)}</span>
-              <span class="note-date">${this._formatDate(note.updatedAt || note.createdAt)}</span>
-            </div>
-            ${note.tags && note.tags.length > 0 ? `
-              <div class="note-item-tags">
-                ${note.tags.slice(0, 3).map(tag => `<span class="tag">${tag}</span>`).join('')}
-                ${note.tags.length > 3 ? `<span class="tag-more">+${note.tags.length - 3}</span>` : ''}
-              </div>
-            ` : ''}
-          </div>
-          <div class="note-item-actions">
-            <button class="btn-icon" title="Duplicar" data-action="duplicate-note" data-note-id="${note.id}">
-              <i class="bi bi-files"></i>
-            </button>
-            <button class="btn-icon btn-danger" title="Eliminar" data-action="delete-note" data-note-id="${note.id}">
-              <i class="bi bi-trash"></i>
-            </button>
-          </div>
-        </div>
-      `;
-    },
+    // Eliminat: _updateNotesList i _renderNoteListItem (llista clàssica)
 
     // =============================
     // GESTIÓ DE NOTES
@@ -359,8 +277,7 @@
       if (tagsField) tagsField.value = (note.tags || []).join(', ');
       if (contentField) contentField.value = note.content || '';
 
-      // Actualitzar UI
-      this._updateEditorHeader(note);
+      // Actualitzar UI (sense header obsolet)
       this._updateEditorStatus('Carregat');
       
       this.isEditing = true;
@@ -374,22 +291,7 @@
       });
     },
 
-    _updateEditorHeader(note) {
-      const header = document.getElementById('editor-header');
-      if (header) {
-        header.innerHTML = `
-          <div class="editor-breadcrumb">
-            <span class="breadcrumb-item">${this._formatLocation(note)}</span>
-            <i class="bi bi-chevron-right"></i>
-            <span class="breadcrumb-item">${note.sectionTitle || 'Secció'}</span>
-          </div>
-          <div class="editor-meta">
-            <span class="editor-status" id="editor-status">Preparat</span>
-            <span class="editor-date">Modificat ${this._formatDate(note.updatedAt || note.createdAt)}</span>
-          </div>
-        `;
-      }
-    },
+    // Eliminat: _updateEditorHeader (capçalera d'editor legacy)
 
     createNewNote() {
       console.log('✏️ Editor: Creant nova nota...');
@@ -681,26 +583,7 @@
       
       const { sectionId, unitId, blocId, sectionTitle, notes } = sectionData;
       
-      // Actualitzar header amb informació de la secció
-      const header = document.getElementById('editor-header');
-      if (header) {
-        const crumbs = [];
-        if (unitId) crumbs.push(`Unitat ${unitId}`);
-        if (typeof blocId !== 'undefined' && blocId !== null && blocId !== '') crumbs.push(`Bloc ${blocId}`);
-        const crumbHtml = crumbs.map(c=>`<span class="breadcrumb-item">${c}</span>`).join('<i class="bi bi-chevron-right"></i>');
-        const label = sectionTitle || 'Totes les seccions';
-        header.innerHTML = `
-          <div class="editor-breadcrumb">
-            ${crumbHtml}
-            ${crumbHtml ? '<i class="bi bi-chevron-right"></i>' : ''}
-            <span class="breadcrumb-item">${label}</span>
-          </div>
-          <div class="editor-meta">
-            <span class="editor-status">${notes.length ? 'Notes de secció' : 'Sense notes'}</span>
-            <span class="editor-count">${notes.length} ${notes.length === 1 ? 'nota' : 'notes'}</span>
-          </div>
-        `;
-      }
+      // Capçalera d'editor legacy eliminada
       
       // Omplir desplegable i seleccionar la més recent (si hi ha)
       this._populateNotesDropdown(notes);
@@ -747,75 +630,7 @@
       });
     },
 
-    _displaySectionNotes(notes, sectionData) {
-      const notesList = document.getElementById('notes-list');
-      if (!notesList) return;
-      
-      if (notes.length === 0) {
-        notesList.innerHTML = `
-          <div class="no-notes">
-            <i class="bi bi-journal-plus"></i>
-            <h3>Encara no hi ha notes</h3>
-            <p>Clica el botó + per crear la primera nota d'aquesta secció</p>
-            <button class="btn btn-primary" onclick="window.Quadern.Editor.createNoteForSection()">
-              <i class="bi bi-plus"></i>
-              Crear primera nota
-            </button>
-          </div>
-        `;
-        return;
-      }
-      
-      let html = '<div class="section-notes-header">';
-      html += `<h3>Notes de ${sectionData.sectionTitle}</h3>`;
-      html += `<button class="btn btn-outline btn-sm" onclick="window.Quadern.Editor.createNoteForSection()">`;
-      html += '<i class="bi bi-plus"></i> Nova nota</button>';
-      html += '</div>';
-      
-      html += '<div class="notes-list-container">';
-      notes.forEach(note => {
-        html += this._renderNoteListItem(note);
-      });
-      html += '</div>';
-      
-      notesList.innerHTML = html;
-    },
-
-    createNoteForSection() {
-      if (!this.currentSection) {
-        console.warn('✏️ Editor: No hi ha secció activa per crear nota');
-        return;
-      }
-      
-      console.log('✏️ Editor: Creant nova nota per secció:', this.currentSection);
-      
-      const { sectionId, unitId, blocId, sectionTitle } = this.currentSection;
-      
-      // Crear nova nota amb context de la secció
-      const newNote = {
-        id: '', // S'assignarà automàticament al Store
-        noteTitle: '',
-        content: '',
-        tags: [],
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-        unitat: parseInt(unitId),
-        bloc: parseInt(blocId),
-        pageUrl: `#${sectionId}`,
-        sectionId: sectionId,
-        sectionTitle: sectionTitle
-      };
-
-      this.currentNote = newNote;
-      this._loadNoteInEditor(newNote);
-      this._clearActiveNoteInList();
-      
-      // Focus al títol
-      const titleField = document.getElementById('note-title');
-      if (titleField) {
-        titleField.focus();
-      }
-    },
+    // Eliminat: _displaySectionNotes i createNoteForSection (llista clàssica/creació directa)
 
     _clearEditor() {
       const titleField = document.getElementById('note-title');
