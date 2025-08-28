@@ -27,7 +27,7 @@
 .qre .editor .ql-container{ border:none; height:var(--editor-h); }
 .qre .editor .ql-editor{ height:100%; overflow:auto; line-height:1.45; color:var(--text); }
 .qre .ql-editor pre{ border:1px solid var(--border); border-radius:8px; padding:10px 12px; background:var(--code-bg); }
-.qre .ql-editor pre.ql-syntax{ background:var(--code-bg)!important; color:var(--code-fg)!important; font:13px/1.35 var(--mono); white-space:pre; overflow:auto; }
+.qre .ql-editor pre.ql-syntax{ background:var(--code-bg)!important; color:var(--code-fg)!important; font:13px/1.35 var(--mono); white-space:pre; overflow:auto; tab-size:4; -moz-tab-size:4; font-variant-ligatures: none; letter-spacing: 0; word-spacing: normal; }
 .qre dialog.c-modal{ border:1px solid var(--border); border-radius:12px; padding:0; width:min(1100px,96vw); max-height:92vh; background:var(--panel); }
 .qre dialog::backdrop{ background:rgba(0,0,0,.35); }
 .qre .m-head{ display:flex; align-items:center; gap:8px; padding:8px 10px; border-bottom:1px solid var(--border); background:var(--toolbar); position:sticky; top:0; z-index:4; }

@@ -273,16 +273,37 @@
       target.dispatchEvent(new Event('input', { bubbles:true }));
     });
 
-    // Paste sanitize
+    // Paste handling: preserve indentation for code
     quill.root.addEventListener('paste', function(e){
       if (!e.clipboardData) return;
       e.preventDefault();
       var html = e.clipboardData.getData('text/html') || '';
       var text = e.clipboardData.getData('text/plain') || '';
-      var source = html || text.replace(/\n/g,'<br>');
+      var sel = quill.getSelection(true) || { index: quill.getLength(), length: 0 };
+      var fmt = quill.getFormat(sel);
+
+      // Heuristics: treat as code if already in code-block or clipboard looks like code
+      var looksLikeCode = /<pre|<code|```/.test(html) || /\t|^\s{2,}/m.test(text);
+      var inCode = !!fmt['code-block'];
+
+      if (inCode || looksLikeCode) {
+        // Get plain text content and normalize newlines and tabs
+        var plain = text;
+        if (!plain && html){
+          try { var tmp = document.createElement('div'); tmp.innerHTML = html; plain = (tmp.innerText || tmp.textContent || '').replace(/\r\n?|\r/g,'\n'); } catch(_){}
+        }
+        plain = (plain || '').replace(/\r\n?|\r/g,'\n').replace(/\t/g,'    ');
+
+        // Ensure we're in code-block to preserve whitespace visually
+        if (!inCode) quill.format('code-block', true);
+        quill.insertText(sel.index, plain, 'user');
+        return;
+      }
+
+      // Default: sanitize HTML and paste, preserving line breaks via HTML
+      var source = html || (text ? text.replace(/\n/g,'<br>') : '');
       var clean = sanitizeHTML(source);
-      var sel = quill.getSelection(true);
-      quill.clipboard.dangerouslyPasteHTML(sel ? sel.index : quill.getLength(), clean, 'user');
+      quill.clipboard.dangerouslyPasteHTML(sel.index, clean, 'user');
     });
 
     // Initialize from target current value
