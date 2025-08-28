@@ -122,16 +122,7 @@
         return;
       }
 
-      // Notes en vista d'editor i dashboard
-      const notePreview = e.target.closest('.note-preview, .recent-note-item');
-      if (notePreview) {
-        e.preventDefault();
-        const noteId = notePreview.dataset.noteId;
-        if (noteId) {
-          this._selectNote(noteId);
-        }
-        return;
-      }
+      // Eliminat: click sobre targetes/preview de nota (la targeta no és clicable)
 
       // Controls UI globals
       this._handleUIControls(e);
