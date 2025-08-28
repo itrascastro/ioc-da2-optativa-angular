@@ -26,16 +26,36 @@
 
   function buildMarkup(container, ids){
     const noTheme = container.hasAttribute('data-no-theme');
-    const html = [
-      '<div class="panel">',
-      '  <div class="head">',
-      '    <div class="fields" data-qre-slot="fields"></div>',
-      '    <div class="actions" aria-label="Accions">',
+    const statusLeft = container.hasAttribute('data-status-left');
+    const headHtml = statusLeft
+      ? [
+        '  <div class="head">',
+        '    <div class="status" data-qre-status aria-live="polite"></div>',
+        '    <div class="fields" data-qre-slot="fields"></div>',
+        '    <div class="actions" aria-label="Accions">',
+        `      <button class="iconbtn" id="${ids.btnHTML}" title="Veure/editar HTML">&lt;/&gt;</button>`,
+        `      <button class="iconbtn" id="${ids.btnExpand}" title="Editar en gran">⤢</button>`,
+        '    </div>',
+        (noTheme ? '' : [
+        '    <div class="theme-toggle">',
+        '      <label for="'+ids.themeSel+'">Tema</label>',
+        `      <select id="${ids.themeSel}" class="input" style="width:auto;padding:6px 8px;">`,
+        '        <option value="light">Clar</option>',
+        '        <option value="dark">Fosc</option>',
+        '      </select>',
+        '    </div>'
+        ].join('')),
+        '  </div>'
+      ].join('')
+      : [
+        '  <div class="head">',
+        '    <div class="fields" data-qre-slot="fields"></div>',
+        '    <div class="actions" aria-label="Accions">',
         '      <div class="status" data-qre-status aria-live="polite"></div>',
         `      <button class="iconbtn" id="${ids.btnHTML}" title="Veure/editar HTML">&lt;/&gt;</button>`,
         `      <button class="iconbtn" id="${ids.btnExpand}" title="Editar en gran">⤢</button>`,
-      '    </div>',
-      (noTheme ? '' : [
+        '    </div>',
+        (noTheme ? '' : [
       '    <div class="theme-toggle">',
       '      <label for="'+ids.themeSel+'">Tema</label>',
       `      <select id="${ids.themeSel}" class="input" style="width:auto;padding:6px 8px;">`,
@@ -44,7 +64,11 @@
       '      </select>',
       '    </div>'
       ].join('')),
-      '  </div>',
+        '  </div>'
+      ].join('');
+    const html = [
+      '<div class="panel">',
+      headHtml,
       '  <div class="editor">',
         `    <div id="${ids.toolbarCompact}" class="ql-toolbar ql-snow">`,
       '      <span class="ql-formats">',

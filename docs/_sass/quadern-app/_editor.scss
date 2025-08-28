@@ -34,8 +34,13 @@
 .qre .panel .head .fields input,
 .qre .panel .head .fields select { flex: 1 1 auto; width: 100%; }
 .qre .panel .head .actions { flex: 0 0 auto; margin-left: auto; display: flex; align-items: center; gap: 8px; }
-.qre .panel .head .actions .status { color: var(--color-text-muted); font-size: 0.9rem; padding: 2px 10px; border: 1px solid var(--color-border); border-radius: 999px; background: var(--color-surface-dark); }
-.qre .panel .head .actions .status:empty { display: none; }
+.qre .panel .head .actions .status, #qre-editor .panel .head .status { color: var(--color-text-muted); font-size: 0.9rem; padding: 2px 10px; border: 1px solid var(--color-border); border-radius: 999px; background: var(--color-surface-dark); }
+.qre .panel .head .actions .status:empty, #qre-editor .panel .head .status:empty { display: none; }
+/* En l'editor principal, situar el status a l'esquerra del capçal */
+#qre-editor .panel .head { width: 100%; }
+#qre-editor .panel .head .status { margin-right: 8px; flex: 0 0 auto; }
+#qre-editor .panel .head .fields { flex: 1 1 auto; }
+#qre-editor .panel .head .actions { flex: 0 0 auto; margin-left: auto; }
 .qre .panel .editor { display: flex; flex-direction: column; flex: 1 1 auto; min-height: 0; }
 .qre .panel .editor .ql-toolbar { flex: 0 0 auto; }
 .qre .panel .editor .ql-container { flex: 1 1 auto; min-height: 0; height: auto; }
