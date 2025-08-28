@@ -211,10 +211,30 @@
     this.root.querySelector('#qnp-tags').value = (n.tags||[]).join(', ');
     this.root.querySelector('#qnp-text').value = n.content||'';
   };
+  // Helpers de validació/normalització
+  Panel.prototype._normalizeTags = function(tags){
+    const seen = new Set();
+    const out = [];
+    (tags||[]).forEach(t => {
+      const clean = String(t||'').trim();
+      if (!clean) return;
+      const key = clean.toLowerCase();
+      if (!seen.has(key)) { seen.add(key); out.push(clean); }
+    });
+    return out;
+  };
+  Panel.prototype._hasDuplicateTitleInSection = function(title, ctx, excludeId){
+    if (!title || !ctx || !ctx.sectionId) return false;
+    const state = this.state;
+    const list = S.notesForSection(state, ctx.pageUrl, ctx.sectionId) || [];
+    const key = String(title).trim().toLowerCase();
+    return list.some(n => n && n.id !== excludeId && String(n.noteTitle||'').trim().toLowerCase() === key);
+  };
   Panel.prototype.saveNote = function(){
     const title = this.root.querySelector('#qnp-title').value.trim();
     const content = this.root.querySelector('#qnp-text').value.trim();
-    const tags = (this.root.querySelector('#qnp-tags').value||'').split(',').map(s=>s.trim()).filter(Boolean);
+    const tagsRaw = (this.root.querySelector('#qnp-tags').value||'').split(',');
+    const tags = this._normalizeTags(tagsRaw);
     
     // Validació: requereix títol I contingut
     if (!title || !content) {
@@ -226,6 +246,12 @@
       // Actualitzar nota existent
       const n = this.state.notes.byId[this.currentId];
       if (n) {
+        // Validar duplicat de títol dins de la mateixa secció
+        const ctxUpd = { pageUrl: n.pageUrl, sectionId: n.sectionId };
+        if (this._hasDuplicateTitleInSection(title, ctxUpd, n.id)) {
+          this.showValidationModal('Ja existeix una nota amb el mateix títol en aquesta secció.');
+          return;
+        }
         n.noteTitle = title;
         n.tags = tags;
         n.content = content;
@@ -240,6 +266,11 @@
       const ctx = this.sectionContext();
       if (!ctx.sectionId) {
         this.showValidationModal('Selecciona una secció per crear la nota.');
+        return;
+      }
+      // Validar duplicat de títol
+      if (this._hasDuplicateTitleInSection(title, ctx, null)) {
+        this.showValidationModal('Ja existeix una nota amb el mateix títol en aquesta secció.');
         return;
       }
       const n = Object.assign({
@@ -266,16 +297,20 @@
     const title = this.root.querySelector('#qnp-title').value.trim();
     const contentHTML = (this.root.querySelector('#qnp-text')?.value || '').trim();
     const contentText = contentHTML.replace(/<[^>]*>/g,'').trim();
-    const tags = (this.root.querySelector('#qnp-tags').value||'').split(',').map(s=>s.trim()).filter(Boolean);
+    const tags = this._normalizeTags((this.root.querySelector('#qnp-tags').value||'').split(','));
     if (!title || !contentText) return; // defer until both exist
     if (this.currentId) {
       const n = this.state.notes.byId[this.currentId];
       if (n) {
+        // Evitar duplicats dins la mateixa secció
+        const ctxUpd = { pageUrl: n.pageUrl, sectionId: n.sectionId };
+        if (this._hasDuplicateTitleInSection(title, ctxUpd, n.id)) return;
         n.noteTitle = title; n.tags = tags; n.content = contentHTML; n.updatedAt = U.nowISO();
         S.save(this.state); this.refreshList(); this.updateHeadCounts();
       }
     } else {
       const ctx = this.sectionContext(); if (!ctx.sectionId) return;
+      if (this._hasDuplicateTitleInSection(title, ctx, null)) return;
       const n = Object.assign({ id:'', noteTitle:title, tags:tags, content:contentHTML, createdAt:U.nowISO(), updatedAt:U.nowISO() }, ctx);
       const created = S.upsertNote(this.state, n); this.currentId = created.id; S.save(this.state);
       this.refreshList(); this.updateHeadCounts();
