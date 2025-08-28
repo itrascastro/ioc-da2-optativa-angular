@@ -12,8 +12,11 @@ breadcrumb: false
     <!-- Capçalera: Cerca i Filtres -->
     <div class="dash-header" role="region" aria-label="Cerca i filtres">
       <div class="search-wrapper">
-        <i class="bi bi-search" aria-hidden="true"></i>
+        <i class="bi bi-search search-icon" aria-hidden="true"></i>
         <input type="text" id="dashboard-search" class="search-input" placeholder="Buscar notes..." aria-label="Buscar notes">
+        <button type="button" id="dashboard-search-clear" class="search-clear" aria-label="Netejar cerca i etiquetes" title="Netejar">
+          <i class="bi bi-x-circle" aria-hidden="true"></i>
+        </button>
       </div>
       <div class="dash-actions">
         <button class="btn btn-outline" data-action="open-filter" aria-label="Filtrar per etiquetes">

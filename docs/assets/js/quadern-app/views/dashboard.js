@@ -22,6 +22,14 @@
       this._bindEvents();
       console.log('✅ Dashboard: Vista inicialitzada');
     },
+    _clearFilters(){
+      this._tagFilter = null;
+      this._searchQuery = '';
+      const search = document.getElementById('dashboard-search');
+      if (search) search.value = '';
+      this.loadData();
+      this._updateSearchClearVisibility();
+    },
 
     _bindEvents() {
       // Esdeveniments específics del dashboard
@@ -33,7 +41,16 @@
           const action = btn.getAttribute('data-action');
           if (action === 'open-filter') this._openFilterModal();
           if (action === 'open-study') this._openStudyView();
+          if (action === 'clear-filters') this._clearFilters();
         });
+        const clearBtn = document.getElementById('dashboard-search-clear');
+        if (clearBtn) {
+          clearBtn.addEventListener('click', (e)=>{
+            e.preventDefault();
+            this._clearFilters();
+            this._updateSearchClearVisibility();
+          });
+        }
       }
 
       // Cerca en temps real
@@ -42,6 +59,7 @@
         search.addEventListener('input', () => {
           this._searchQuery = (search.value || '').trim().toLowerCase();
           this.loadData();
+          this._updateSearchClearVisibility();
         });
       }
 
@@ -59,6 +77,7 @@
           if (idx >= 0) current.splice(idx, 1); else current.push(tag);
           this._tagFilter = current.length ? current : null;
           this.loadData();
+          this._updateSearchClearVisibility();
         });
       }
       // Bind de la llista de notes (accions i click)
@@ -80,6 +99,7 @@
         this._updateRecentTags(notes);
         this._renderTagFilters(notes);
         this._updateActivityChart(notes);
+        this._updateSearchClearVisibility();
         
       } catch (error) {
         console.error('❌ Dashboard: Error carregant dades:', error);
@@ -171,7 +191,7 @@
         }
       } catch {}
       // Donar un petit marge per si Discovery encara s'està carregant
-      setTimeout(()=> this.loadData(), 30);
+      setTimeout(()=> { this.loadData(); this._updateSearchClearVisibility(); }, 30);
     },
     _groupByDateLabel(notes){
       const map = new Map();
@@ -380,6 +400,14 @@
       } else {
         if (confirm('Eliminar aquesta nota?')) doDelete();
       }
+    },
+
+    _updateSearchClearVisibility(){
+      const btn = document.getElementById('dashboard-search-clear');
+      if (!btn) return;
+      const hasSearch = !!(this._searchQuery && this._searchQuery.length);
+      const hasTags = Array.isArray(this._tagFilter) && this._tagFilter.length > 0;
+      btn.classList.toggle('visible', hasSearch || hasTags);
     },
 
     // =============================
