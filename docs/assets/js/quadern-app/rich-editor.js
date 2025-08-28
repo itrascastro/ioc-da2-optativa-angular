@@ -412,6 +412,8 @@
     // ESC closes modals
     on(document, 'keydown', function(e){ if (e.key==='Escape'){ if (modalBig && modalBig.open) modalBig.close(); if (modalHTML && modalHTML.open) modalHTML.close(); }});
 
+    // Expose instance on container for external control
+    try { container.__qre = { quill: quill, target: target }; } catch(e){}
     return { quill, target };
   }
 
@@ -460,7 +462,11 @@
 
   // Expose
   window.Quadern = window.Quadern || {};
-  window.Quadern.RichEditor = { attach, autoInit };
+  window.Quadern.RichEditor = {
+    attach: attach,
+    autoInit: autoInit,
+    getInstance: function(selector){ try { const el = document.querySelector(selector); return el && el.__qre ? el.__qre : null; } catch(e){ return null; } }
+  };
 
   document.addEventListener('DOMContentLoaded', function(){
     autoInit();

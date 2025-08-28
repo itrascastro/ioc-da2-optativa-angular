@@ -66,6 +66,34 @@
           element.addEventListener('input', () => this._scheduleAutosave());
         }
       });
+
+      // Canvi en el desplegable de notes: carregar nota seleccionada
+      const noteSelect = document.getElementById('note-select');
+      if (noteSelect) {
+        noteSelect.addEventListener('change', (e) => {
+          const id = e.target.value;
+          if (!id) return;
+          try {
+            // API existent
+            this.selectNote(id);
+            // Seguro: aplicar també directament als camps
+            const state = window.Quadern?.Store?.load ? window.Quadern.Store.load() : null;
+            const note = state?.notes?.byId ? state.notes.byId[id] : null;
+            if (note) {
+              const tagsField = document.getElementById('note-tags');
+              if (tagsField) tagsField.value = (note.tags || []).join(', ');
+              const contentField = document.getElementById('note-content');
+              if (contentField) {
+                contentField.value = note.content || '';
+                contentField.dispatchEvent(new Event('input', { bubbles: true }));
+              }
+              const qre = (window.Quadern?.RichEditor?.getInstance) ? window.Quadern.RichEditor.getInstance('#qre-editor') : null;
+              const quill = qre?.quill || null;
+              if (quill) { try { quill.setText(''); quill.clipboard.dangerouslyPasteHTML(0, note.content || '', 'api'); } catch {} }
+            }
+          } catch {}
+        });
+      }
     },
 
     _bindNavigationEvents() {
@@ -280,6 +308,43 @@
           this._loadNoteInEditor(note);
           this._updateActiveNoteInList(noteId);
           this.app.currentNote = note;
+
+          // Forçar refresc dels camps visibles (etiquetes i editor rich)
+          try {
+            const tagsField = document.getElementById('note-tags');
+            if (tagsField) tagsField.value = (note.tags || []).join(', ');
+            const contentField = document.getElementById('note-content');
+            if (contentField) {
+              contentField.value = note.content || '';
+              // Notificar canvis per assegurar sincronització amb el rich editor
+              contentField.dispatchEvent(new Event('input', { bubbles: true }));
+            }
+            // Actualitzar directament Quill si està disponible
+            const qre = (window.Quadern?.RichEditor?.getInstance) ? window.Quadern.RichEditor.getInstance('#qre-editor') : null;
+            const quill = qre?.quill || null;
+            if (quill) {
+              try { quill.setText(''); quill.clipboard.dangerouslyPasteHTML(0, note.content || '', 'api'); } catch {}
+            } else {
+              // Fallback: manipular DOM del editor
+              const qlEditor = document.querySelector('#qre-editor .ql-editor');
+              if (qlEditor) { qlEditor.innerHTML = note.content || ''; }
+            }
+            // Tercer fallback: repetir després d'un cicle de render
+            setTimeout(() => {
+              try {
+                const tagsField2 = document.getElementById('note-tags');
+                if (tagsField2) tagsField2.value = (note.tags || []).join(', ');
+                const contentField2 = document.getElementById('note-content');
+                if (contentField2) {
+                  contentField2.value = note.content || '';
+                  contentField2.dispatchEvent(new Event('input', { bubbles: true }));
+                }
+                const qre2 = (window.Quadern?.RichEditor?.getInstance) ? window.Quadern.RichEditor.getInstance('#qre-editor') : null;
+                const quill2 = qre2?.quill || null;
+                if (quill2) { try { quill2.setText(''); quill2.clipboard.dangerouslyPasteHTML(0, note.content || '', 'api'); } catch {} }
+              } catch {}
+            }, 50);
+          } catch(e) {}
         }
       }
     },
@@ -663,9 +728,10 @@
         }
         this._clearEditor();
       }
-      // Guardar context actual
+      // Guardar context actual i focus al selector
       this.currentSection = sectionData;
-      this.currentNote = null;
+      const selFocus = document.getElementById('note-select');
+      if (selFocus) selFocus.focus();
     },
 
     _populateNotesDropdown(notes){
