@@ -11,7 +11,7 @@
       ui: { explorer: { openUnits: [], openBlocs: {} }, notesPanel: { open: false, sectionId: '', noteId: '' } },
       progress: { lastVisited: null, readPositions: {}, sections: {} },
       filters: { q: '', tags: [] },
-      notes: { byId: {}, bySection: {}, counters: { total: 0 } }
+      notes: { byId: {}, bySection: {}, orderBySection: {}, counters: { total: 0 } }
     };
   }
   function load(){
@@ -29,6 +29,11 @@
     const sKey = sectionKey(n.pageUrl, n.sectionId);
     const arr = state.notes.bySection[sKey] || (state.notes.bySection[sKey] = []);
     if (!arr.includes(n.id)) arr.push(n.id);
+    // Ensure custom order includes the new id at the end if order exists
+    if (state.notes.orderBySection && Array.isArray(state.notes.orderBySection[sKey])) {
+      const ord = state.notes.orderBySection[sKey];
+      if (!ord.includes(n.id)) ord.push(n.id);
+    }
     state.notes.counters.total = Object.keys(state.notes.byId).length;
     return n;
   }
@@ -45,6 +50,28 @@
     const ids = state.notes.bySection[sKey] || [];
     return ids.map(id => state.notes.byId[id]).filter(Boolean);
   }
+  function getOrderForSection(state, pageUrl, sectionId){
+    const sKey = sectionKey(pageUrl, sectionId);
+    const custom = state.notes.orderBySection && state.notes.orderBySection[sKey];
+    if (Array.isArray(custom) && custom.length) return custom.slice();
+    // Default: order by createdAt ASC
+    const arr = (state.notes.bySection[sKey] || []).slice();
+    arr.sort((aId,bId)=>{
+      const a = state.notes.byId[aId]||{}; const b = state.notes.byId[bId]||{};
+      return new Date(a.createdAt||a.updatedAt||0) - new Date(b.createdAt||b.updatedAt||0);
+    });
+    return arr;
+  }
+  function setOrderForSection(state, pageUrl, sectionId, orderedIds){
+    const sKey = sectionKey(pageUrl, sectionId);
+    const ids = state.notes.bySection[sKey] || [];
+    // keep only ids present in section and maintain order of provided array
+    const set = new Set(ids);
+    const cleaned = orderedIds.filter(id => set.has(id));
+    // append any missing ids at end preserving default order
+    const missing = ids.filter(id => !cleaned.includes(id));
+    state.notes.orderBySection[sKey] = cleaned.concat(missing);
+  }
   function countForSection(state, pageUrl, sectionId){
     const sKey = sectionKey(pageUrl, sectionId);
     const arr = state.notes.bySection[sKey] || [];
@@ -52,5 +79,5 @@
   }
 
   window.Quadern = window.Quadern || {};
-  window.Quadern.Store = { load, save, upsertNote, deleteNote, notesForSection, countForSection };
+  window.Quadern.Store = { load, save, upsertNote, deleteNote, notesForSection, countForSection, getOrderForSection, setOrderForSection };
 })();

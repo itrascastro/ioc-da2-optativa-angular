@@ -238,8 +238,39 @@
           sects.forEach(([sk, s], idx)=>{
             const clean = this._cleanSectionTitle ? this._cleanSectionTitle(String(s.title||'')) : (s.title||'');
             html += `<h4 class=\"doc-h3\">${u.id||'?'}.${b.id||'?'}.${idx+1} ${this._escapeHtml(clean)}</h4>`;
-            const ordered = (s.notes||[]).sort((a,b)=> new Date(b.updatedAt||b.createdAt) - new Date(a.updatedAt||a.createdAt));
-            ordered.forEach(n=>{ html += `<div class=\"doc-note\" data-note-id=\"${n.id}\">${n.content||''}</div>`; });
+            // Default order: createdAt ASC. Allow custom per-section order stored in Store.orderBySection
+            const ref = (s.notes && s.notes[0]) ? s.notes[0] : null;
+            const sKeyFull = ref ? `${ref.pageUrl}#${ref.sectionId}` : null;
+            let orderedIds = [];
+            try {
+              if (ref && window.Quadern?.Store?.getOrderForSection) {
+                const state = window.Quadern.Store.load();
+                orderedIds = window.Quadern.Store.getOrderForSection(state, ref.pageUrl, ref.sectionId);
+                const allowed = new Set((s.notes||[]).map(n=>n.id));
+                orderedIds = orderedIds.filter(id => allowed.has(id));
+                const missing = (s.notes||[])
+                  .map(n=>n.id)
+                  .filter(id => !orderedIds.includes(id))
+                  .sort((aId,bId)=>{
+                    const a = (s.notes||[]).find(n=>n.id===aId)||{}; const b = (s.notes||[]).find(n=>n.id===bId)||{};
+                    return new Date(a.createdAt||a.updatedAt||0) - new Date(b.createdAt||b.updatedAt||0);
+                  });
+                orderedIds = orderedIds.concat(missing);
+              }
+            } catch {}
+            const ordered = orderedIds.length
+              ? orderedIds.map(id => (s.notes||[]).find(n=>n.id===id)).filter(Boolean)
+              : (s.notes||[]).slice().sort((a,b)=> new Date(a.createdAt||a.updatedAt||0) - new Date(b.createdAt||b.updatedAt||0));
+            ordered.forEach(n=>{
+              html += `
+                <div class=\"doc-note\" data-note-id=\"${n.id}\" data-section=\"${sKeyFull||''}\">
+                  <div class=\"study-reorder\">
+                    <button class=\"reorder-btn\" data-action=\"move-up\" data-id=\"${n.id}\" data-section=\"${sKeyFull||''}\" title=\"Pujar\" aria-label=\"Pujar nota\"><i class=\"bi bi-chevron-up\"></i></button>
+                    <button class=\"reorder-btn\" data-action=\"move-down\" data-id=\"${n.id}\" data-section=\"${sKeyFull||''}\" title=\"Baixar\" aria-label=\"Baixar nota\"><i class=\"bi bi-chevron-down\"></i></button>
+                  </div>
+                  ${n.content||''}
+                </div>`;
+            });
           });
         });
       });
@@ -375,6 +406,30 @@
           this._deleteNote(noteId);
         } else if (action === 'open-filter') {
           this._openFilterModal();
+        } else if (action === 'move-up' || action === 'move-down') {
+          // Reordenació en Mode Estudi
+          const sec = btn.getAttribute('data-section');
+          const id = btn.getAttribute('data-id');
+          if (!this._studyMode || !sec || !id) return;
+          try {
+            const [pageUrl, sectionId] = sec.split('#');
+            const state = window.Quadern.Store.load();
+            let order = window.Quadern.Store.getOrderForSection(state, pageUrl, sectionId);
+            // Fallback: if id not found, derive current order from DOM
+            let idx = order.indexOf(id);
+            if (idx === -1) {
+              const nodes = Array.from(container.querySelectorAll(`.doc-note[data-section="${sec}"]`));
+              order = nodes.map(n => n.getAttribute('data-note-id')).filter(Boolean);
+              idx = order.indexOf(id);
+            }
+            if (idx === -1) return;
+            const swapWith = action === 'move-up' ? idx - 1 : idx + 1;
+            if (swapWith < 0 || swapWith >= order.length) return;
+            const tmp = order[idx]; order[idx] = order[swapWith]; order[swapWith] = tmp;
+            window.Quadern.Store.setOrderForSection(state, pageUrl, sectionId, order);
+            window.Quadern.Store.save(state);
+            this.loadData();
+          } catch(err){ console.warn('Reorder failed', err); }
         }
       });
       // Click en targeta completa: no fer res (només icona d'editar activa l'edició)
