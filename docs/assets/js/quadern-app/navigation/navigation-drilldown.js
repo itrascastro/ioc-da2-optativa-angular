@@ -150,8 +150,9 @@
               crumbButton.addEventListener('click', () => {
                 if (this.activePath.length === 1) {
                   this.activePath = [];
-                  // Tornar a arrel: eliminar filtre
-                  if (window.Quadern?.Dashboard?.setStructureFilter) {
+                  // Tornar a arrel: eliminar filtre només si estem al dashboard
+                  const currentView = (window.Quadern?.App?.currentView) || '';
+                  if (currentView === 'dashboard' && window.Quadern?.Dashboard?.setStructureFilter) {
                     window.Quadern.Dashboard.setStructureFilter(null);
                   }
                   this.render();
