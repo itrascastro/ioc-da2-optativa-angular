@@ -63,19 +63,20 @@
         return structure;
       }
       
-      window.courseData.unitats.forEach(unitat => {
+      window.courseData.unitats.forEach((unitat, uIndex) => {
         const unitKey = `unitat-${unitat.numero}`;
         
         structure[unitKey] = {
           id: unitat.numero,
           nom: unitat.nom,
           descripcio: unitat.descripcio,
+          order: uIndex,
           noteCount: 0,
           blocs: {}
         };
         
         if (unitat.blocs) {
-          unitat.blocs.forEach(bloc => {
+          unitat.blocs.forEach((bloc, bIndex) => {
             const blockKey = `bloc-${bloc.numero}`;
             
             structure[unitKey].blocs[blockKey] = {
@@ -83,6 +84,7 @@
               nom: bloc.nom,
               descripcio: bloc.descripcio,
               url: bloc.url,
+              order: bIndex,
               noteCount: 0,
               seccions: {},
               isLoading: false

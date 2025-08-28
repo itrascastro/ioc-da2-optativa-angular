@@ -224,20 +224,66 @@
         sec.title = title; sec.notes.push(n);
         org[uKey].blocs[bKey].seccions[sKey] = sec;
       });
-      const unitKeys = Object.keys(org).sort((a,b)=> (org[a].id||0) - (org[b].id||0));
+      const CS = (window.Quadern?.Discovery?.getCourseStructure) ? window.Quadern.Discovery.getCourseStructure() : null;
+      const unitKeys = Object.keys(org).sort((a,b)=>{
+        if (CS) {
+          const ao = CS[a]?.order ?? 9999; const bo = CS[b]?.order ?? 9999;
+          if (ao !== bo) return ao - bo;
+        }
+        return (org[a].id||0) - (org[b].id||0);
+      });
       let html = '<div class="study-doc">';
       unitKeys.forEach(uk=>{
         const u = org[uk];
         html += `<h2 class=\"doc-h1\">Unitat ${u.id||'?'} </h2>`;
-        const bks = Object.keys(u.blocs).sort((a,b)=> (u.blocs[a].id||0) - (u.blocs[b].id||0));
+        const bks = Object.keys(u.blocs).sort((a,b)=>{
+          if (CS) {
+            const cu = CS[`unitat-${u.id}`];
+            const ao = cu?.blocs?.[a]?.order ?? 9999; const bo = cu?.blocs?.[b]?.order ?? 9999;
+            if (ao !== bo) return ao - bo;
+          }
+          return (u.blocs[a].id||0) - (u.blocs[b].id||0);
+        });
         bks.forEach(bk=>{
           const b = u.blocs[bk];
           html += `<h3 class=\"doc-h2\">${u.id||'?'}.${b.id||'?'} Bloc ${b.id||'?'}</h3>`;
           const sects = Object.entries(b.seccions);
-          sects.sort((a,b)=> String(a[1].title||'').localeCompare(String(b[1].title||'')));
-          sects.forEach(([sk, s], idx)=>{
+          const getSectionOrder = (unitNum, blockNum, sectionKey, sectionTitle) => {
+            if (!CS) return 9999;
+            const cu = CS[`unitat-${unitNum}`];
+            const cb = cu?.blocs?.[`bloc-${blockNum}`];
+            if (!cb || !cb.seccions) return 9999;
+            // 1) match by id key
+            if (Object.prototype.hasOwnProperty.call(cb.seccions, sectionKey)) {
+              const o = cb.seccions[sectionKey]?.order;
+              if (typeof o === 'number') return o;
+            }
+            // 2) fallback: match by cleaned title
+            const clean = this._cleanSectionTitle ? this._cleanSectionTitle(String(sectionTitle||'')) : String(sectionTitle||'');
+            let best = 9999;
+            for (const [sid, sconf] of Object.entries(cb.seccions)) {
+              const confTitle = this._cleanSectionTitle ? this._cleanSectionTitle(String(sconf?.title||'')) : String(sconf?.title||'');
+              if (confTitle && confTitle === clean) {
+                const o = typeof sconf.order === 'number' ? sconf.order : 9999;
+                if (o < best) best = o;
+              }
+            }
+            return best;
+          };
+          sects.sort((aEnt,bEnt)=>{
+            const ao = getSectionOrder(u.id, b.id, aEnt[0], aEnt[1]?.title);
+            const bo = getSectionOrder(u.id, b.id, bEnt[0], bEnt[1]?.title);
+            if (ao !== bo) return ao - bo;
+            // fallback estable si no hi ha informació
+            return String(aEnt[1].title||'').localeCompare(String(bEnt[1].title||''));
+          });
+          sects.forEach(([sk, s])=>{
             const clean = this._cleanSectionTitle ? this._cleanSectionTitle(String(s.title||'')) : (s.title||'');
-            html += `<h4 class=\"doc-h3\">${u.id||'?'}.${b.id||'?'}.${idx+1} ${this._escapeHtml(clean)}</h4>`;
+            // Numeració basada en l'ordre definit al config (no en la posició filtrada)
+            let dispIndex = 1;
+            const ord = getSectionOrder(u.id, b.id, sk, s.title);
+            if (ord !== 9999) dispIndex = ord + 1;
+            html += `<h4 class=\"doc-h3\">${u.id||'?'}.${b.id||'?'}.${dispIndex} ${this._escapeHtml(clean)}</h4>`;
             // Default order: createdAt ASC. Allow custom per-section order stored in Store.orderBySection
             const ref = (s.notes && s.notes[0]) ? s.notes[0] : null;
             const sKeyFull = ref ? `${ref.pageUrl}#${ref.sectionId}` : null;
