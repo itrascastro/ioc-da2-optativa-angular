@@ -24,17 +24,24 @@
   min-width: 280px;
 }
 
-.editor-main { flex: 1; min-width: 480px; }
+.editor-main { flex: 1; min-width: 480px; display: flex; flex-direction: column; min-height: 0; }
 
 /* Header i formulari sense contenidors de panell */
 .editor-header { margin-bottom: 12px; }
-.editor-form { display: flex; flex-direction: column; gap: 10px; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--border-radius); padding: 14px; }
+.editor-form { display: flex; flex-direction: column; gap: 10px; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--border-radius); padding: 14px; flex: 1 1 auto; min-height: 0; }
 .editor-form input, .editor-form select { width: 100%; padding: 8px 12px; border: 1px solid var(--color-border); border-radius: 4px; background: var(--color-background); color: var(--color-text); font-size: 1rem; }
 .editor-form input#note-title { font-weight: 600; }
 .editor-actions-inline { display: flex; gap: 10px; margin-top: 8px; }
 
-/* Área del rich editor */
-#qre-editor { min-height: 320px; }
+/* Área del rich editor – ocupar l'alçada disponible (toolbar fixa, editor flexible) */
+#qre-editor { flex: 1 1 auto; min-height: 320px; display: flex; min-height: 0; }
+.qre { display: flex; flex: 1 1 auto; min-height: 0; width: 100%; }
+.qre .panel { display: flex; flex-direction: column; flex: 1 1 auto; min-height: 0; width: 100%; }
+.qre .panel .head { flex: 0 0 auto; }
+.qre .panel .editor { display: flex; flex-direction: column; flex: 1 1 auto; min-height: 0; }
+.qre .panel .editor .ql-toolbar { flex: 0 0 auto; }
+.qre .panel .editor .ql-container { flex: 1 1 auto; min-height: 0; height: auto; }
+.qre .panel .editor .ql-editor { height: 100%; }
 
 /* Llista de notes de la secció */
 #notes-list { margin-top: 16px; }
