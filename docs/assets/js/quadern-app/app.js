@@ -53,6 +53,8 @@
 
         // Inicialitzar mòduls en ordre de dependència
         this._initializeModules();
+        // Escoltar canvis de localStorage des d'altres pestanyes per actualitzar el footer
+        this._bindStorageListener();
         
         console.log('✅ Quadern: Aplicació inicialitzada correctament');
       } catch (error) {
@@ -160,6 +162,23 @@
       if (this.modules.navigation) {
         this.modules.navigation.switchView('dashboard');
       }
+    },
+
+    _bindStorageListener() {
+      try {
+        const STORE_KEY = (window.Quadern?.Constants && window.Quadern.Constants.STORE_KEY) || null;
+        if (!STORE_KEY) return;
+        window.addEventListener('storage', (e) => {
+          try {
+            if (e && e.key === STORE_KEY) {
+              // Actualitzar només l'indicador del footer sense forçar recàrregues
+              this._updateFooterStats();
+            }
+          } catch(err) {
+            console.warn('Storage listener error:', err);
+          }
+        });
+      } catch(e) { console.warn('No storage listener bound', e); }
     },
 
     _bindFooterActions() {

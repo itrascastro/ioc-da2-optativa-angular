@@ -211,7 +211,7 @@
         const lastSyncEl = document.getElementById('last-sync');
         if (lastSyncEl) {
           const now = new Date();
-          lastSyncEl.textContent = `Ara (${now.toLocaleTimeString('ca-ES', { hour: '2-digit', minute: '2-digit' })})`;
+          lastSyncEl.textContent = `Actualitzat ${now.toLocaleTimeString('ca-ES', { hour: '2-digit', minute: '2-digit' })}`;
         }
 
         // Estadístiques de curs: unitats, blocs, seccions

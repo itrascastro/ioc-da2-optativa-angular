@@ -18,7 +18,14 @@
     try { const raw = localStorage.getItem(STORE_KEY); if (!raw) return initialState(); const data = JSON.parse(raw); return data && typeof data==='object' ? data : initialState(); }
     catch { return initialState(); }
   }
-  function save(state){ try { state.meta.updatedAt = U.nowISO(); localStorage.setItem(STORE_KEY, JSON.stringify(state)); } catch {} }
+  function save(state){
+    try {
+      state.meta.updatedAt = U.nowISO();
+      localStorage.setItem(STORE_KEY, JSON.stringify(state));
+      // Notify UI to refresh footer stats immediately after any storage change
+      try { if (window.Quadern?.App?._updateFooterStats) window.Quadern.App._updateFooterStats(); } catch(e){}
+    } catch {}
+  }
 
   function sectionKey(pageUrl, sectionId){ return `${pageUrl}#${sectionId}`; }
 
