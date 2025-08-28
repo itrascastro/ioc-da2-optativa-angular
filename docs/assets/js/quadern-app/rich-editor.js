@@ -200,12 +200,33 @@
       });
     }
 
+    // Full toolbar inline: if requested, move full toolbar from modal to inline and hide expand
+    const wantFull = container.hasAttribute('data-full-toolbar');
+    if (wantFull) {
+      try {
+        const modalFull = $(container, '#'+ids.toolbarFull);
+        const editorHost = $(container, '#'+ids.editor);
+        if (modalFull && editorHost) {
+          // Insert full toolbar before editor and remove compact toolbar
+          editorHost.parentNode.insertBefore(modalFull, editorHost);
+          const compact = $(container, '#'+ids.toolbarCompact);
+          if (compact) compact.remove();
+        }
+        const btnExpandEl = $(container, '#'+ids.btnExpand);
+        if (btnExpandEl) btnExpandEl.style.display = 'none';
+        const modalBigEl = $(container, '#'+ids.modalBig);
+        if (modalBigEl) modalBigEl.remove();
+      } catch(e){}
+    }
+
+    const toolbarId = wantFull ? ids.toolbarFull : ids.toolbarCompact;
+
     // Init Quill (embedded)
     const quill = new Quill('#'+ids.editor, {
       theme:'snow',
       placeholder:'Escriu la teva nota…',
       modules:{
-        toolbar:{ container:'#'+ids.toolbarCompact,
+        toolbar:{ container:'#'+toolbarId,
           handlers:{
             'code-block': function(){
               var r = this.quill.getSelection(true);
