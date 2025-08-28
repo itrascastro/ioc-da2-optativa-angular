@@ -123,11 +123,7 @@
         this.modules.search.init(this);
       }
 
-      // Estudi
-      if (window.Quadern?.Study) {
-        this.modules.study = window.Quadern.Study;
-        this.modules.study.init(this);
-      }
+      // Estudi (fusionat en Dashboard amb mode Estudi)
 
       // Import/Export
       if (window.Quadern?.ImportExport) {

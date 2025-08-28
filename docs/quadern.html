@@ -240,46 +240,7 @@ breadcrumb: false
     </div>
 </div>
 
-<!-- Vista d'Estudi -->
-<div id="study-view" class="view" role="tabpanel" aria-labelledby="study-btn">
-    <div class="dashboard-container">
-      <!-- Capçalera: Cerca i Filtres (ID propis d'estudi) -->
-      <div class="dash-header" role="region" aria-label="Cerca i filtres">
-        <div class="search-wrapper">
-          <i class="bi bi-search search-icon" aria-hidden="true"></i>
-          <input type="text" id="study-search" class="search-input" placeholder="Buscar notes..." aria-label="Buscar notes">
-          <button type="button" id="study-search-clear" class="search-clear" aria-label="Netejar cerca i etiquetes" title="Netejar">
-            <i class="bi bi-x-circle" aria-hidden="true"></i>
-          </button>
-        </div>
-        <div class="dash-actions">
-          <button class="btn btn-outline" id="print-study" aria-label="Imprimir vista d'estudi">
-            <i class="bi bi-printer" aria-hidden="true"></i>
-            <span class="hide-sm">Imprimir</span>
-          </button>
-          <button class="btn btn-outline" id="export-study" aria-label="Exportar vista d'estudi">
-            <i class="bi bi-download" aria-hidden="true"></i>
-            <span class="hide-sm">Exportar</span>
-          </button>
-        </div>
-      </div>
-
-      <!-- Navegació per etiquetes -->
-      <nav class="tag-filters" id="study-tag-filters" aria-label="Filtre ràpid per etiqueta"></nav>
-
-      <!-- Llista de notes (estudi: contingut complet) -->
-      <section id="study-notes" class="notes-timeline" aria-live="polite">
-        <div class="empty-state">
-          <p>Encara no tens notes. Crea la teva primera nota!</p>
-        </div>
-      </section>
-    </div>
-
-    <!-- Botó tornar a dalt -->
-    <button class="back-to-top" id="back-to-top" aria-label="Tornar a dalt">
-        <i class="bi bi-arrow-up" aria-hidden="true"></i>
-    </button>
-</div>
+<!-- Vista d'Estudi eliminada (fusionada en Dashboard amb mode Estudi) -->
 
 <!-- Modal de confirmació -->
 <div class="modal" id="confirm-modal" role="dialog" aria-labelledby="confirm-title" aria-modal="true">
