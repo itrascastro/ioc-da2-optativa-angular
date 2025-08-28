@@ -11,6 +11,7 @@
     currentNote: null,
     isEditing: false,
     autosaveTimeout: null,
+    lastUpdatedAt: null,
 
     // =============================
     // INICIALITZACIÓ
@@ -260,8 +261,10 @@
       if (tagsField) tagsField.value = (note.tags || []).join(', ');
       if (contentField) contentField.value = note.content || '';
 
-      // Actualitzar UI (sense header obsolet)
-      this._updateEditorStatus('Carregat');
+      // Actualitzar UI: anunciar i fixar hora de darrera modificació
+      this.lastUpdatedAt = note.updatedAt || note.createdAt || new Date().toISOString();
+      this._announceStatus('Carregat');
+      this._renderStatusTime();
       
       this.isEditing = true;
     },
@@ -327,7 +330,10 @@
         this.currentNote = saved;
         this.app.currentNote = saved;
         
-        this._updateEditorStatus('Desat');
+        this.lastUpdatedAt = this.currentNote.updatedAt;
+        this._announceStatus('Desat');
+        // Mostrar missatge breu i tornar a l'hora fixa
+        setTimeout(() => this._renderStatusTime(), 1500);
         this._loadEditorNavigation(); // Refrescar navegació
         
         // Notificar altres mòduls
@@ -351,11 +357,10 @@
 
     _autoSave() {
       this.saveCurrentNote();
-      this._updateEditorStatus('Auto-desat');
-      
-      setTimeout(() => {
-        this._updateEditorStatus('');
-      }, 2000);
+      this.lastUpdatedAt = this.currentNote ? this.currentNote.updatedAt : this.lastUpdatedAt;
+      this._announceStatus('Auto-desat');
+      // Mostrar missatge breu i tornar a l'hora fixa
+      setTimeout(() => this._renderStatusTime(), 1500);
     },
 
     _clearEditor() {
@@ -370,12 +375,35 @@
       this.app.currentNote = null;
     },
 
-    _updateEditorStatus(message) {
-      const status = document.getElementById('editor-status');
-      if (status) {
-        status.textContent = message;
-        status.className = `editor-status ${message.toLowerCase().replace(/[^a-z]/g, '-')}`;
-      }
+    _announceStatus(message) {
+      // Live region (a11y) — no visual output
+      try {
+        const root = document.getElementById('qre-editor');
+        if (root) {
+          let live = root.querySelector('[data-qre-live]');
+          if (!live) {
+            live = document.createElement('span');
+            live.setAttribute('data-qre-live', '');
+            live.setAttribute('aria-live', 'polite');
+            live.className = 'visually-hidden';
+            root.appendChild(live);
+          }
+          live.textContent = message || '';
+          // Also mirror message visibly in status pill (left of HTML button)
+          const statusEl = root.querySelector('[data-qre-status]');
+          if (statusEl) statusEl.textContent = message || '';
+        }
+      } catch {}
+    },
+    _renderStatusTime(){
+      try {
+        const el = document.querySelector('#qre-editor [data-qre-status]');
+        const d = this.lastUpdatedAt ? new Date(this.lastUpdatedAt) : null;
+        if (el && d && !isNaN(d)) {
+          const time = d.toLocaleTimeString('ca-ES', { hour: '2-digit', minute: '2-digit' });
+          el.textContent = `Canvis desats ${time}`;
+        }
+      } catch {}
     },
 
     // Eliminada la toolbar manual (Quill assumeix la formatació)
