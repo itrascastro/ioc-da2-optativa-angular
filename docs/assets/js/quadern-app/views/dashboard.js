@@ -221,7 +221,7 @@
     _renderRecentNoteCard(note) {
       const tags = (note.tags||[]).map(t=>`<span class="tag note-tag">#${t}</span>`).join(' ');
       const title = this._escapeHtml(note.noteTitle || 'Sense títol');
-      const preview = this._getContentPreview(note.content || '', 240);
+      const previewHTML = this._getContentPreviewHTML(note.content || '', 240);
       const footer = this._escapeHtml(this._cleanSectionTitle(note.sectionTitle || ''));
       return `
         <article class="note-card" data-note-id="${note.id}">
@@ -232,11 +232,39 @@
               <button class="icon-btn danger" title="Eliminar" data-action="delete-note" data-note-id="${note.id}"><i class="bi bi-trash"></i></button>
             </div>
           </header>
-          ${preview ? `<p class="note-content">${this._escapeHtml(preview)}</p>` : ''}
+          ${previewHTML ? `<p class="note-content">${previewHTML}</p>` : ''}
           ${tags ? `<div class="note-tags">${tags}</div>` : ''}
           ${footer ? `<footer class="note-footer">${footer}</footer>` : ''}
         </article>
       `;
+    },
+    _getContentPreviewHTML(content, maxLength = 240) {
+      if (!content) return '';
+      const CODE_TOKEN = '__CODE__';
+      // 1) Sustituir bloques markdown fence por marcador con saltos alrededor
+      let html = String(content).replace(/```[\s\S]*?```/g, `\n${CODE_TOKEN}\n`);
+      // 2) Parsear como HTML y reemplazar pre/quill code por marcador
+      const div = document.createElement('div');
+      try { div.innerHTML = html; } catch { div.textContent = html; }
+      div.querySelectorAll('pre, .ql-syntax, .ql-code-block, .ql-code-block-container').forEach(el => {
+        el.replaceWith(document.createTextNode(`\n${CODE_TOKEN}\n`));
+      });
+      // 3) Extraer texto preservando saltos
+      let text = (div.innerText || div.textContent || '').replace(/\r\n|\r/g, '\n');
+      text = text.replace(/\n{3,}/g, '\n\n').trim();
+      if (!text) return '';
+      if (text.length > maxLength) text = text.slice(0, maxLength).trim() + '...';
+      // 4) Construir HTML seguro: escapar texto y convertir \n a <br>, insertar placeholder estilizado para CODE_TOKEN
+      const parts = text.split(CODE_TOKEN);
+      let out = '';
+      for (let i = 0; i < parts.length; i++) {
+        const chunk = parts[i];
+        if (chunk) out += this._escapeHtml(chunk).replace(/\n/g, '<br>');
+        if (i < parts.length - 1) {
+          out += '<span class="code-placeholder"><i class="bi bi-code-slash" aria-hidden="true"></i><span class="label">Bloc de codi</span></span>';
+        }
+      }
+      return out;
     },
     _formatLocationLinks(note) {
       const base = (document.body.getAttribute('data-baseurl')||'');
