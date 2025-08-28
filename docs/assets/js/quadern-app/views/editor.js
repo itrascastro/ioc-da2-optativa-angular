@@ -26,21 +26,8 @@
 
     _bindEvents() {
       // Esdeveniments específics de l'editor
-      this._bindToolbarEvents();
       this._bindEditorEvents();
       this._bindNavigationEvents();
-    },
-
-    _bindToolbarEvents() {
-      // Toolbar de formatació
-      document.addEventListener('click', (e) => {
-        const toolbarBtn = e.target.closest('.toolbar-btn');
-        if (toolbarBtn) {
-          e.preventDefault();
-          const command = toolbarBtn.dataset.command;
-          this._execEditorCommand(command);
-        }
-      });
     },
 
     _bindEditorEvents() {
@@ -94,7 +81,7 @@
     _initializeEditor() {
       console.log('✏️ Editor: Carregant navegació...');
       this._loadEditorNavigation();
-      this._initializeToolbar();
+      // Toolbar manual eliminada; Quill gestiona la barra d'eines
     },
 
     // =============================
@@ -422,107 +409,7 @@
       }
     },
 
-    // =============================
-    // TOOLBAR I FORMATACIÓ
-    // =============================
-
-    _initializeToolbar() {
-      // Inicialitzar toolbar de formatació
-      console.log('✏️ Editor: Inicialitzant toolbar...');
-    },
-
-    _execEditorCommand(command) {
-      console.log('✏️ Editor: Executant comanda:', command);
-      
-      const contentField = document.getElementById('note-content');
-      if (!contentField) return;
-
-      const start = contentField.selectionStart;
-      const end = contentField.selectionEnd;
-      const selectedText = contentField.value.substring(start, end);
-
-      switch(command) {
-        case 'bold':
-          this._insertFormatting('**', '**', selectedText || 'text en negreta');
-          break;
-        case 'italic':
-          this._insertFormatting('*', '*', selectedText || 'text en cursiva');
-          break;
-        case 'code':
-          this._insertFormatting('`', '`', selectedText || 'codi');
-          break;
-        case 'link':
-          this._insertLink();
-          break;
-        case 'list':
-          this._insertList();
-          break;
-        case 'header':
-          this._insertHeader();
-          break;
-      }
-    },
-
-    _insertFormatting(before, after, defaultText) {
-      const contentField = document.getElementById('note-content');
-      if (!contentField) return;
-
-      const start = contentField.selectionStart;
-      const end = contentField.selectionEnd;
-      const selectedText = contentField.value.substring(start, end) || defaultText;
-      
-      const newText = before + selectedText + after;
-      const beforeText = contentField.value.substring(0, start);
-      const afterText = contentField.value.substring(end);
-      
-      contentField.value = beforeText + newText + afterText;
-      
-      // Reposicionar cursor
-      const newStart = start + before.length;
-      const newEnd = newStart + selectedText.length;
-      contentField.setSelectionRange(newStart, newEnd);
-      contentField.focus();
-      
-      this._scheduleAutosave();
-    },
-
-    _insertLink() {
-      const url = prompt('Introdueix l\'URL:');
-      if (url) {
-        const text = prompt('Text del enllaç:', url);
-        this._insertFormatting(`[${text || url}](`, ')', url);
-      }
-    },
-
-    _insertList() {
-      const contentField = document.getElementById('note-content');
-      if (!contentField) return;
-
-      const start = contentField.selectionStart;
-      const lines = contentField.value.substring(0, start).split('\n');
-      const isNewLine = lines[lines.length - 1] === '';
-      
-      const listItem = isNewLine ? '- Element de llista' : '\n- Element de llista';
-      
-      const beforeText = contentField.value.substring(0, start);
-      const afterText = contentField.value.substring(contentField.selectionEnd);
-      
-      contentField.value = beforeText + listItem + afterText;
-      
-      const newPosition = start + listItem.length;
-      contentField.setSelectionRange(newPosition, newPosition);
-      contentField.focus();
-      
-      this._scheduleAutosave();
-    },
-
-    _insertHeader() {
-      const level = prompt('Nivell de capçalera (1-3):', '2');
-      if (level && /^[1-3]$/.test(level)) {
-        const hashes = '#'.repeat(parseInt(level));
-        this._insertFormatting(`${hashes} `, '', 'Títol de la secció');
-      }
-    },
+    // Eliminada la toolbar manual (Quill assumeix la formatació)
 
     // =============================
     // UTILITATS
