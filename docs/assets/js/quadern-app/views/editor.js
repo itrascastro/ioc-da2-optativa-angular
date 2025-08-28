@@ -210,7 +210,6 @@
         if (note) {
           this.currentNote = note;
           this._loadNoteInEditor(note);
-          this._updateActiveNoteInList(noteId);
           this.app.currentNote = note;
 
           // Forçar refresc dels camps visibles (etiquetes i editor rich)
@@ -267,13 +266,7 @@
       this.isEditing = true;
     },
 
-    _updateActiveNoteInList(noteId) {
-      // Actualitzar llista de notes per mostrar l'activa
-      const items = document.querySelectorAll('.note-list-item');
-      items.forEach(item => {
-        item.classList.toggle('active', item.dataset.noteId === noteId);
-      });
-    },
+    // Eliminada: _updateActiveNoteInList (llista clàssica)
 
     // Eliminat: _updateEditorHeader (capçalera d'editor legacy)
 
@@ -297,17 +290,13 @@
 
       this.currentNote = newNote;
       this._loadNoteInEditor(newNote);
-      this._clearActiveNoteInList();
       
       // Focus inicial al selector de notes si existeix
       const sel = document.getElementById('note-select');
       if (sel) sel.focus();
     },
 
-    _clearActiveNoteInList() {
-      const items = document.querySelectorAll('.note-list-item');
-      items.forEach(item => item.classList.remove('active'));
-    },
+    // Eliminada: _clearActiveNoteInList (llista clàssica)
 
     saveCurrentNote() {
       if (!this.currentNote) return;
