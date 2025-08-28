@@ -117,11 +117,7 @@
         this.modules.editor.init(this);
       }
 
-      // Cerca
-      if (window.Quadern?.Search) {
-        this.modules.search = window.Quadern.Search;
-        this.modules.search.init(this);
-      }
+      // Cerca (fusionada en Dashboard amb barra de cerca)
 
       // Estudi (fusionat en Dashboard amb mode Estudi)
 

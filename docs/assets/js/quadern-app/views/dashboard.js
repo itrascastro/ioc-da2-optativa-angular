@@ -767,9 +767,6 @@
 
     handleQuickAction(action) {
       switch(action) {
-        case 'view-all-notes':
-          this._viewAllNotes();
-          break;
         case 'export-notes':
           this._exportNotes();
           break;
@@ -777,24 +774,13 @@
           this._importNotes();
           break;
         case 'study-view':
-          this._openStudyView();
+          this.toggleStudyMode?.();
           break;
         default:
           console.warn('Dashboard: Acció desconeguda:', action);
       }
     },
 
-    _openStudyView() {
-      if (this.app && this.app.switchView) {
-        this.app.switchView('study');
-      }
-    },
-
-    _viewAllNotes() {
-      if (this.app && this.app.switchView) {
-        this.app.switchView('search');
-      }
-    },
 
     _exportNotes() {
       if (this.app && this.app.switchView) {
