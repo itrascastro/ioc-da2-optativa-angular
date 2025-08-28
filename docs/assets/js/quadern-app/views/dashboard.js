@@ -304,8 +304,6 @@
           this._deleteNote(noteId);
         } else if (action === 'open-filter') {
           this._openFilterModal();
-        } else if (action === 'create-note') {
-          this._createNewNote();
         }
       });
       // Click en targeta completa: no fer res (només icona d'editar activa l'edició)
@@ -317,7 +315,6 @@
           if (!btn) return;
           const action = btn.getAttribute('data-action');
           if (action === 'open-filter') this._openFilterModal();
-          if (action === 'create-note') this._createNewNote();
         });
       }
 
