@@ -221,7 +221,7 @@
     _renderRecentNoteCard(note) {
       const tags = (note.tags||[]).map(t=>`<span class="tag note-tag">#${t}</span>`).join(' ');
       const title = this._escapeHtml(note.noteTitle || 'Sense títol');
-      const previewHTML = this._getContentPreviewHTML(note.content || '');
+      const preview = this._getContentPreview(note.content || '', 240);
       const footer = this._escapeHtml(this._cleanSectionTitle(note.sectionTitle || ''));
       return `
         <article class="note-card" data-note-id="${note.id}">
@@ -232,66 +232,11 @@
               <button class="icon-btn danger" title="Eliminar" data-action="delete-note" data-note-id="${note.id}"><i class="bi bi-trash"></i></button>
             </div>
           </header>
-          ${previewHTML ? `<p class="note-content">${previewHTML}</p>` : ''}
+          ${preview ? `<p class="note-content">${this._escapeHtml(preview)}</p>` : ''}
           ${tags ? `<div class="note-tags">${tags}</div>` : ''}
           ${footer ? `<footer class="note-footer">${footer}</footer>` : ''}
         </article>
       `;
-    },
-    _getContentPreviewHTML(content) {
-      if (!content) return '';
-      const CODE_TOKEN = '__CODE_BLOCK_LANG__';
-      let html = String(content);
-      // Reemplaça blocs markdown fence per un marcador amb llenguatge
-      html = html.replace(/```\s*([a-zA-Z0-9_+-]*)\n[\s\S]*?```/g, (m, lang)=>`\n${CODE_TOKEN}(${lang||''})\n`);
-      const div = document.createElement('div');
-      try { div.innerHTML = html; } catch { div.textContent = html; }
-      // Detectar <pre> i variants Quill/HLJS
-      div.querySelectorAll('pre, .ql-syntax, .ql-code-block, .ql-code-block-container').forEach(el => {
-        let lang = '';
-        const codeChild = el.querySelector('code');
-        const cls = `${el.className || ''} ${codeChild?.className || ''}`;
-        // Buscar per classes habituals
-        const classMatch = cls.match(/(?:language-|lang-)([a-z0-9_+\-]+)/i);
-        if (classMatch) {
-          lang = classMatch[1];
-        } else {
-          // Coincidir per classes simples amb nom de llenguatge
-          const known = ['php','javascript','js','typescript','ts','python','py','java','csharp','cs','cpp','c\+\+','html','css','sql','bash','sh','shell','json','xml','yaml','yml','go','rust','ruby','rb','kotlin','swift','scala','dart','powershell','ps1'];
-          const lower = cls.toLowerCase();
-          for (const k of known) { if (new RegExp(`(^|\\s)${k}(\\s|$)`).test(lower)) { lang = k; break; } }
-          // Heurística pel contingut
-          if (!lang) {
-            const codeText = (codeChild?.textContent || el.textContent || '').toLowerCase();
-            if (codeText.includes('<?php')) lang = 'php';
-          }
-        }
-        el.replaceWith(document.createTextNode(`\n${CODE_TOKEN}(${lang})\n`));
-      });
-      // Obtenir text amb salts
-      let text = (div.innerText || div.textContent || '').replace(/\r\n|\r/g, '\n');
-      text = text.replace(/\n{3,}/g, '\n\n');
-      // Construir HTML segur
-      const parts = [];
-      const re = new RegExp(`${CODE_TOKEN}\\(([^)]*)\\)`, 'g');
-      let lastIndex = 0; let match;
-      while ((match = re.exec(text)) !== null) {
-        const chunk = text.slice(lastIndex, match.index);
-        if (chunk) parts.push({ type: 'text', value: chunk });
-        parts.push({ type: 'code', lang: match[1]||'' });
-        lastIndex = re.lastIndex;
-      }
-      const tail = text.slice(lastIndex);
-      if (tail) parts.push({ type: 'text', value: tail });
-      const htmlOut = parts.map(p => {
-        if (p.type === 'text') {
-          return this._escapeHtml(p.value).replace(/\n/g, '<br>');
-        } else {
-          const lang = p.lang ? this._escapeHtml(String(p.lang).toUpperCase()) : '';
-          return `<span class="code-placeholder"><i class="bi bi-code-slash" aria-hidden="true"></i><span class="label">Bloc de codi</span>${lang?`<span class="lang">${lang}</span>`:''}</span>`;
-        }
-      }).join('');
-      return htmlOut;
     },
     _formatLocationLinks(note) {
       const base = (document.body.getAttribute('data-baseurl')||'');
