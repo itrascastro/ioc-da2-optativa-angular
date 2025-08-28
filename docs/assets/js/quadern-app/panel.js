@@ -113,7 +113,11 @@
     if (tagsEl) tagsEl.addEventListener('input', schedule);
     if (textEl) textEl.addEventListener('input', schedule);
   };
-  Panel.prototype.toggle = function(show){ this.root.style.display = (show===false)?'none':'block'; };
+  Panel.prototype.toggle = function(show){
+    this.root.style.display = (show===false)?'none':'block';
+    // Recalcular offsets per evitar deixar espai reservat quan s'oculta
+    try { this.adjustOffsets(); } catch(e){}
+  };
   // Netejar text d'un H2 eliminant botons/badges afegits al DOM
   function cleanHeaderText(h2){
     try {
