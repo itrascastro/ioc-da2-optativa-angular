@@ -308,14 +308,7 @@
           this._createNewNote();
         }
       });
-      // Click en targeta completa para editar
-      container.addEventListener('click', (e)=>{
-        if (e.target.closest('[data-action]')) return; // ya gestionado por botones
-        const card = e.target.closest('.note-card');
-        if (!card) return;
-        const noteId = card.getAttribute('data-note-id');
-        if (noteId) this._editNote(noteId);
-      });
+      // Click en targeta completa: no fer res (només icona d'editar activa l'edició)
       // Delegació: botons de la capçalera (fora de recent-notes)
       const listCard = container.closest('.card');
       if (listCard) {
