@@ -4,7 +4,7 @@
 
 #dashboard-view { height: calc(100vh - var(--quadern-header-height) - var(--quadern-footer-height) - 52px); overflow: hidden; }
 #study-view { height: calc(100vh - var(--quadern-header-height) - var(--quadern-footer-height) - 52px); overflow: hidden; }
-.dashboard-container { max-width: 900px; margin: 0 auto; padding: 6px 0 0; height: 100%; display: flex; flex-direction: column; }
+.dashboard-container { max-width: none; width: 100%; margin: 0 auto; padding: 6px 0 0; height: 100%; display: flex; flex-direction: column; }
 
 .dash-header { display:flex; gap:14px; align-items:center; justify-content:space-between; margin-bottom: 14px; }
 .dash-header .dash-actions { display:flex; gap:8px; flex-shrink:0; }
