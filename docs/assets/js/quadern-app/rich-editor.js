@@ -31,6 +31,7 @@
       '  <div class="head">',
       '    <div class="fields" data-qre-slot="fields"></div>',
       '    <div class="actions" aria-label="Accions">',
+        '      <div class="status" data-qre-status aria-live="polite"></div>',
         `      <button class="iconbtn" id="${ids.btnHTML}" title="Veure/editar HTML">&lt;/&gt;</button>`,
         `      <button class="iconbtn" id="${ids.btnExpand}" title="Editar en gran">⤢</button>`,
       '    </div>',
