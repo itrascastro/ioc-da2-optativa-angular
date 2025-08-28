@@ -156,6 +156,20 @@
                     window.Quadern.Dashboard.setStructureFilter(null);
                   }
                   this.render();
+                  // En editor: mostrar empty-state (sense notes a la selecció)
+                  if (currentView === 'editor') {
+                    try {
+                      if (window.Quadern?.Editor?.showNotesForSection) {
+                        window.Quadern.Editor.showNotesForSection({
+                          unitId: null,
+                          blocId: null,
+                          sectionId: null,
+                          sectionTitle: 'Totes les seccions',
+                          notes: []
+                        });
+                      }
+                    } catch(e){ /* noop */ }
+                  }
                 }
               });
             }
