@@ -399,10 +399,25 @@
       if (this.app && this.app.switchView) {
         this.app.switchView('editor');
         setTimeout(()=>{
-          if (this.app.modules.editor && this.app.modules.editor.selectNote) {
-            this.app.modules.editor.selectNote(noteId);
+          try {
+            // Carregar context al tree i seleccionar la nota
+            const state = window.Quadern?.Store?.load ? window.Quadern.Store.load() : null;
+            const note = state?.notes?.byId ? state.notes.byId[noteId] : null;
+            if (note) {
+              if (window.Quadern?.NavigationTree?.openTo) {
+                window.Quadern.NavigationTree.openTo(note.unitat, note.bloc, note.sectionId, noteId);
+              } else if (this.app.modules.editor && this.app.modules.editor.selectNote) {
+                this.app.modules.editor.selectNote(noteId);
+              }
+            } else if (this.app.modules.editor && this.app.modules.editor.selectNote) {
+              this.app.modules.editor.selectNote(noteId);
+            }
+          } catch(e) {
+            if (this.app.modules.editor && this.app.modules.editor.selectNote) {
+              this.app.modules.editor.selectNote(noteId);
+            }
           }
-        }, 50);
+        }, 60);
       }
     },
     _deleteNote(noteId){

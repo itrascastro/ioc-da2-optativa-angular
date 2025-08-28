@@ -394,6 +394,61 @@
 
     refreshData() {
       this.loadCourseStructure();
+    },
+
+    // Obrir el tree fins a una unitat/bloc/secció i opcionalment seleccionar nota
+    openTo(unitId, blocId = null, sectionId = null, selectedNoteId = null) {
+      try {
+        if (!this.treeData) return;
+        // Construir activePath
+        const uId = parseInt(unitId, 10);
+        const bId = blocId != null ? parseInt(blocId, 10) : null;
+        const sId = sectionId != null ? String(sectionId) : null;
+
+        const unitNode = (this.treeData.children || []).find(n => n.id === `unit-${uId}`);
+        if (!unitNode) return;
+        const path = [unitNode];
+        let blockNode = null;
+        if (bId != null) {
+          blockNode = (unitNode.children || []).find(n => n.id === `bloc-${bId}`);
+          if (blockNode) path.push(blockNode);
+        }
+        this.activePath = path;
+        this.activeItemId = sId ? `section-${sId}` : null;
+        this.render();
+
+        // Si som a l'editor, mostrar notes d'aquest àmbit
+        const currentView = (window.Quadern?.App?.currentView) || '';
+        if (currentView === 'editor') {
+          let notes = [];
+          if (sId && window.Quadern?.Discovery?.getNotesForSection) {
+            notes = window.Quadern.Discovery.getNotesForSection(uId, bId, sId) || [];
+            if (window.Quadern?.Editor?.showNotesForSection) {
+              window.Quadern.Editor.showNotesForSection({ unitId: uId, blocId: bId, sectionId: sId, sectionTitle: '', notes });
+            }
+          } else if (bId != null) {
+            notes = this._collectNotesForBlock(uId, bId);
+            if (window.Quadern?.Editor?.showNotesForSection) {
+              window.Quadern.Editor.showNotesForSection({ unitId: uId, blocId: bId, sectionId: null, sectionTitle: 'Totes les seccions', notes });
+            }
+          } else {
+            notes = this._collectNotesForUnit(uId);
+            if (window.Quadern?.Editor?.showNotesForSection) {
+              window.Quadern.Editor.showNotesForSection({ unitId: uId, blocId: null, sectionId: null, sectionTitle: 'Totes les seccions', notes });
+            }
+          }
+          // Seleccionar nota específica si s'ha demanat
+          if (selectedNoteId && window.Quadern?.Editor?.selectNote) {
+            setTimeout(() => {
+              try {
+                const sel = document.getElementById('note-select');
+                if (sel) sel.value = selectedNoteId;
+                window.Quadern.Editor.selectNote(selectedNoteId);
+              } catch {}
+            }, 30);
+          }
+        }
+      } catch (e) { console.warn('NavigationTree: openTo error', e); }
     }
   };
 
