@@ -40,9 +40,10 @@
 
 .study-body {
   flex: 1;
-  padding: 40px;
+  padding: 24px;
   overflow-y: auto;
   line-height: 1.7;
+  font-size: var(--study-font-size, 1rem);
 }
 
 /* STUDY CONTENT */
@@ -53,9 +54,10 @@
 
 .study-course-header {
   text-align: center;
-  margin-bottom: 40px;
-  padding-bottom: 20px;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
   border-bottom: 2px solid var(--color-border);
+  position: relative;
 }
 
 .study-course-header h1 {
@@ -70,6 +72,10 @@
   font-size: 1.1rem;
   margin: 0;
 }
+
+.study-course-header .study-tools { position: absolute; right: 0; bottom: 12px; display: flex; gap: 8px; }
+.study-course-header .icon-btn { width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center; border: 1px solid var(--color-border); border-radius: 8px; background: var(--color-surface); color: var(--color-text); }
+.study-course-header .icon-btn:hover { background: var(--color-border); }
 
 /* JERARQUIA D'ESTUDI */
 .study-units {
@@ -88,13 +94,10 @@
 .study-unit-header {
   background: var(--quadern-accent);
   color: white;
-  padding: 20px 30px;
-  
-  h2 {
-    margin: 0;
-    font-size: 1.8rem;
-    font-weight: 700;
-  }
+  padding: 14px 18px;
+  display: flex; align-items: center; gap: 10px;
+  .caret { opacity: 0.9; transform: rotate(0deg); transition: transform .2s ease; }
+  h2 { margin: 0; font-size: 1.4rem; font-weight: 700; }
 }
 
 .study-unit-content {
@@ -110,16 +113,12 @@
 }
 
 .study-block-header {
-  margin-bottom: 20px;
-  padding-bottom: 10px;
+  margin-bottom: 12px;
+  padding: 8px 4px;
   border-bottom: 1px solid var(--color-border);
-  
-  h3 {
-    margin: 0;
-    font-size: 1.4rem;
-    font-weight: 600;
-    color: var(--color-text);
-  }
+  display: flex; align-items: center; gap: 8px; cursor: pointer;
+  .caret { color: var(--color-text-muted); transform: rotate(0deg); transition: transform .2s ease; }
+  h3 { margin: 0; font-size: 1.1rem; font-weight: 600; color: var(--color-text); }
 }
 
 .study-block-content {
@@ -133,14 +132,13 @@
 }
 
 .study-section-header {
-  margin-bottom: 16px;
-  
-  h4 {
-    margin: 0 0 4px 0;
-    font-size: 1.2rem;
-    font-weight: 600;
-    color: var(--quadern-accent);
-  }
+  margin-bottom: 12px;
+  cursor: pointer;
+  display: flex; align-items: center; gap: 8px;
+  .caret { color: var(--color-text-muted); transform: rotate(0deg); transition: transform .2s ease; }
+  .title-wrap { display: flex; align-items: center; gap: 8px; }
+  .title-wrap .count { display: inline-flex; min-width: 22px; height: 22px; align-items: center; justify-content: center; padding: 0 6px; font-size: .8rem; border-radius: 999px; background: var(--color-surface-dark); color: var(--color-text-muted); }
+  h4 { margin: 0; font-size: 1.05rem; font-weight: 600; color: var(--quadern-accent); }
 }
 
 .section-meta {
@@ -155,16 +153,42 @@
   gap: 30px;
 }
 
+.study-unit.collapsed .study-unit-content,
+.study-block.collapsed .study-block-content,
+.study-section.collapsed .study-notes { display: none; }
+
+/* Document-style headings for Estudi when rendering a single document */
+.study-doc { max-width: 1000px; margin: 0 auto; }
+.study-doc .doc-h1 { font-size: 1.6rem; font-weight: 700; color: var(--quadern-accent); margin: 24px 0 8px; border-bottom: 2px solid var(--color-border); padding-bottom: 8px; }
+.study-doc .doc-h2 { font-size: 1.25rem; font-weight: 600; color: var(--color-text); margin: 20px 0 8px; border-bottom: 1px solid var(--color-border); padding-bottom: 6px; }
+.study-doc .doc-h3 { font-size: 1.05rem; font-weight: 600; color: var(--color-text); margin: 16px 0 6px; }
+.study-doc .doc-note { margin: 10px 0 18px; }
+.study-doc .doc-note pre { border: 1px solid var(--color-border); border-radius: 8px; padding: 10px 12px; background: var(--code-bg); }
+.study-doc .doc-note ul, .study-doc .doc-note ol { margin: 12px 0 12px 24px; padding-left: 24px; }
+.study-doc .doc-note ul { list-style: disc outside; }
+.study-doc .doc-note ol { list-style: decimal outside; }
+.study-doc .doc-note li { margin: 4px 0; }
+.study-doc .doc-note ul ul { list-style: circle; }
+.study-doc .doc-note ul ul ul { list-style: square; }
+/* Quill indent classes when rendering read-only HTML */
+.study-doc .doc-note li.ql-indent-1 { margin-left: 2em; }
+.study-doc .doc-note li.ql-indent-2 { margin-left: 4em; }
+.study-doc .doc-note li.ql-indent-3 { margin-left: 6em; }
+.study-doc .doc-note li.ql-indent-4 { margin-left: 8em; }
+.study-doc .doc-note li.ql-indent-5 { margin-left: 10em; }
+.study-unit.collapsed .caret,
+.study-block.collapsed .caret,
+.study-section.collapsed .caret { transform: rotate(-90deg); }
+
 .study-note {
   background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: 12px;
-  padding: 24px;
-  transition: all 0.3s ease;
+  border-left: 3px solid var(--quadern-accent);
+  border-radius: 10px;
+  padding: 16px;
+  transition: background 0.2s ease;
   
   &:hover {
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    transform: translateY(-2px);
+    background: var(--color-surface-dark);
   }
 }
 

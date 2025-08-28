@@ -19,6 +19,7 @@
     init(app) {
       this.app = app;
       console.log('📊 Dashboard: Inicialitzant vista dashboard...');
+      try { this._studyMode = localStorage.getItem('notes_study_mode') === '1'; } catch{}
       this._bindEvents();
       console.log('✅ Dashboard: Vista inicialitzada');
     },
@@ -29,6 +30,7 @@
       if (search) search.value = '';
       this.loadData();
       this._updateSearchClearVisibility();
+      try { if (this.app && this.app.refreshData) this.app.refreshData(); } catch {}
     },
 
     _bindEvents() {
@@ -40,7 +42,7 @@
           if (!btn) return;
           const action = btn.getAttribute('data-action');
           if (action === 'open-filter') this._openFilterModal();
-          if (action === 'open-study') this._openStudyView();
+          if (action === 'open-study') this.toggleStudyMode();
           if (action === 'clear-filters') this._clearFilters();
         });
         const clearBtn = document.getElementById('dashboard-search-clear');
@@ -60,7 +62,15 @@
           this._searchQuery = (search.value || '').trim().toLowerCase();
           this.loadData();
           this._updateSearchClearVisibility();
+          try { if (this.app && this.app.refreshData) this.app.refreshData(); } catch {}
         });
+      }
+
+      // Study mode toggle
+      const studyTgl = document.getElementById('study-mode-toggle');
+      if (studyTgl) {
+        try { studyTgl.checked = !!this._studyMode; } catch {}
+        studyTgl.addEventListener('change', ()=> this.setStudyMode(studyTgl.checked));
       }
 
       // Click en etiquetes (fila superior)
@@ -78,6 +88,7 @@
           this._tagFilter = current.length ? current : null;
           this.loadData();
           this._updateSearchClearVisibility();
+          try { if (this.app && this.app.refreshData) this.app.refreshData(); } catch {}
         });
       }
       // Bind de la llista de notes (accions i click)
@@ -178,6 +189,61 @@
           </div>
         </section>
       `).join('');
+      // Si estem en mode estudi, renderitzar document en lloc de targetes
+      if (this._studyMode) {
+        this._renderStudyDocument(filtered);
+      } else {
+        container.innerHTML = html;
+      }
+    },
+    toggleStudyMode(){
+      this._studyMode = !this._studyMode;
+      try { localStorage.setItem('notes_study_mode', this._studyMode ? '1' : '0'); } catch{}
+      try { const btn = document.querySelector('#dashboard-view [data-action="open-study"]'); if (btn) btn.classList.toggle('active', this._studyMode); } catch{}
+      this.loadData();
+    },
+    setStudyMode(on){
+      this._studyMode = !!on;
+      try{ localStorage.setItem('notes_study_mode', this._studyMode ? '1' : '0'); }catch{}
+      try { const btn = document.querySelector('#dashboard-view [data-action="open-study"]'); if (btn) btn.classList.toggle('active', this._studyMode); } catch{}
+      this.loadData();
+    },
+    _renderStudyDocument(notes) {
+      const container = document.getElementById('recent-notes');
+      if (!container) return;
+      const org = {};
+      const filtered = notes.filter(n=> n.content && String(n.content).trim());
+      filtered.forEach(n=>{
+        const uKey = `unitat-${n.unitat||0}`;
+        const bKey = `bloc-${n.bloc||0}`;
+        const sKey = String(n.sectionId||'');
+        org[uKey] = org[uKey] || { id: n.unitat||0, blocs:{} };
+        org[uKey].blocs[bKey] = org[uKey].blocs[bKey] || { id: n.bloc||0, seccions:{} };
+        const title = n.sectionTitle || sKey || 'Secció';
+        const sec = org[uKey].blocs[bKey].seccions[sKey] || { title, notes:[] };
+        sec.title = title; sec.notes.push(n);
+        org[uKey].blocs[bKey].seccions[sKey] = sec;
+      });
+      const unitKeys = Object.keys(org).sort((a,b)=> (org[a].id||0) - (org[b].id||0));
+      let html = '<div class="study-doc">';
+      unitKeys.forEach(uk=>{
+        const u = org[uk];
+        html += `<h2 class=\"doc-h1\">Unitat ${u.id||'?'} </h2>`;
+        const bks = Object.keys(u.blocs).sort((a,b)=> (u.blocs[a].id||0) - (u.blocs[b].id||0));
+        bks.forEach(bk=>{
+          const b = u.blocs[bk];
+          html += `<h3 class=\"doc-h2\">${u.id||'?'}.${b.id||'?'} Bloc ${b.id||'?'}</h3>`;
+          const sects = Object.entries(b.seccions);
+          sects.sort((a,b)=> String(a[1].title||'').localeCompare(String(b[1].title||'')));
+          sects.forEach(([sk, s], idx)=>{
+            const clean = this._cleanSectionTitle ? this._cleanSectionTitle(String(s.title||'')) : (s.title||'');
+            html += `<h4 class=\"doc-h3\">${u.id||'?'}.${b.id||'?'}.${idx+1} ${this._escapeHtml(clean)}</h4>`;
+            const ordered = (s.notes||[]).sort((a,b)=> new Date(b.updatedAt||b.createdAt) - new Date(a.updatedAt||a.createdAt));
+            ordered.forEach(n=>{ html += `<div class=\"doc-note\" data-note-id=\"${n.id}\">${n.content||''}</div>`; });
+          });
+        });
+      });
+      html += '</div>';
       container.innerHTML = html;
     },
     // Establir filtre per estructura i mostrar al dashboard
@@ -186,8 +252,13 @@
       // i s'apliquen només sobre aquesta branca
       this._structureFilter = filter || null;
       try {
-        if (this.app && typeof this.app.switchView === 'function') {
-          this.app.switchView('dashboard');
+        if (this.app) {
+          if (this.app.currentView === 'study') {
+            // No canviem de vista; refresquem dades perquè la vista d'estudi reculli el filtre
+            if (this.app.refreshData) this.app.refreshData();
+          } else if (typeof this.app.switchView === 'function') {
+            this.app.switchView('dashboard');
+          }
         }
       } catch {}
       // Donar un petit marge per si Discovery encara s'està carregant
@@ -365,11 +436,13 @@
           // Netejar checks visuals
           modal.querySelectorAll('.filter-checkbox:checked').forEach(cb => { cb.checked = false; });
           this.loadData();
+          try { if (this.app && this.app.refreshData) this.app.refreshData(); } catch {}
         }
         if (act === 'apply') {
           const selected = Array.from(modal.querySelectorAll('.filter-checkbox:checked')).map(i=>i.value);
           this._tagFilter = selected;
           this.loadData();
+          try { if (this.app && this.app.refreshData) this.app.refreshData(); } catch {}
         }
       });
       // Filtre per text

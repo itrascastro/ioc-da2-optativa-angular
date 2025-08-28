@@ -18,16 +18,19 @@ breadcrumb: false
           <i class="bi bi-x-circle" aria-hidden="true"></i>
         </button>
       </div>
-      <div class="dash-actions">
-        <button class="btn btn-outline" data-action="open-filter" aria-label="Filtrar per etiquetes">
-          <i class="bi bi-funnel" aria-hidden="true"></i>
-          <span class="hide-sm">Etiquetes</span>
-        </button>
-        <button class="btn btn-outline" data-action="open-study" aria-label="Vista d'Estudi">
-          <i class="bi bi-book" aria-hidden="true"></i>
-          <span class="hide-sm">Estudi</span>
-        </button>
-      </div>
+        <div class="dash-actions">
+          <button class="btn btn-outline" data-action="open-filter" aria-label="Filtrar per etiquetes">
+            <i class="bi bi-funnel" aria-hidden="true"></i>
+            <span class="hide-sm">Etiquetes</span>
+          </button>
+          <div class="mode-toggle" title="Mode d'Estudi">
+            <span class="label hide-sm">Estudi</span>
+            <label class="switch">
+              <input type="checkbox" id="study-mode-toggle" aria-label="Mode d'Estudi">
+              <span class="slider"></span>
+            </label>
+          </div>
+        </div>
     </div>
 
     <!-- Navegació per etiquetes (píndoles) -->
@@ -239,31 +242,37 @@ breadcrumb: false
 
 <!-- Vista d'Estudi -->
 <div id="study-view" class="view" role="tabpanel" aria-labelledby="study-btn">
-    <div class="study-container">
-        <!-- Contingut d'estudi -->
-        <div class="study-content" id="study-content">
-            <div class="study-header">
-                <h2>Vista d'Estudi del Curs</h2>
-                <div class="study-controls">
-                    <button class="btn btn-outline" id="print-study">
-                        <i class="bi bi-printer" aria-hidden="true"></i>
-                        Imprimir
-                    </button>
-                    <button class="btn btn-outline" id="export-study">
-                        <i class="bi bi-download" aria-hidden="true"></i>
-                        Exportar
-                    </button>
-                </div>
-            </div>
-            
-            <div class="study-body" id="study-body">
-                <div class="empty-state">
-                    <i class="bi bi-book" aria-hidden="true"></i>
-                    <h3>No hi ha notes per mostrar</h3>
-                    <p>Crea algunes notes per veure-les en format d'estudi.</p>
-                </div>
-            </div>
+    <div class="dashboard-container">
+      <!-- Capçalera: Cerca i Filtres (ID propis d'estudi) -->
+      <div class="dash-header" role="region" aria-label="Cerca i filtres">
+        <div class="search-wrapper">
+          <i class="bi bi-search search-icon" aria-hidden="true"></i>
+          <input type="text" id="study-search" class="search-input" placeholder="Buscar notes..." aria-label="Buscar notes">
+          <button type="button" id="study-search-clear" class="search-clear" aria-label="Netejar cerca i etiquetes" title="Netejar">
+            <i class="bi bi-x-circle" aria-hidden="true"></i>
+          </button>
         </div>
+        <div class="dash-actions">
+          <button class="btn btn-outline" id="print-study" aria-label="Imprimir vista d'estudi">
+            <i class="bi bi-printer" aria-hidden="true"></i>
+            <span class="hide-sm">Imprimir</span>
+          </button>
+          <button class="btn btn-outline" id="export-study" aria-label="Exportar vista d'estudi">
+            <i class="bi bi-download" aria-hidden="true"></i>
+            <span class="hide-sm">Exportar</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Navegació per etiquetes -->
+      <nav class="tag-filters" id="study-tag-filters" aria-label="Filtre ràpid per etiqueta"></nav>
+
+      <!-- Llista de notes (estudi: contingut complet) -->
+      <section id="study-notes" class="notes-timeline" aria-live="polite">
+        <div class="empty-state">
+          <p>Encara no tens notes. Crea la teva primera nota!</p>
+        </div>
+      </section>
     </div>
 
     <!-- Botó tornar a dalt -->
