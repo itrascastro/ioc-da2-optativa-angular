@@ -93,9 +93,15 @@
         }
 
         const notesList = document.getElementById('notes-list');
-      if (notesList) {
-        this._updateNotesList(notes);
-      }
+        if (notesList) {
+          // En layout de 1 columna (editor-single) no renderitzem la llista antiga
+          const isSingle = !!document.querySelector('.editor-single');
+          if (isSingle) {
+            notesList.innerHTML = '';
+          } else {
+            this._updateNotesList(notes);
+          }
+        }
       } catch (error) {
         console.error('❌ Editor: Error carregant navegació:', error);
       }
