@@ -209,23 +209,43 @@
       li.innerHTML = `${this.getIcon(iconType)}<span class="item-text">${node.title}</span>${badgeHtml}${chevronHtml}`;
       
       li.addEventListener('click', () => {
+        const currentView = (window.Quadern?.App?.currentView) || '';
         if (node.children) {
           if (isRootClick) {
             this.activePath = [node]; // REEMPLAÇA, no anida
           } else {
             this.activePath.push(node); // Anida dins del mateix arbre
           }
-          // Aplicar filtre al dashboard per unitat o bloc
-          const unitMatch = /^unit-(\d+)/.exec(node.id || '');
-          if (unitMatch) {
-            this._setDashboardFilter({ unitId: parseInt(unitMatch[1], 10) });
-          } else if (node.id && node.id.startsWith('bloc-')) {
-            this._setDashboardFilter({ unitId: parseInt(node.unitId, 10), blocId: parseInt(String(node.id).replace('bloc-',''), 10) });
+          // En editor: no aplicar filtre; en dashboard: filtrar per unitat/bloc
+          if (currentView === 'dashboard') {
+            const unitMatch = /^unit-(\d+)/.exec(node.id || '');
+            if (unitMatch) {
+              this._setDashboardFilter({ unitId: parseInt(unitMatch[1], 10) });
+            } else if (node.id && node.id.startsWith('bloc-')) {
+              this._setDashboardFilter({ unitId: parseInt(node.unitId, 10), blocId: parseInt(String(node.id).replace('bloc-',''), 10) });
+            }
           }
         } else {
           this.activeItemId = node.id;
-          // És una secció final - filtrar dashboard per aquesta secció
-          this._setDashboardFilter({ unitId: parseInt(node.unitId,10), blocId: parseInt(node.blocId,10), sectionId: String(node.sectionId) });
+          // És una secció final - en editor: mostrar llista de notes; en dashboard: filtrar
+          if (currentView === 'editor') {
+            try {
+              const notes = (window.Quadern?.Discovery?.getNotesForSection) 
+                ? (window.Quadern.Discovery.getNotesForSection(node.unitId, node.blocId, node.sectionId) || [])
+                : [];
+              if (window.Quadern?.Editor?.showNotesForSection) {
+                window.Quadern.Editor.showNotesForSection({
+                  sectionId: node.sectionId,
+                  unitId: node.unitId,
+                  blocId: node.blocId,
+                  sectionTitle: node.title,
+                  notes
+                });
+              }
+            } catch(e){ console.warn('NavigationTree: error mostrant notes per secció', e); }
+          } else {
+            this._setDashboardFilter({ unitId: parseInt(node.unitId,10), blocId: parseInt(node.blocId,10), sectionId: String(node.sectionId) });
+          }
         }
         this.render();
       });

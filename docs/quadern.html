@@ -42,49 +42,23 @@ breadcrumb: false
   </div>
 </div>
 
-<!-- Vista Editor (3 Panells) -->
+<!-- Vista Editor -->
 <div id="editor-view" class="view" role="tabpanel" aria-labelledby="editor-btn">
-    <div class="editor-container">
-        <!-- Panel Llista Notes (35%) -->
-        <div class="editor-panel editor-list">
-            <div class="panel-header">
-                <h3 id="section-title">Selecciona una secció</h3>
-                <button class="btn-icon" id="refresh-notes" aria-label="Actualitzar llista">
-                    <i class="bi bi-arrow-clockwise" aria-hidden="true"></i>
-                </button>
-            </div>
-            <div class="panel-body">
-                <div class="notes-list" id="notes-list">
-                    <div class="empty-state">
-                        <p>Selecciona una secció per veure les notes.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <div class="editor-container editor-single">
+        <div class="editor-main">
+            <div id="editor-header" class="editor-header"></div>
 
-        <!-- Panel Editor (65%) -->
-        <div class="editor-panel editor-main">
-            <div class="panel-header">
-                <div class="editor-title-container">
-                    <input type="text" id="note-title" placeholder="Títol de la nota..." aria-label="Títol de la nota">
-                </div>
-                <div class="editor-actions">
-                    <button class="btn btn-outline" id="editor-cancel" aria-label="Cancel·lar edició">
-                        <i class="bi bi-x" aria-hidden="true"></i>
-                        Cancel·lar
-                    </button>
-                    <button class="btn btn-primary save-btn" id="editor-save" aria-label="Desar nota">
-                        <i class="bi bi-check" aria-hidden="true"></i>
-                        Desar
-                    </button>
-                </div>
-            </div>
-            <div class="panel-body">
+            <div class="editor-form">
+                <input type="text" id="note-title" placeholder="Títol de la nota..." aria-label="Títol de la nota">
+                <input type="text" id="note-tags" placeholder="Etiquetes (separades per comes)" aria-label="Etiquetes de la nota">
                 <!-- Hidden sync field for compatibility with existing JS -->
                 <textarea id="note-content" aria-hidden="true" hidden></textarea>
                 <!-- Rich editor container (auto-initialized by Quadern.RichEditor) -->
-                <div id="qre-editor" class="qre" data-sync-target="#note-content"></div>
+                <div id="qre-editor" class="qre" data-no-theme data-sync-target="#note-content"></div>
             </div>
+
+            <!-- Panell de notes de la secció seleccionada (controlat per Editor.js) -->
+            <div id="notes-list" class="notes-list"></div>
         </div>
     </div>
 </div>

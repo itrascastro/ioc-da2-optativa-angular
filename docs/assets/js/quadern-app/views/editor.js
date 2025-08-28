@@ -93,9 +93,9 @@
         }
 
         const notesList = document.getElementById('notes-list');
-        if (notesList) {
-          this._updateNotesList(notes);
-        }
+      if (notesList) {
+        this._updateNotesList(notes);
+      }
       } catch (error) {
         console.error('❌ Editor: Error carregant navegació:', error);
       }
@@ -202,10 +202,7 @@
             <div class="empty-icon">
               <i class="bi bi-journal-text"></i>
             </div>
-            <p>No hi ha notes per mostrar</p>
-            <button class="btn btn-primary btn-sm" data-action="create-note">
-              <i class="bi bi-plus"></i> Nova Nota
-            </button>
+            <p>No hi ha notes per mostrar en aquesta secció.</p>
           </div>
         `;
         return;
