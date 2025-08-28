@@ -47,7 +47,7 @@ breadcrumb: false
     <div class="editor-container editor-single">
         <div class="editor-main">
 
-            <div class="editor-form">
+            <div class="editor-form" role="region" aria-label="Editor de notes">
                 <select id="note-select" aria-label="Selecciona una nota de la secció">
                     <option value="">Selecciona una nota…</option>
                 </select>
@@ -55,11 +55,13 @@ breadcrumb: false
                 <!-- Hidden sync field for compatibility with existing JS -->
                 <textarea id="note-content" aria-hidden="true" hidden></textarea>
                 <!-- Rich editor container (auto-initialized by Quadern.RichEditor) -->
-                <div id="qre-editor" class="qre" data-no-theme data-full-toolbar data-sync-target="#note-content"></div>
+                <div id="qre-editor" class="qre" role="region" aria-label="Àrea d'edició" data-no-theme data-full-toolbar data-sync-target="#note-content"></div>
+                <!-- Live region for editor status (autosave, saved, etc.) -->
+                <span id="editor-status" class="visually-hidden" aria-live="polite"></span>
             </div>
 
             <!-- Panell de notes de la secció seleccionada (controlat per Editor.js) -->
-            <div id="notes-list" class="notes-list"></div>
+            <div id="notes-list" class="notes-list" role="region" aria-live="polite"></div>
         </div>
     </div>
 </div>

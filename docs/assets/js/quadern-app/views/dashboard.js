@@ -228,8 +228,8 @@
           <header class="note-head">
             <h3 class="note-title">${title}</h3>
             <div class="note-actions">
-              <button class="icon-btn" title="Editar" data-action="edit-note" data-note-id="${note.id}"><i class="bi bi-pencil"></i></button>
-              <button class="icon-btn danger" title="Eliminar" data-action="delete-note" data-note-id="${note.id}"><i class="bi bi-trash"></i></button>
+              <button class="icon-btn" title="Editar" aria-label="Editar nota" data-action="edit-note" data-note-id="${note.id}"><i class="bi bi-pencil" aria-hidden="true"></i></button>
+              <button class="icon-btn danger" title="Eliminar" aria-label="Eliminar nota" data-action="delete-note" data-note-id="${note.id}"><i class="bi bi-trash" aria-hidden="true"></i></button>
             </div>
           </header>
           ${previewHTML ? `<p class="note-content">${previewHTML}</p>` : ''}
