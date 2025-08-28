@@ -218,6 +218,8 @@
           }
           // En editor: mostrar notes per unitat/bloc; en dashboard: filtrar
           if (currentView === 'editor') {
+            // Netejar selecció de secció prèvia
+            this.activeItemId = null;
             const unitMatch = /^unit-(\d+)/.exec(node.id || '');
             if (unitMatch) {
               const uid = parseInt(unitMatch[1], 10);
@@ -282,7 +284,9 @@
     },
 
     _applyFilterForActivePath(){
-      // Detectar nivell actual i aplicar filtre adequat
+      // Detectar nivell actual i aplicar filtre adequat (només en dashboard)
+      const currentView = (window.Quadern?.App?.currentView) || '';
+      if (currentView !== 'dashboard') return;
       const last = this.activePath[this.activePath.length - 1];
       if (!last) { this._setDashboardFilter(null); return; }
       const unitMatch = /^unit-(\d+)/.exec(last.id || '');
