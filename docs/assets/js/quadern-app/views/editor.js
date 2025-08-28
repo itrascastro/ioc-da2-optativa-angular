@@ -613,28 +613,65 @@
       // Actualitzar header amb informació de la secció
       const header = document.getElementById('editor-header');
       if (header) {
+        const crumbs = [];
+        if (unitId) crumbs.push(`Unitat ${unitId}`);
+        if (typeof blocId !== 'undefined' && blocId !== null && blocId !== '') crumbs.push(`Bloc ${blocId}`);
+        const crumbHtml = crumbs.map(c=>`<span class="breadcrumb-item">${c}</span>`).join('<i class="bi bi-chevron-right"></i>');
+        const label = sectionTitle || 'Totes les seccions';
         header.innerHTML = `
           <div class="editor-breadcrumb">
-            <span class="breadcrumb-item">Unitat ${unitId} - Bloc ${blocId}</span>
-            <i class="bi bi-chevron-right"></i>
-            <span class="breadcrumb-item">${sectionTitle}</span>
+            ${crumbHtml}
+            ${crumbHtml ? '<i class="bi bi-chevron-right"></i>' : ''}
+            <span class="breadcrumb-item">${label}</span>
           </div>
           <div class="editor-meta">
-            <span class="editor-status">Notes de secció</span>
+            <span class="editor-status">${notes.length ? 'Notes de secció' : 'Sense notes'}</span>
             <span class="editor-count">${notes.length} ${notes.length === 1 ? 'nota' : 'notes'}</span>
           </div>
         `;
       }
       
-      // Mostrar llista de notes de la secció
-      this._displaySectionNotes(notes, sectionData);
-      
-      // Netejar editor si hi havia una nota carregada
-      this._clearEditor();
-      
+      // Omplir desplegable i seleccionar la més recent (si hi ha)
+      this._populateNotesDropdown(notes);
+      const formEl = document.querySelector('.editor-form');
+      if (notes && notes.length) {
+        if (formEl) formEl.style.display = '';
+        const sorted = [...notes].sort((a,b)=> new Date(b.updatedAt||b.createdAt) - new Date(a.updatedAt||a.createdAt));
+        this.selectNote(sorted[0].id);
+        const sel = document.getElementById('note-select');
+        if (sel) sel.value = sorted[0].id;
+      } else {
+        if (formEl) formEl.style.display = 'none';
+        const list = document.getElementById('notes-list');
+        if (list) {
+          list.innerHTML = `
+            <div class="empty-state">
+              <div class="empty-icon">
+                <i class="bi bi-journal-text"></i>
+              </div>
+              <h3>No hi ha notes en aquesta selecció</h3>
+              <p>Selecciona una altra part del curs o modifica els filtres.</p>
+            </div>
+          `;
+        }
+        this._clearEditor();
+      }
       // Guardar context actual
       this.currentSection = sectionData;
       this.currentNote = null;
+    },
+
+    _populateNotesDropdown(notes){
+      const sel = document.getElementById('note-select');
+      if (!sel) return;
+      sel.innerHTML = '<option value="">Selecciona una nota…</option>';
+      const sorted = [...(notes||[])].sort((a,b)=> new Date(b.updatedAt||b.createdAt) - new Date(a.updatedAt||a.createdAt));
+      sorted.forEach(n => {
+        const opt = document.createElement('option');
+        opt.value = n.id;
+        opt.textContent = n.noteTitle || 'Sense títol';
+        sel.appendChild(opt);
+      });
     },
 
     _displaySectionNotes(notes, sectionData) {

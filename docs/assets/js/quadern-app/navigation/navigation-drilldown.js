@@ -216,8 +216,36 @@
           } else {
             this.activePath.push(node); // Anida dins del mateix arbre
           }
-          // En editor: no aplicar filtre; en dashboard: filtrar per unitat/bloc
-          if (currentView === 'dashboard') {
+          // En editor: mostrar notes per unitat/bloc; en dashboard: filtrar
+          if (currentView === 'editor') {
+            const unitMatch = /^unit-(\d+)/.exec(node.id || '');
+            if (unitMatch) {
+              const uid = parseInt(unitMatch[1], 10);
+              const notes = this._collectNotesForUnit(uid);
+              if (window.Quadern?.Editor?.showNotesForSection) {
+                window.Quadern.Editor.showNotesForSection({
+                  unitId: uid,
+                  blocId: null,
+                  sectionId: null,
+                  sectionTitle: 'Totes les seccions',
+                  notes
+                });
+              }
+            } else if (node.id && node.id.startsWith('bloc-')) {
+              const bid = parseInt(String(node.id).replace('bloc-',''), 10);
+              const uid = parseInt(node.unitId, 10);
+              const notes = this._collectNotesForBlock(uid, bid);
+              if (window.Quadern?.Editor?.showNotesForSection) {
+                window.Quadern.Editor.showNotesForSection({
+                  unitId: uid,
+                  blocId: bid,
+                  sectionId: null,
+                  sectionTitle: 'Totes les seccions',
+                  notes
+                });
+              }
+            }
+          } else if (currentView === 'dashboard') {
             const unitMatch = /^unit-(\d+)/.exec(node.id || '');
             if (unitMatch) {
               this._setDashboardFilter({ unitId: parseInt(unitMatch[1], 10) });
@@ -278,6 +306,29 @@
           }, 30);
         }
       } catch(e) { console.warn('NavigationDrillDown: error aplicant filtre dashboard', e); }
+    },
+
+    _collectNotesForUnit(unitId){
+      try {
+        const D = window.Quadern?.Discovery;
+        const CS = D?.getCourseStructure?.();
+        const u = CS ? CS[`unitat-${parseInt(unitId,10)}`] : null;
+        if (!u) return [];
+        const notes = [];
+        Object.values(u.blocs||{}).forEach(b => {
+          Object.values(b.seccions||{}).forEach(s => (s.notes||[]).forEach(n => notes.push(n)) );
+        });
+        return notes;
+      } catch { return []; }
+    },
+    _collectNotesForBlock(unitId, blocId){
+      try {
+        const D = window.Quadern?.Discovery;
+        const sections = D?.getSectionsForBlock?.(parseInt(unitId,10), parseInt(blocId,10)) || {};
+        const notes = [];
+        Object.values(sections).forEach(s => (s.notes||[]).forEach(n => notes.push(n)) );
+        return notes;
+      } catch { return []; }
     },
 
     selectSection(sectionElement) {

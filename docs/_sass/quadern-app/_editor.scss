@@ -29,7 +29,7 @@
 /* Header i formulari sense contenidors de panell */
 .editor-header { margin-bottom: 12px; }
 .editor-form { display: flex; flex-direction: column; gap: 10px; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--border-radius); padding: 14px; }
-.editor-form input { width: 100%; padding: 8px 12px; border: 1px solid var(--color-border); border-radius: 4px; background: var(--color-background); color: var(--color-text); font-size: 1rem; }
+.editor-form input, .editor-form select { width: 100%; padding: 8px 12px; border: 1px solid var(--color-border); border-radius: 4px; background: var(--color-background); color: var(--color-text); font-size: 1rem; }
 .editor-form input#note-title { font-weight: 600; }
 .editor-actions-inline { display: flex; gap: 10px; margin-top: 8px; }
 

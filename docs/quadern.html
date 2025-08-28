@@ -49,7 +49,9 @@ breadcrumb: false
             <div id="editor-header" class="editor-header"></div>
 
             <div class="editor-form">
-                <input type="text" id="note-title" placeholder="Títol de la nota..." aria-label="Títol de la nota">
+                <select id="note-select" aria-label="Selecciona una nota de la secció">
+                    <option value="">Selecciona una nota…</option>
+                </select>
                 <input type="text" id="note-tags" placeholder="Etiquetes (separades per comes)" aria-label="Etiquetes de la nota">
                 <!-- Hidden sync field for compatibility with existing JS -->
                 <textarea id="note-content" aria-hidden="true" hidden></textarea>
