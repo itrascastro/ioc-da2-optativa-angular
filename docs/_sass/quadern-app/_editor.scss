@@ -28,13 +28,12 @@
 #qre-editor { flex: 1 1 auto; min-height: 320px; display: flex; min-height: 0; }
 .qre { display: flex; flex: 1 1 auto; min-height: 0; width: 100%; }
 .qre .panel { display: flex; flex-direction: column; flex: 1 1 auto; min-height: 0; width: 100%; }
-.qre .panel .head { flex: 0 0 auto; display: flex; align-items: center; gap: 8px; }
-.qre .panel .head .actions { flex: 1 1 auto; display: flex; align-items: center; justify-content: flex-start; gap: 8px; }
-.qre .panel .head .actions .status { margin-right: 0; }
-.qre .panel .head .actions .iconbtn { margin-left: auto; }
-.qre .panel .head .fields { display: flex; gap: 8px; flex: 1 1 auto; }
+.qre .panel .head { flex: 0 0 auto; display: flex; align-items: center; gap: 8px; width: 100%; }
+.qre .panel .head .fields { display: flex; gap: 8px; flex: 1 1 auto; min-width: 0; }
 .qre .panel .head .fields:empty { display: none; }
-.qre .panel .head .actions { display: flex; align-items: center; gap: 8px; }
+.qre .panel .head .fields input,
+.qre .panel .head .fields select { flex: 1 1 auto; width: 100%; }
+.qre .panel .head .actions { flex: 0 0 auto; margin-left: auto; display: flex; align-items: center; gap: 8px; }
 .qre .panel .head .actions .status { color: var(--color-text-muted); font-size: 0.9rem; padding: 2px 10px; border: 1px solid var(--color-border); border-radius: 999px; background: var(--color-surface-dark); }
 .qre .panel .head .actions .status:empty { display: none; }
 .qre .panel .editor { display: flex; flex-direction: column; flex: 1 1 auto; min-height: 0; }
