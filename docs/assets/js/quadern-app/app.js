@@ -171,8 +171,9 @@
         window.addEventListener('storage', (e) => {
           try {
             if (e && e.key === STORE_KEY) {
-              // Actualitzar només l'indicador del footer sense forçar recàrregues
+              // Actualitzar indicador del footer i dades del dashboard
               this._updateFooterStats();
+              try { this.modules.dashboard && this.modules.dashboard.loadData(); } catch(_){}
             }
           } catch(err) {
             console.warn('Storage listener error:', err);
