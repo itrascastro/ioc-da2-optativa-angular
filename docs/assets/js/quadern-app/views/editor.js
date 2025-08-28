@@ -640,15 +640,16 @@
       // Omplir desplegable i seleccionar la més recent (si hi ha)
       this._populateNotesDropdown(notes);
       const formEl = document.querySelector('.editor-form');
+      const list = document.getElementById('notes-list');
       if (notes && notes.length) {
         if (formEl) formEl.style.display = '';
+        if (list) list.innerHTML = '';
         const sorted = [...notes].sort((a,b)=> new Date(b.updatedAt||b.createdAt) - new Date(a.updatedAt||a.createdAt));
         this.selectNote(sorted[0].id);
         const sel = document.getElementById('note-select');
         if (sel) sel.value = sorted[0].id;
       } else {
         if (formEl) formEl.style.display = 'none';
-        const list = document.getElementById('notes-list');
         if (list) {
           list.innerHTML = `
             <div class="empty-state">
