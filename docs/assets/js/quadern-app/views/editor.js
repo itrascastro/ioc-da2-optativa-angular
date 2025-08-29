@@ -85,7 +85,7 @@
               mousedownDidFire = true;
               e.preventDefault();
               e.stopPropagation();
-              this._finishInlineRename(true, { focusButton: true });
+              this._finishInlineRename(true);
             }
           });
           // Iniciar edición solo en click cuando no está editando
