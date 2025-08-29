@@ -307,12 +307,21 @@
             const ordered = orderedIds.length
               ? orderedIds.map(id => (s.notes||[]).find(n=>n.id===id)).filter(Boolean)
               : (s.notes||[]).slice().sort((a,b)=> new Date(a.createdAt||a.updatedAt||0) - new Date(b.createdAt||b.updatedAt||0));
-            ordered.forEach(n=>{
+            ordered.forEach((n, noteIdx)=>{
+              const fullNum = `${u.id||'?'}.${b.id||'?'}.${dispIndex}.${noteIdx+1}`;
+              const titleSafe = this._escapeHtml(n.noteTitle || 'Sense títol');
               html += `
                 <div class=\"doc-note\" data-note-id=\"${n.id}\" data-section=\"${sKeyFull||''}\">
                   <div class=\"study-reorder\">
                     <button class=\"reorder-btn\" data-action=\"move-up\" data-id=\"${n.id}\" data-section=\"${sKeyFull||''}\" title=\"Pujar\" aria-label=\"Pujar nota\"><i class=\"bi bi-chevron-up\"></i></button>
                     <button class=\"reorder-btn\" data-action=\"move-down\" data-id=\"${n.id}\" data-section=\"${sKeyFull||''}\" title=\"Baixar\" aria-label=\"Baixar nota\"><i class=\"bi bi-chevron-down\"></i></button>
+                  </div>
+                  <div class=\"doc-note-header\">
+                    <div class=\"doc-note-title\"><span class=\"doc-note-number\">${fullNum}</span> ${titleSafe}</div>
+                    <div class=\"doc-note-actions\">
+                      <button class=\"icon-btn\" data-action=\"edit-note\" data-note-id=\"${n.id}\" title=\"Editar nota\" aria-label=\"Editar nota\"><i class=\"bi bi-pencil\"></i></button>
+                      <button class=\"icon-btn\" data-action=\"delete-note\" data-note-id=\"${n.id}\" title=\"Eliminar nota\" aria-label=\"Eliminar nota\"><i class=\"bi bi-trash\"></i></button>
+                    </div>
                   </div>
                   ${n.content||''}
                 </div>`;

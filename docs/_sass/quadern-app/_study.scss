@@ -170,6 +170,13 @@
 .study-doc .study-reorder .reorder-btn { width: 24px; height: 24px; display: inline-flex; align-items: center; justify-content: center; border: none; background: transparent; color: var(--color-text-muted); border-radius: 6px; cursor: pointer; }
 .study-doc .study-reorder .reorder-btn:hover { color: var(--color-text); background: var(--color-surface-dark); }
 .study-doc .study-reorder .reorder-btn i { font-size: 1rem; line-height: 1; }
+.study-doc .doc-note .doc-note-header { display: flex; align-items: center; gap: 8px; margin: 4px 0 8px; }
+.study-doc .doc-note .doc-note-number { font-weight: 600; color: var(--color-text-muted); margin-right: 6px; }
+.study-doc .doc-note .doc-note-title { font-weight: 600; font-size: 1.05rem; color: var(--color-text); }
+.study-doc .doc-note .doc-note-actions { margin-left: auto; display: inline-flex; gap: 6px; opacity: 0; pointer-events: none; transition: opacity .15s ease; }
+.study-doc .doc-note:hover .doc-note-actions { opacity: 1; pointer-events: auto; }
+.study-doc .doc-note .doc-note-actions .icon-btn { width: 28px; height: 28px; display: inline-flex; align-items: center; justify-content: center; border-radius: 6px; border: 1px solid var(--color-border); background: var(--color-surface); color: var(--color-text-muted); cursor: pointer; }
+.study-doc .doc-note .doc-note-actions .icon-btn:hover { color: var(--color-text); background: var(--color-surface-dark); }
 .study-doc .doc-note ul, .study-doc .doc-note ol { margin: 12px 0 12px 24px; padding-left: 24px; }
 .study-doc .doc-note ul { list-style: disc outside; }
 .study-doc .doc-note ol { list-style: decimal outside; }
