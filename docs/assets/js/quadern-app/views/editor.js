@@ -38,12 +38,34 @@
       // Auto-guardat
       const noteContent = document.getElementById('note-content');
       const noteTags = document.getElementById('note-tags');
+      const noteTitle = document.getElementById('note-title');
 
-      [noteContent, noteTags].forEach(element => {
+      [noteContent, noteTags, noteTitle].forEach(element => {
         if (element) {
           element.addEventListener('input', () => this._scheduleAutosave());
         }
       });
+
+      // Títol: actualització immediata de UI (desplegable) mentre s'espera l'autosave
+      if (noteTitle) {
+        noteTitle.addEventListener('input', (e) => {
+          const val = (e.target.value || '').trim();
+          if (this.currentNote) {
+            this.currentNote.noteTitle = val;
+            try {
+              const sel = document.getElementById('note-select');
+              if (sel && this.currentNote.id) {
+                const opt = sel.querySelector(`option[value="${this.currentNote.id}"]`);
+                if (opt) opt.textContent = val || 'Sense títol';
+              }
+            } catch {}
+          }
+        });
+        // Guardar immediatament en sortir del camp
+        noteTitle.addEventListener('blur', () => {
+          if (this.currentNote) this.saveCurrentNote();
+        });
+      }
 
       // Canvi en el desplegable de notes: carregar nota seleccionada
       const noteSelect = document.getElementById('note-select');
@@ -60,6 +82,8 @@
             if (note) {
               const tagsField = document.getElementById('note-tags');
               if (tagsField) tagsField.value = (note.tags || []).join(', ');
+              const titleField = document.getElementById('note-title');
+              if (titleField) titleField.value = note.noteTitle || '';
               const contentField = document.getElementById('note-content');
               if (contentField) {
                 contentField.value = note.content || '';
@@ -217,6 +241,8 @@
           try {
             const tagsField = document.getElementById('note-tags');
             if (tagsField) tagsField.value = (note.tags || []).join(', ');
+            const titleField = document.getElementById('note-title');
+            if (titleField) titleField.value = note.noteTitle || '';
             const contentField = document.getElementById('note-content');
             if (contentField) {
               contentField.value = note.content || '';
@@ -238,6 +264,8 @@
               try {
                 const tagsField2 = document.getElementById('note-tags');
                 if (tagsField2) tagsField2.value = (note.tags || []).join(', ');
+                const titleField2 = document.getElementById('note-title');
+                if (titleField2) titleField2.value = note.noteTitle || '';
                 const contentField2 = document.getElementById('note-content');
                 if (contentField2) {
                   contentField2.value = note.content || '';
@@ -257,9 +285,11 @@
       // Carregar contingut als camps
       const tagsField = document.getElementById('note-tags');
       const contentField = document.getElementById('note-content');
+      const titleField = document.getElementById('note-title');
 
       if (tagsField) tagsField.value = (note.tags || []).join(', ');
       if (contentField) contentField.value = note.content || '';
+      if (titleField) titleField.value = note.noteTitle || '';
 
       // Actualitzar UI: anunciar i fixar hora de darrera modificació
       this.lastUpdatedAt = note.updatedAt || note.createdAt || new Date().toISOString();
@@ -309,8 +339,10 @@
       // Obtenir dades dels camps
       const tagsField = document.getElementById('note-tags');
       const contentField = document.getElementById('note-content');
+      const titleField = document.getElementById('note-title');
 
       if (contentField) this.currentNote.content = contentField.value;
+      if (titleField) this.currentNote.noteTitle = titleField.value || '';
       
       if (tagsField) {
         const tagsText = tagsField.value.trim();
@@ -366,9 +398,11 @@
     _clearEditor() {
       const tagsField = document.getElementById('note-tags');
       const contentField = document.getElementById('note-content');
+      const titleField = document.getElementById('note-title');
 
       if (tagsField) tagsField.value = '';
       if (contentField) contentField.value = '';
+      if (titleField) titleField.value = '';
 
       this.currentNote = null;
       this.isEditing = false;
