@@ -51,10 +51,17 @@ breadcrumb: false
         <div class="editor-main">
 
             <div class="editor-form" role="region" aria-label="Editor de notes">
-                <select id="note-select" aria-label="Selecciona una nota de la secció">
-                    <option value="">Selecciona una nota…</option>
-                </select>
-                <input type="text" id="note-title" placeholder="Títol de la nota" aria-label="Títol de la nota">
+                <div id="note-select-row" class="note-select-row">
+                  <select id="note-select" aria-label="Selecciona una nota de la secció">
+                      <option value="">Selecciona una nota…</option>
+                  </select>
+                  <button type="button" id="note-select-edit-btn" class="inline-edit-btn" aria-label="Editar títol de la nota" title="Editar títol">
+                    <i class="bi bi-pencil"></i>
+                  </button>
+                  <button type="button" id="note-select-confirm-btn" class="inline-confirm-btn" aria-label="Confirmar títol" title="Confirmar títol">
+                    <i class="bi bi-check"></i>
+                  </button>
+                </div>
                 <input type="text" id="note-tags" placeholder="Etiquetes (separades per comes)" aria-label="Etiquetes de la nota">
                 <!-- Hidden sync field for compatibility with existing JS -->
                 <textarea id="note-content" aria-hidden="true" hidden></textarea>

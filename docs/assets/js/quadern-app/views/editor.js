@@ -38,34 +38,12 @@
       // Auto-guardat
       const noteContent = document.getElementById('note-content');
       const noteTags = document.getElementById('note-tags');
-      const noteTitle = document.getElementById('note-title');
 
-      [noteContent, noteTags, noteTitle].forEach(element => {
+      [noteContent, noteTags].forEach(element => {
         if (element) {
           element.addEventListener('input', () => this._scheduleAutosave());
         }
       });
-
-      // Títol: actualització immediata de UI (desplegable) mentre s'espera l'autosave
-      if (noteTitle) {
-        noteTitle.addEventListener('input', (e) => {
-          const val = (e.target.value || '').trim();
-          if (this.currentNote) {
-            this.currentNote.noteTitle = val;
-            try {
-              const sel = document.getElementById('note-select');
-              if (sel && this.currentNote.id) {
-                const opt = sel.querySelector(`option[value="${this.currentNote.id}"]`);
-                if (opt) opt.textContent = val || 'Sense títol';
-              }
-            } catch {}
-          }
-        });
-        // Guardar immediatament en sortir del camp
-        noteTitle.addEventListener('blur', () => {
-          if (this.currentNote) this.saveCurrentNote();
-        });
-      }
 
       // Canvi en el desplegable de notes: carregar nota seleccionada
       const noteSelect = document.getElementById('note-select');
@@ -82,8 +60,6 @@
             if (note) {
               const tagsField = document.getElementById('note-tags');
               if (tagsField) tagsField.value = (note.tags || []).join(', ');
-              const titleField = document.getElementById('note-title');
-              if (titleField) titleField.value = note.noteTitle || '';
               const contentField = document.getElementById('note-content');
               if (contentField) {
                 contentField.value = note.content || '';
@@ -95,6 +71,35 @@
             }
           } catch {}
         });
+
+        // Editar títol directament des del desplegable (doble clic o F2)
+        const startInline = () => this._startInlineRenameOnSelect();
+        noteSelect.addEventListener('dblclick', (e)=>{ e.preventDefault(); startInline(); });
+        noteSelect.addEventListener('keydown', (e)=>{ if (e.key === 'F2') { e.preventDefault(); startInline(); } });
+        const editBtn = document.getElementById('note-select-edit-btn');
+        if (editBtn) {
+          let mousedownDidFire = false;
+          // Confirmar en mousedown para evitar que el blur del input reactive edición
+          editBtn.addEventListener('mousedown', (e)=>{
+            if (this._inlineRenameInput) {
+              mousedownDidFire = true;
+              e.preventDefault();
+              e.stopPropagation();
+              this._finishInlineRename(true, { focusButton: true });
+            }
+          });
+          // Iniciar edición solo en click cuando no está editando
+          editBtn.addEventListener('click', (e)=>{ 
+            e.preventDefault();
+            if (mousedownDidFire) {
+              mousedownDidFire = false;
+              return;
+            }
+            if (!this._inlineRenameInput) {
+              startInline();
+            }
+          });
+        }
       }
     },
 
@@ -241,8 +246,6 @@
           try {
             const tagsField = document.getElementById('note-tags');
             if (tagsField) tagsField.value = (note.tags || []).join(', ');
-            const titleField = document.getElementById('note-title');
-            if (titleField) titleField.value = note.noteTitle || '';
             const contentField = document.getElementById('note-content');
             if (contentField) {
               contentField.value = note.content || '';
@@ -264,8 +267,6 @@
               try {
                 const tagsField2 = document.getElementById('note-tags');
                 if (tagsField2) tagsField2.value = (note.tags || []).join(', ');
-                const titleField2 = document.getElementById('note-title');
-                if (titleField2) titleField2.value = note.noteTitle || '';
                 const contentField2 = document.getElementById('note-content');
                 if (contentField2) {
                   contentField2.value = note.content || '';
@@ -285,11 +286,9 @@
       // Carregar contingut als camps
       const tagsField = document.getElementById('note-tags');
       const contentField = document.getElementById('note-content');
-      const titleField = document.getElementById('note-title');
 
       if (tagsField) tagsField.value = (note.tags || []).join(', ');
       if (contentField) contentField.value = note.content || '';
-      if (titleField) titleField.value = note.noteTitle || '';
 
       // Actualitzar UI: anunciar i fixar hora de darrera modificació
       this.lastUpdatedAt = note.updatedAt || note.createdAt || new Date().toISOString();
@@ -297,6 +296,84 @@
       this._renderStatusTime();
       
       this.isEditing = true;
+    },
+
+    _startInlineRenameOnSelect() {
+      try {
+        const sel = document.getElementById('note-select');
+        if (!sel) return;
+        // Asegurar currentNote
+        if (!this.currentNote || !this.currentNote.id) {
+          const cur = sel.value;
+          if (cur) { try { this.selectNote(cur); } catch(_){} }
+        }
+        if (!this.currentNote) return;
+        const currentId = this.currentNote.id;
+        if (!currentId) return;
+        const opt = sel.querySelector(`option[value="${currentId}"]`);
+        const currentTitle = opt ? opt.textContent : (this.currentNote.noteTitle || '');
+        // Evitar duplicats
+        if (document.getElementById('note-title-inline')) return;
+        // Crear input en la mateixa posició
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.id = 'note-title-inline';
+        input.placeholder = 'Títol de la nota';
+        input.value = currentTitle;
+        // Insertar abans del select i ocultar select temporalment
+        const editBtn = document.getElementById('note-select-edit-btn');
+        this._inlineRenameInput = input;
+        // Botó en estat d'edició
+        if (editBtn) {
+          editBtn.classList.add('editing');
+          const icon = editBtn.querySelector('i');
+          if (icon) { icon.classList.remove('bi-pencil'); icon.classList.add('bi-check'); }
+          editBtn.setAttribute('aria-label', 'Confirmar títol');
+          editBtn.setAttribute('title', 'Confirmar títol');
+        }
+        sel.parentNode.insertBefore(input, sel);
+        sel.style.display = 'none';
+        input.focus();
+        input.select();
+
+        const finish = (commit) => this._finishInlineRename(commit);
+
+        input.addEventListener('keydown', (e)=>{
+          if (e.key === 'Enter') { e.preventDefault(); finish(true); }
+          if (e.key === 'Escape') { e.preventDefault(); finish(false); }
+        });
+        input.addEventListener('blur', ()=> finish(true));
+      } catch (err) { console.warn('Inline rename failed', err); }
+    },
+
+    _finishInlineRename(commit, opts) {
+      try {
+        const sel = document.getElementById('note-select');
+        const input = this._inlineRenameInput;
+        const editBtn = document.getElementById('note-select-edit-btn');
+        if (!sel || !input || !this.currentNote || this._inlineFinishing) return;
+        this._inlineFinishing = true;
+        const opt = sel.querySelector(`option[value="${this.currentNote.id}"]`);
+        if (commit) {
+          const newTitle = (input.value || '').trim();
+          this.currentNote.noteTitle = newTitle;
+          if (opt) opt.textContent = newTitle || 'Sense títol';
+          try { this.saveCurrentNote(); } catch {}
+        }
+        // Restaurar UI
+        sel.style.display = '';
+        input.remove();
+        this._inlineRenameInput = null;
+        if (editBtn) {
+          editBtn.classList.remove('editing');
+          const icon = editBtn.querySelector('i');
+          if (icon) { icon.classList.remove('bi-check'); icon.classList.add('bi-pencil'); }
+          editBtn.setAttribute('aria-label', 'Editar títol de la nota');
+          editBtn.setAttribute('title', 'Editar títol');
+        }
+        if (opts && opts.focusButton && editBtn) editBtn.focus(); else sel.focus();
+        this._inlineFinishing = false;
+      } catch (err) { console.warn('Finish inline rename failed', err); }
     },
 
     // Eliminada: _updateActiveNoteInList (llista clàssica)
@@ -339,10 +416,8 @@
       // Obtenir dades dels camps
       const tagsField = document.getElementById('note-tags');
       const contentField = document.getElementById('note-content');
-      const titleField = document.getElementById('note-title');
 
       if (contentField) this.currentNote.content = contentField.value;
-      if (titleField) this.currentNote.noteTitle = titleField.value || '';
       
       if (tagsField) {
         const tagsText = tagsField.value.trim();
@@ -398,11 +473,9 @@
     _clearEditor() {
       const tagsField = document.getElementById('note-tags');
       const contentField = document.getElementById('note-content');
-      const titleField = document.getElementById('note-title');
 
       if (tagsField) tagsField.value = '';
       if (contentField) contentField.value = '';
-      if (titleField) titleField.value = '';
 
       this.currentNote = null;
       this.isEditing = false;

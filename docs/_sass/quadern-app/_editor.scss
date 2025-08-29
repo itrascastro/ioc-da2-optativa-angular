@@ -24,6 +24,16 @@
 /* removed: no #note-title field in 1-column editor */
 /* legacy inline actions removed */
 
+/* Inline edit del select de notas */
+.note-select-row { display: flex; align-items: center; gap: 8px; }
+.note-select-row #note-select { flex: 1 1 auto; }
+.inline-edit-btn, .inline-confirm-btn { flex: 0 0 auto; width: 36px; height: 36px; display: inline-flex; align-items: center; justify-content: center; border: 1px solid var(--color-border); border-radius: 6px; background: var(--color-surface); color: var(--color-text-muted); cursor: pointer; }
+.inline-edit-btn:hover, .inline-confirm-btn:hover { color: var(--color-text); background: var(--color-surface-dark); }
+.inline-confirm-btn { display: none; }
+.note-select-row.editing .inline-edit-btn { display: none; }
+.note-select-row.editing .inline-confirm-btn { display: inline-flex; border-color: var(--quadern-accent); color: var(--color-text); }
+.note-select-row input#note-title-inline { flex: 1 1 auto; }
+
 /* Área del rich editor – ocupar l'alçada disponible (toolbar fixa, editor flexible) */
 #qre-editor { flex: 1 1 auto; min-height: 320px; display: flex; min-height: 0; }
 .qre { display: flex; flex: 1 1 auto; min-height: 0; width: 100%; }
