@@ -5,14 +5,11 @@
 .content-item {
   display: flex;
   align-items: flex-start; /* Alinear a l'inici per contingut multi-línia */
-  padding: 12px 0; /* 0.75rem vertical padding igual al boceto */
-  border-bottom: 1px solid #f3f4f6; /* gray-100 com al boceto */
+  padding: 4px 0; /* Padding reduït per menys separació */
   width: 100%;
 }
 
-.content-item:last-child {
-  border-bottom: none;
-}
+/* Sense bordres inferiors */
 
 /* Div de contingut ocupa tot l'espai disponible */
 .content-item > div:last-child {
@@ -168,7 +165,11 @@
 .content-item .doc-note-title { 
   font-weight: 600; 
   font-size: 1.05rem; 
-  color: var(--color-text); 
+  color: var(--color-text);
+  background: rgba(148, 163, 184, 0.05);
+  padding: 4px 8px;
+  border-radius: 4px;
+  flex: 1;
 }
 
 .content-item .doc-note-actions { 
