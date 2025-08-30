@@ -337,14 +337,16 @@
                     <button class="move-btn" data-action="move-down" data-id="${n.id}" data-section="${sKeyFull||''}" title="Baixar" aria-label="Baixar nota">
                       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
                     </button>
+                    <button class="move-btn" data-action="edit-note" data-note-id="${n.id}" title="Editar nota" aria-label="Editar nota">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m18 2 3 3L12 14l-4 1 1-4L18 2zM16 6l2 2"/></svg>
+                    </button>
+                    <button class="move-btn" data-action="delete-note" data-note-id="${n.id}" title="Eliminar nota" aria-label="Eliminar nota">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18m-2 0v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6m3 0V4c0-1 1-2 2-2h4c0 1 1 2 2h4v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+                    </button>
                   </div>
                   <div>
                     <div class="doc-note-header">
                       <div class="doc-note-title"><span class="doc-note-number">${fullNum}</span> ${titleSafe}</div>
-                      <div class="doc-note-actions">
-                        <button class="icon-btn" data-action="edit-note" data-note-id="${n.id}" title="Editar nota" aria-label="Editar nota"><i class="bi bi-pencil"></i></button>
-                        <button class="icon-btn" data-action="delete-note" data-note-id="${n.id}" title="Eliminar nota" aria-label="Eliminar nota"><i class="bi bi-trash"></i></button>
-                      </div>
                     </div>
                     ${n.content||''}
                   </div>

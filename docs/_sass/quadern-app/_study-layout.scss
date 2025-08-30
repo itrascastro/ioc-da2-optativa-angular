@@ -21,17 +21,17 @@
 
 /* Espaiador per Unitats/Blocs/Seccions per alinear amb les notes */
 .controls-spacer { 
-  width: 1.25rem; /* 20px - Reduït per menys indentació */
+  width: 1.5rem; /* 24px - Coincidir amb note-controls */
   flex-shrink: 0; 
 }
 
 /* Contenidor de botons per a cada nota */
 .note-controls {
-  width: 1.25rem; /* 20px - Reduït per menys indentació */
+  width: 1.5rem; /* 24px - Ampliat lleugerament per 4 botons */
   flex-shrink: 0;
   display: flex;
   flex-direction: column; /* Botons un a sota de l'altre */
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   gap: 0.25rem; /* 4px gap */
   opacity: 0; /* Ocult per defecte */
@@ -149,9 +149,6 @@
 }
 
 .content-item .doc-note-header { 
-  display: flex; 
-  justify-content: space-between; 
-  align-items: flex-start; 
   margin: 4px 0 8px; 
   width: 100%;
 }
@@ -172,34 +169,4 @@
   flex: 1;
 }
 
-.content-item .doc-note-actions { 
-  margin-left: auto; 
-  display: inline-flex; 
-  gap: 6px; 
-  opacity: 0; 
-  pointer-events: none; 
-  transition: opacity .15s ease; 
-}
-
-.content-item:hover .doc-note-actions { 
-  opacity: 1; 
-  pointer-events: auto; 
-}
-
-.content-item .doc-note-actions .icon-btn { 
-  width: 28px; 
-  height: 28px; 
-  display: inline-flex; 
-  align-items: center; 
-  justify-content: center; 
-  border-radius: 6px; 
-  border: 1px solid var(--color-border); 
-  background: var(--color-surface); 
-  color: var(--color-text-muted); 
-  cursor: pointer; 
-}
-
-.content-item .doc-note-actions .icon-btn:hover { 
-  color: var(--color-text); 
-  background: var(--color-surface-dark); 
-}
+/* CSS de doc-note-actions eliminat - ara tots els botons estan a note-controls */
