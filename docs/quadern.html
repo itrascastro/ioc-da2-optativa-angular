@@ -10,31 +10,35 @@ breadcrumb: false
 <div id="dashboard-view" class="view active" role="tabpanel" aria-labelledby="dashboard-btn">
   <div class="dashboard-container">
     <!-- Capçalera: Cerca i Filtres -->
-    <div class="dash-header" role="region" aria-label="Cerca i filtres">
-      <div class="search-wrapper">
-        <i class="bi bi-search search-icon" aria-hidden="true"></i>
-        <input type="text" id="dashboard-search" class="search-input" placeholder="Buscar notes..." aria-label="Buscar notes">
-        <button type="button" id="dashboard-search-clear" class="search-clear" aria-label="Netejar cerca i etiquetes" title="Netejar">
-          <i class="bi bi-x-circle" aria-hidden="true"></i>
-        </button>
-      </div>
-        <div class="dash-actions">
-          <button class="btn btn-outline" data-action="open-filter" aria-label="Filtrar per etiquetes">
-            <i class="bi bi-funnel" aria-hidden="true"></i>
-            <span class="hide-sm">Etiquetes</span>
-          </button>
-          <div class="mode-toggle" title="Mode d'Estudi">
-            <span class="label hide-sm">Estudi</span>
-            <label class="switch">
-              <input type="checkbox" id="study-mode-toggle" aria-label="Mode d'Estudi">
-              <span class="slider"></span>
-            </label>
+    <div class="content-item">
+      <div style="width: 100%;">
+        <div class="dash-header" role="region" aria-label="Cerca i filtres">
+          <div class="search-wrapper">
+            <i class="bi bi-search search-icon" aria-hidden="true"></i>
+            <input type="text" id="dashboard-search" class="search-input" placeholder="Buscar notes..." aria-label="Buscar notes">
+            <button type="button" id="dashboard-search-clear" class="search-clear" aria-label="Netejar cerca i etiquetes" title="Netejar">
+              <i class="bi bi-x-circle" aria-hidden="true"></i>
+            </button>
           </div>
+            <div class="dash-actions">
+              <button class="btn btn-outline" data-action="open-filter" aria-label="Filtrar per etiquetes">
+                <i class="bi bi-funnel" aria-hidden="true"></i>
+                <span class="hide-sm">Etiquetes</span>
+              </button>
+              <div class="mode-toggle" title="Mode d'Estudi">
+                <span class="label hide-sm">Estudi</span>
+                <label class="switch">
+                  <input type="checkbox" id="study-mode-toggle" aria-label="Mode d'Estudi">
+                  <span class="slider"></span>
+                </label>
+              </div>
+            </div>
         </div>
+        
+        <!-- Navegació per etiquetes (píndoles) -->
+        <nav class="tag-filters" id="dashboard-tag-filters" aria-label="Filtre ràpid per etiqueta"></nav>
+      </div>
     </div>
-
-    <!-- Navegació per etiquetes (píndoles) -->
-    <nav class="tag-filters" id="dashboard-tag-filters" aria-label="Filtre ràpid per etiqueta"></nav>
 
     <!-- Llista de notes agrupades per data -->
     <section id="recent-notes" class="notes-timeline" aria-live="polite">

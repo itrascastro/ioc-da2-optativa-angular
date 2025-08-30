@@ -235,7 +235,13 @@
       let html = '<div class="study-doc">';
       unitKeys.forEach(uk=>{
         const u = org[uk];
-        html += `<h2 class=\"doc-h1\">Unitat ${u.id||'?'} </h2>`;
+        html += `
+          <div class="content-item">
+            <div class="controls-spacer"></div>
+            <div>
+              <h2 class="doc-h1">Unitat ${u.id||'?'} </h2>
+            </div>
+          </div>`;
         const bks = Object.keys(u.blocs).sort((a,b)=>{
           if (CS) {
             const cu = CS[`unitat-${u.id}`];
@@ -246,7 +252,13 @@
         });
         bks.forEach(bk=>{
           const b = u.blocs[bk];
-          html += `<h3 class=\"doc-h2\">${u.id||'?'}.${b.id||'?'} Bloc ${b.id||'?'}</h3>`;
+          html += `
+            <div class="content-item">
+              <div class="controls-spacer"></div>
+              <div>
+                <h3 class="doc-h2">${u.id||'?'}.${b.id||'?'} Bloc ${b.id||'?'}</h3>
+              </div>
+            </div>`;
           const sects = Object.entries(b.seccions);
           const getSectionOrder = (unitNum, blockNum, sectionKey, sectionTitle) => {
             if (!CS) return 9999;
@@ -283,7 +295,13 @@
             let dispIndex = 1;
             const ord = getSectionOrder(u.id, b.id, sk, s.title);
             if (ord !== 9999) dispIndex = ord + 1;
-            html += `<h4 class=\"doc-h3\">${u.id||'?'}.${b.id||'?'}.${dispIndex} ${this._escapeHtml(clean)}</h4>`;
+            html += `
+              <div class="content-item">
+                <div class="controls-spacer"></div>
+                <div>
+                  <h4 class="doc-h3">${u.id||'?'}.${b.id||'?'}.${dispIndex} ${this._escapeHtml(clean)}</h4>
+                </div>
+              </div>`;
             // Default order: createdAt ASC. Allow custom per-section order stored in Store.orderBySection
             const ref = (s.notes && s.notes[0]) ? s.notes[0] : null;
             const sKeyFull = ref ? `${ref.pageUrl}#${ref.sectionId}` : null;
@@ -311,19 +329,25 @@
               const fullNum = `${u.id||'?'}.${b.id||'?'}.${dispIndex}.${noteIdx+1}`;
               const titleSafe = this._escapeHtml(n.noteTitle || 'Sense títol');
               html += `
-                <div class=\"doc-note\" data-note-id=\"${n.id}\" data-section=\"${sKeyFull||''}\">
-                  <div class=\"study-reorder\">
-                    <button class=\"reorder-btn\" data-action=\"move-up\" data-id=\"${n.id}\" data-section=\"${sKeyFull||''}\" title=\"Pujar\" aria-label=\"Pujar nota\"><i class=\"bi bi-chevron-up\"></i></button>
-                    <button class=\"reorder-btn\" data-action=\"move-down\" data-id=\"${n.id}\" data-section=\"${sKeyFull||''}\" title=\"Baixar\" aria-label=\"Baixar nota\"><i class=\"bi bi-chevron-down\"></i></button>
+                <div class="content-item" data-note-id="${n.id}" data-section="${sKeyFull||''}">
+                  <div class="note-controls">
+                    <button class="move-btn" data-action="move-up" data-id="${n.id}" data-section="${sKeyFull||''}" title="Pujar" aria-label="Pujar nota">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m18 15-6-6-6 6"/></svg>
+                    </button>
+                    <button class="move-btn" data-action="move-down" data-id="${n.id}" data-section="${sKeyFull||''}" title="Baixar" aria-label="Baixar nota">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+                    </button>
                   </div>
-                  <div class=\"doc-note-header\">
-                    <div class=\"doc-note-title\"><span class=\"doc-note-number\">${fullNum}</span> ${titleSafe}</div>
-                    <div class=\"doc-note-actions\">
-                      <button class=\"icon-btn\" data-action=\"edit-note\" data-note-id=\"${n.id}\" title=\"Editar nota\" aria-label=\"Editar nota\"><i class=\"bi bi-pencil\"></i></button>
-                      <button class=\"icon-btn\" data-action=\"delete-note\" data-note-id=\"${n.id}\" title=\"Eliminar nota\" aria-label=\"Eliminar nota\"><i class=\"bi bi-trash\"></i></button>
+                  <div>
+                    <div class="doc-note-header">
+                      <div class="doc-note-title"><span class="doc-note-number">${fullNum}</span> ${titleSafe}</div>
+                      <div class="doc-note-actions">
+                        <button class="icon-btn" data-action="edit-note" data-note-id="${n.id}" title="Editar nota" aria-label="Editar nota"><i class="bi bi-pencil"></i></button>
+                        <button class="icon-btn" data-action="delete-note" data-note-id="${n.id}" title="Eliminar nota" aria-label="Eliminar nota"><i class="bi bi-trash"></i></button>
+                      </div>
                     </div>
+                    ${n.content||''}
                   </div>
-                  ${n.content||''}
                 </div>`;
             });
           });

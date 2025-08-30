@@ -4,7 +4,7 @@
 
 #dashboard-view { height: calc(100vh - var(--quadern-header-height) - var(--quadern-footer-height) - 52px); overflow: hidden; }
 /* #study-view eliminat: mode Estudi integrat al Dashboard */
-.dashboard-container { max-width: none; width: 100%; margin: 0 auto; padding: 6px 0 0; height: 100%; display: flex; flex-direction: column; }
+.dashboard-container { max-width: none; width: 100%; margin: 0 auto; padding: 16px 16px 0 0; height: 100%; display: flex; flex-direction: column; }
 
 .dash-header { display:flex; gap:14px; align-items:center; justify-content:space-between; margin-bottom: 14px; }
 .dash-header .dash-actions { display:flex; gap:8px; flex-shrink:0; }
@@ -35,12 +35,8 @@
   position: relative;
   flex: 1 1 auto;
   overflow: auto;
-  /* Separació visual entre notes i la barra de scroll */
-  padding-right: 12px;
-  /* Espai inferior simètric al marge sota les etiquetes */
-  padding-bottom: 20px; /* igual al marge de seguretat del layout */
-  /* Reserva espai estable per a la scrollbar on sigui possible */
-  scrollbar-gutter: stable both-edges;
+  /* Marge dret per no tocar la barra de scroll */
+  padding: 0 24px 0 0;
 }
 
 /* Un pèl més d'aire al final de la llista */

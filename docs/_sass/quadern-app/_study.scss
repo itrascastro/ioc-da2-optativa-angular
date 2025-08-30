@@ -189,6 +189,12 @@
 .study-doc .doc-note li.ql-indent-3 { margin-left: 6em; }
 .study-doc .doc-note li.ql-indent-4 { margin-left: 8em; }
 .study-doc .doc-note li.ql-indent-5 { margin-left: 10em; }
+
+/* ================================================================
+   LAYOUT CONTENT-ITEM (import del fitxer de layout)
+   ================================================================ */
+@import "study-layout";
+
 .study-unit.collapsed .caret,
 .study-block.collapsed .caret,
 .study-section.collapsed .caret { transform: rotate(-90deg); }
