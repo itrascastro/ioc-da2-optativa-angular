@@ -36,7 +36,7 @@
   gap: 0.25rem; /* 4px gap */
   opacity: 0; /* Ocult per defecte */
   transition: opacity 0.2s ease-in-out;
-  padding-top: 0.125rem; /* Alineació fina amb el títol */
+  padding-top: 2rem; /* Posicionar botons sota el títol de la nota */
 }
 
 /* Es mostra al passar el ratolí per sobre de la fila de la nota */
@@ -85,6 +85,7 @@
   max-width: 100%;
   box-sizing: border-box;
   overflow-x: auto;
+  margin: 16px 0; /* Mateix margin que els paràgrafs */
 }
 
 /* Llistes formateades igual que abans */
