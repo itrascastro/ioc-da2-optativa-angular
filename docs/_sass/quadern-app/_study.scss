@@ -169,6 +169,12 @@
   border-radius: 8px;
 }
 
+/* Mode fosc: títol principal de document en neutre (sense blau) */
+.quadern-layout[data-theme='dark'] .study-doc .doc-h1 {
+  color: var(--color-text);
+  background: var(--color-surface-dark);
+}
+
 .study-doc .doc-h2 { 
   font-size: 1.25rem; 
   font-weight: 600; 
@@ -345,6 +351,12 @@
   margin-bottom: 20px;
   padding-bottom: 10px;
   border-bottom: 3px solid var(--quadern-accent);
+}
+
+/* Mode fosc: títol de unitat en neutre (sense accent blau) */
+.quadern-layout[data-theme='dark'] .study-unit h1 {
+  color: var(--color-text);
+  border-bottom-color: var(--color-border);
 }
 
 .study-block {
