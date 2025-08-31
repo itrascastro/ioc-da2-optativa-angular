@@ -123,6 +123,12 @@ body.quadern-layout {
   transition: all 0.2s ease;
 }
 
+/* Modo oscuro: mejorar contraste de la cápsula del título */
+.quadern-layout[data-theme='dark'] .quadern-logo {
+  background: rgba(122, 162, 227, 0.18);
+  color: #e6edf3; /* texto e icono claros para mejor legibilidad */
+}
+
 .quadern-logo i {
   font-size: 1.4rem;
 }

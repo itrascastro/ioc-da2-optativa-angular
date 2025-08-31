@@ -1,17 +1,17 @@
-# 📝 Guia per Editors de Materials IOC
+# Guia per Editors de Materials IOC
 {% raw %}
 
-## 🎯 Objectiu
+## Objectiu
 Aquest document explica com crear i editar continguts educatius seguint l'arquitectura simplificada d'aquest sistema.
 
-## 📂 Estructura de Fitxers
+## Estructura de Fitxers
 
 ```
 unitat-X/
 └── bloc-Y.html               ← TU EDITES AQUÍ
 ```
 
-## ✅ QUÈ POTS FER
+## QUÈ POTS FER
 
 ### **HTML + Components Jekyll NOMÉS:**
 
@@ -22,7 +22,7 @@ unitat-X/
     <p>Contingut educatiu amb <strong>text destacat</strong> i <em>cursiva</em>.</p>
 
     {% include info_box.html
-       contingut="<strong>💡 Definició:</strong> Angular és un framework complet..."
+       contingut="<strong>Definició:</strong> Angular és un framework complet..."
     %}
 
     <h3>Subtítol</h3>
@@ -40,47 +40,47 @@ ng version"
     %}
 
     {% include warning_box.html
-       contingut="<strong>⚠️ Nota important:</strong> El primer build pot trigar..."
+       contingut="<strong>Nota important:</strong> El primer build pot trigar..."
     %}
 
     {% include success_box.html
-       contingut="<strong>✅ Objectius aconseguits:</strong>
+       contingut="<strong>Objectius aconseguits:</strong>
 <ul>
-<li>✓ Primera tasca completada</li>
-<li>✓ Segona tasca completada</li>
+<li>Primera tasca completada</li>
+<li>Segona tasca completada</li>
 </ul>"
     %}
 </div>
 ```
 
-## 📦 Components Jekyll Disponibles
+## Components Jekyll Disponibles
 
-### 📘 Caixa Informativa:
+### Caixa Informativa:
 ```jekyll
 {% include info_box.html
-   contingut="<strong>💡 Informació:</strong> Text explicatiu amb <em>HTML</em>..."
+   contingut="<strong>Informació:</strong> Text explicatiu amb <em>HTML</em>..."
 %}
 ```
 
-### ⚠️ Caixa d'Advertiment:
+### Caixa d'Advertiment:
 ```jekyll
 {% include warning_box.html
-   contingut="<strong>⚠️ Atenció:</strong> Text d'advertiment amb <code>codi</code>..."
+   contingut="<strong>Atenció:</strong> Text d'advertiment amb <code>codi</code>..."
 %}
 ```
 
-### ✅ Caixa d'Èxit:
+### Caixa d'Èxit:
 ```jekyll
 {% include success_box.html
-   contingut="<strong>✅ Completat:</strong> Text amb llistes HTML
+   contingut="<strong>Completat:</strong> Text amb llistes HTML
 <ul>
-<li>✓ Primera tasca</li>
-<li>✓ Segona tasca</li>
+<li>Primera tasca</li>
+<li>Segona tasca</li>
 </ul>"
 %}
 ```
 
-### 💻 Bloc de Codi:
+### Bloc de Codi:
 ```jekyll
 {% include code-block.html
    lang="bash"
@@ -104,22 +104,22 @@ export class MyComponent { }"
 %}
 ```
 
-### 🤖 Prompt per IA:
+### Prompt per IA:
 ```jekyll
 {% include prompt-ai.html
-   contingut="<strong>🤖 Prompt per IA:</strong>
+   contingut="<strong>Prompt per IA:</strong>
 <p>Text del prompt amb <em>format HTML</em>...</p>"
 %}
 ```
 
-### ⚠️ Error:
+### Error:
 ```jekyll
 {% include error.html
    contingut="Error: ng command not found després d'instal·lar Angular CLI."
 %}
 ```
 
-### ✅ Solució:
+### Solució:
 ```jekyll
 {% include solucio.html
    contingut="Reinicia el terminal o executa source ~/.bashrc per actualitzar les variables d'entorn."
@@ -130,14 +130,14 @@ export class MyComponent { }"
 %}
 ```
 
-### 💡 Suggeriment:
+### Suggeriment:
 ```jekyll
 {% include suggeriment.html
-   contingut="<strong>💡 Suggeriment:</strong> Text del suggeriment amb <code>exemples</code>..."
+   contingut="<strong>Suggeriment:</strong> Text del suggeriment amb <code>exemples</code>..."
 %}
 ```
 
-### ✅ Checklist:
+### Checklist:
 ```jekyll
 {% include checklist.html
    titol="Verificació del Projecte"
@@ -180,7 +180,7 @@ onclick="algo()"
 
 ## 🎨 Exemple Complet
 
-## 🗂️ Estructura del Curs (Unitats i Blocs)
+## Estructura del Curs (Unitats i Blocs)
 
 Estructura bàsica dins de `docs/`:
 
@@ -210,7 +210,7 @@ Notes importants:
   - `descripcio.html` amb la descripció curta (3–6 punts) que es mostra a la pàgina de la unitat.
 - Els enllaços a blocs en configuració (`_config.yml`) apunten a `/unitat-<n>/bloc-<m>/` (barra final) per fer correspondre `index.html`.
 
-## 🧩 Pàgina d’Unitat (`unitat-*/index.html`)
+## Pàgina d’Unitat (`unitat-*/index.html`)
 
 - No inclou la descripció a la capçalera. La descripció es mostra en una secció pròpia:
 
@@ -258,7 +258,7 @@ Bones pràctiques de contingut:
 
 ## 🔗 OBLIGATORI: IDs Jeràrquics per Seccions H2
 
-**⚠️ IMPORTANT:** Tots els `<h2>` han de tenir un atribut `id` que segueixi la convenció jeràrquica per al funcionament correcte del sistema de navegació del quadern de notes.
+**IMPORTANT:** Tots els `<h2>` han de tenir un atribut `id` que segueixi la convenció jeràrquica per al funcionament correcte del sistema de navegació del quadern de notes.
 
 ### Convenció Obligatòria:
 ```
@@ -292,7 +292,12 @@ Unitat{N}_Bloc{M}_Seccio{X}
 - **Estructura jeràrquica:** Permet navegar per unitats → blocs → seccions
 - **IDs únics:** Evita conflictes entre seccions de diferents blocs
 
-## 🎯 Descripcions OBLIGATÒRIES
+Mini‑checklist d’IDs:
+- Cada secció principal és un `h2`.
+- Cada `h2` té un `id` únic amb format `UnitatN_BlocM_SeccioX`.
+- Els `id` coincideixen amb els definits a `docs/_config.yml` (apartat `seccions`).
+
+## Descripcions OBLIGATÒRIES
 
 - Unitat: `descripcio.html`
   - Contingut: resum (80–150 paraules), punts clau, enllaços interns.
@@ -302,28 +307,35 @@ Unitat{N}_Bloc{M}_Seccio{X}
   - Contingut: 3–6 punts clau (llista curta) sobre el que s’aprèn.
   - Exemple i pautes dins del mateix fitxer (comentaris HTML inicials).
 
-## 🧭 Navegació i estil
+## Navegació i estil
 
 - Portada: títols d’unitat enllaçats sense subratllat (estil de títol preservat).
 - Breadcrumb: en mode fosc, només els enllaços en blau; l’element actual es manté neutre.
 - Botons: estil neutre en clar i coherent en fosc.
 
-## ♿ Accessibilitat i Progrés
+## Accessibilitat i Progrés
 
 - Cada `h2` del bloc alimenta la barra de progrés de seccions del peu de pàgina.
 - Mantingueu títols clars i un ordre lògic de seccions.
 
-## 🛠️ Configuració (`_config.yml`)
+## Configuració (`_config.yml`)
 
-- Definició de la jerarquia en `curs.unitats` (noms, números i URL de blocs).
+- La jerarquia del curs es defineix a `docs/_config.yml` → `curs.unitats[].blocs[]`.
+- Cada bloc declara `url` i les seves `seccions` (ids i títols).
 - Exemple d’entrada de bloc:
 
-```
+```yaml
 blocs:
-  - { nom: "Bloc 1", numero: 1, descripcio: "...", url: "/unitat-1/bloc-1/" }
+  - nom: "Bloc 1"
+    numero: 1
+    descripcio: "..."
+    url: "/unitat-1/bloc-1/"
+    seccions:
+      - { id: "Unitat1_Bloc1_Seccio1", titol: "Introducció" }
+      - { id: "Unitat1_Bloc1_Seccio2", titol: "Contingut" }
 ```
 
-## ❗ Evitar
+## Evitar
 
 - Descripcions llargues a la portada del curs.
 - Codi extens sense el component `code-block` (pot perdre format).
@@ -348,7 +360,7 @@ block: 1
     <p><strong>Angular</strong> és un framework modern amb <em>components</em> reutilitzables.</p>
 
     {% include info_box.html
-       contingut="<strong>💡 Definició:</strong> Un framework proporciona <code>estructura completa</code>."
+       contingut="<strong>Definició:</strong> Un framework proporciona <code>estructura completa</code>."
     %}
 
     <h3>Característiques</h3>
@@ -365,7 +377,7 @@ ng version"
     %}
 
     {% include warning_box.html
-       contingut="<strong>⚠️ Important:</strong> Necessites Node.js v18+"
+       contingut="<strong>Important:</strong> Necessites Node.js v18+"
     %}
     
     {% include checklist.html
@@ -380,16 +392,16 @@ ng version"
     <p>Contingut de la segona secció amb <strong>HTML</strong> directe...</p>
     
     {% include success_box.html
-       contingut="<strong>✅ Completat:</strong> 
+       contingut="<strong>Completat:</strong> 
 <ul>
-<li>✓ Entorn configurat</li>
-<li>✓ CLI instal·lat</li>
+<li>Entorn configurat</li>
+<li>CLI instal·lat</li>
 </ul>"
     %}
 </div>
 ```
 
-## 🆘 Ajuda
+## Ajuda
 
 **Dubtes sobre contingut:** Contacta l'equip educatiu  
 **Problemes tècnics:** Contacta l'equip tècnic  
@@ -397,7 +409,7 @@ ng version"
 
 ---
 
-## 🔄 Reutilitzar Aquest Sistema per Altres Mòduls
+## Reutilitzar Aquest Sistema per Altres Mòduls
 
 **Per professors que vulguin adaptar aquest sistema per crear nous cursos IOC:**
 
@@ -421,9 +433,24 @@ authors:
 - El vostre nom com a autor
 - `Institut Obert de Catalunya` com a organització
 
-✅ **Sistema 100% portable** - Funciona en qualsevol URL de GitHub Pages  
-✅ **Migració completa** - Tot el contingut es transfereix automàticament  
-✅ **Configuració mínima** - Només 3 variables per personalitzar
+**Sistema 100% portable** - Funciona en qualsevol URL de GitHub Pages  
+**Migració completa** - Tot el contingut es transfereix automàticament  
+**Configuració mínima** - Només 3 variables per personalitzar
 
 ---
 **Recorda:** Només HTML + Components Jekyll. NO Markdown. NO CSS personalitzat.
+
+## Problemes comuns
+
+- No apareixen seccions al Quadern: afegeix `id` als `h2` amb el format jeràrquic i defineix les `seccions` al `_config.yml`.
+- El bloc no surt al llistat de la unitat: comprova la `url` del bloc al `_config.yml` i que existeix `bloc-<M>/index.html`.
+- El codi es veu sense format: usa `{% include code-block.html %}` en comptes de `<pre><code>` manual.
+- Hi ha emojis icònics: elimina'ls; l’estil del curs no els necessita.
+
+## Checklist de publicació
+
+- Front matter complet i coherent (`layout`, `title`, `unitat`, `bloc`).
+- `descripcio.html` creat per unitats i blocs (3–6 punts clau).
+- Totes les seccions principals amb `h2` + `id` únic jeràrquic.
+- Components Jekyll emprats en lloc de HTML personalitzat per avisos, codi, etc.
+- Enllaços interns revisats i sense emojis.
