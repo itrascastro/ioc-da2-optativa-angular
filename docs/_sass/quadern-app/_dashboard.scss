@@ -131,6 +131,8 @@
 
 /* Variant per etiquetes de nota (accent suau blau) */
 .tag.note-tag { background: rgba(59, 130, 246, 0.12); color: #1e40af; border-color: rgba(59,130,246,0.25); }
+/* Mode fosc: variant neutra en gris per etiquetes de nota */
+.quadern-layout[data-theme='dark'] .tag.note-tag { background: #3a3a3a; color: var(--color-text); border-color: #555; }
 
 /* Accions Ràpides */
 .quick-actions {
@@ -227,6 +229,13 @@
   color: white;
   border-color: var(--quadern-accent);
 }
+/* Mode fosc: hover neutre en gris per etiquetes */
+.quadern-layout[data-theme='dark'] .tag:hover,
+.quadern-layout[data-theme='dark'] .tag-item:hover {
+  background: #4a4a4a;
+  border-color: #666;
+  color: var(--color-text);
+}
 
 .tag-count {
   background: rgba(255,255,255,0.2);
@@ -242,4 +251,11 @@
 .tag-item.active {
   background: var(--quadern-accent);
   color: white;
+}
+/* Mode fosc: actiu en gris per etiquetes */
+.quadern-layout[data-theme='dark'] .tag.active,
+.quadern-layout[data-theme='dark'] .tag-item.active {
+  background: #5a5a5a;
+  border-color: #777;
+  color: var(--color-text);
 }
