@@ -177,5 +177,6 @@
 .quadern-layout[data-theme='dark'] .breadcrumb-button:hover:not(:disabled) { background-color: var(--color-surface-dark); color: var(--color-text); }
 .quadern-layout[data-theme='dark'] .breadcrumb-button:disabled { color: var(--color-text); }
 .quadern-layout[data-theme='dark'] .breadcrumb-separator { color: var(--color-text-muted); }
-.quadern-layout[data-theme='dark'] .badge-blue { background-color: rgba(var(--color-primary-rgb, 74, 163, 223), 0.25); color: #e6edf3; }
-.quadern-layout[data-theme='dark'] .badge-green { background-color: rgba(16, 185, 129, 0.22); color: #d1fae5; }
+.quadern-layout[data-theme='dark'] .badge { border: 1px solid rgba(255,255,255,0.12); }
+.quadern-layout[data-theme='dark'] .badge-blue { background-color: #3a3a3a; color: #e6edf3; }
+.quadern-layout[data-theme='dark'] .badge-green { background-color: #3a3a3a; color: #e6edf3; }
