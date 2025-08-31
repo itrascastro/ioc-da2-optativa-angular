@@ -18,6 +18,96 @@
 
 .editor-main { flex: 1; min-width: 480px; display: flex; flex-direction: column; min-height: 0; }
 
+/* Capçalera Editor subtil amb botó de sortida a la dreta */
+.editor-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 0;
+  background: transparent;
+  border: none;
+  margin-bottom: 14px;
+}
+
+.exit-editor-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  background: transparent;
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  color: var(--color-text);
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.exit-editor-btn:hover {
+  border-color: var(--quadern-accent);
+  color: var(--quadern-accent);
+}
+
+.exit-editor-btn i {
+  font-size: 0.9rem;
+}
+
+/* Migas de pa estilitzades amb icones */
+.editor-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9rem;
+}
+
+.crumb-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  color: var(--color-text-muted);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  text-decoration: none;
+}
+
+.crumb-link:hover {
+  background: var(--color-surface-dark);
+  border-color: var(--color-border);
+  color: var(--quadern-accent);
+}
+
+.crumb-link i {
+  font-size: 0.9rem;
+}
+
+.crumb-separator {
+  font-size: 0.7rem;
+  color: var(--color-text-muted);
+  opacity: 0.5;
+  margin: 0 2px;
+}
+
+.crumb-current {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  background: rgba(59, 130, 246, 0.08);
+  border-radius: 8px;
+  color: var(--quadern-accent);
+  font-weight: 600;
+}
+
+.crumb-current i {
+  font-size: 0.9rem;
+}
+
 /* Header i formulari sense contenidors de panell */
 .editor-form { display: flex; flex-direction: column; gap: 10px; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--border-radius); padding: 14px; flex: 1 1 auto; min-height: 0; }
 .editor-form input, .editor-form select { width: 100%; padding: 8px 12px; border: 1px solid var(--color-border); border-radius: 4px; background: var(--color-background); color: var(--color-text); font-size: 1rem; }

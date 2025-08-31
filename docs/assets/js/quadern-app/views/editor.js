@@ -32,6 +32,32 @@
     },
 
     _bindEditorEvents() {
+      // Botó de retorn a l'estudi
+      const backBtn = document.getElementById('editor-back-btn');
+      if (backBtn) {
+        backBtn.addEventListener('click', () => {
+          console.log('🔙 Editor: Sortint del mode editor...');
+          if (this.app && this.app.switchView) {
+            // Detectar mode actual (dashboard/study) des del store
+            const state = window.Quadern?.Store?.load();
+            const lastMode = state?.user?.mode || 'study';
+            const targetView = lastMode === 'study' ? 'dashboard' : 'dashboard';
+            this.app.switchView(targetView);
+          }
+        });
+      }
+
+      // Breadcrumb "Quadern" - tornar a vista principal
+      const breadcrumbQuadern = document.getElementById('breadcrumb-quadern');
+      if (breadcrumbQuadern) {
+        breadcrumbQuadern.addEventListener('click', () => {
+          console.log('🏠 Editor: Tornant al Quadern principal...');
+          if (this.app && this.app.switchView) {
+            this.app.switchView('dashboard');
+          }
+        });
+      }
+
       // Guardar nota
       // Eliminar listeners obsolets (#editor-save / #editor-cancel)
 
@@ -558,6 +584,7 @@
       }
       // Guardar context actual i focus al selector
       this.currentSection = sectionData;
+      
       const selFocus = document.getElementById('note-select');
       if (selFocus) selFocus.focus();
     },

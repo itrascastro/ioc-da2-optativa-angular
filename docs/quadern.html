@@ -54,6 +54,25 @@ breadcrumb: false
     <div class="editor-container editor-single">
         <div class="editor-main">
 
+            <!-- Capçalera Editor amb migas de pa i botó de sortida -->
+            <div class="editor-header">
+                <nav class="editor-breadcrumb">
+                    <button class="crumb-link" id="breadcrumb-quadern" title="Tornar al Quadern" aria-label="Tornar al Quadern">
+                        <i class="bi bi-journal-text"></i>
+                        <span>Quadern</span>
+                    </button>
+                    <i class="bi bi-chevron-right crumb-separator"></i>
+                    <span class="crumb-current">
+                        <i class="bi bi-pencil-square"></i>
+                        <span>Editor</span>
+                    </span>
+                </nav>
+                <button class="exit-editor-btn" id="editor-back-btn" title="Sortir del mode editor" aria-label="Sortir del mode editor">
+                    <i class="bi bi-x-lg" aria-hidden="true"></i>
+                    <span>Sortir de Mode Editor</span>
+                </button>
+            </div>
+
             <div class="editor-form" role="region" aria-label="Editor de notes">
                 <div id="note-select-row" class="note-select-row">
                   <select id="note-select" aria-label="Selecciona una nota de la secció">
