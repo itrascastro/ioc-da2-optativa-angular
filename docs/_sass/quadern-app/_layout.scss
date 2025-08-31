@@ -159,6 +159,12 @@ body.quadern-layout {
   box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
 }
 
+/* Mode fosc: focus neutre en gris per evitar l'halo blau */
+.quadern-layout[data-theme='dark'] .global-search input:focus {
+  border-color: var(--color-border);
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.08);
+}
+
 .global-search .search-icon {
   position: absolute;
   right: 12px;
