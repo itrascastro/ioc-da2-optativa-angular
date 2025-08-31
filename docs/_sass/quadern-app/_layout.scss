@@ -94,7 +94,6 @@ body.quadern-layout {
 .quadern-header .header-brand {
   display: flex;
   align-items: center;
-  gap: 15px;
 }
 
 .quadern-header .logo-link {
@@ -104,17 +103,28 @@ body.quadern-layout {
 
 .quadern-header .logo { height: 50px; width: auto; }
 
+/* Header center per "Quadern de Notes" */
+.header-center {
+  justify-self: center;
+  display: flex;
+  justify-content: center;
+}
+
 .quadern-logo {
   display: flex;
   align-items: center;
-  gap: 8px;
-  color: var(--color-primary);
-  font-weight: 600;
-  font-size: 1.1rem;
+  gap: 10px;
+  color: var(--quadern-accent);
+  font-weight: 700;
+  font-size: 1.3rem;
+  padding: 8px 16px;
+  background: rgba(59, 130, 246, 0.05);
+  border-radius: 10px;
+  transition: all 0.2s ease;
 }
 
 .quadern-logo i {
-  font-size: 1.2rem;
+  font-size: 1.4rem;
 }
 
 /* Cerca Global */
