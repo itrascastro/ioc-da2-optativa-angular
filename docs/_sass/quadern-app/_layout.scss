@@ -226,6 +226,15 @@ body.quadern-layout {
 .quadern-sidebar .tree-item .item-icon { color: var(--color-text-muted); }
 .quadern-sidebar .tree-item.active .item-icon { color: var(--color-primary) !important; }
 
+/* Modo oscuro: priorizar gris de activo coherente con hover */
+.quadern-layout[data-theme='dark'] .quadern-sidebar .tree-item.active {
+  background-color: var(--color-surface-dark) !important;
+  border: 1px solid var(--color-border) !important;
+}
+.quadern-layout[data-theme='dark'] .quadern-sidebar .tree-item.active .item-icon {
+  color: #e6edf3 !important;
+}
+
 .quadern-sidebar .breadcrumb-button {
   color: var(--color-text);
 }
