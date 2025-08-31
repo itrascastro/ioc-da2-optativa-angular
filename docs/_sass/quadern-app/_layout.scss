@@ -780,3 +780,24 @@ body.quadern-layout {
   .quadern-sidebar { display: none; }
   .quadern-main { padding-top: 0; margin-left: 0; }
 }
+
+/* Scrollbars en mode fosc (Quadern) */
+.quadern-layout[data-theme='dark'] {
+  /* Firefox */
+  scrollbar-color: #555 #2c2c2c;
+}
+.quadern-layout[data-theme='dark'] ::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+.quadern-layout[data-theme='dark'] ::-webkit-scrollbar-track {
+  background: #2c2c2c;
+}
+.quadern-layout[data-theme='dark'] ::-webkit-scrollbar-thumb {
+  background: #555;
+  border-radius: 6px;
+  border: 2px solid #2c2c2c; /* separació del track */
+}
+.quadern-layout[data-theme='dark'] ::-webkit-scrollbar-thumb:hover {
+  background: #666;
+}
