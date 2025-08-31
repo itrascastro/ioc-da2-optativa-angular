@@ -713,6 +713,9 @@ body.quadern-layout {
 /* Main Content */
 .quadern-main { flex: 1; padding: 8px 0 0; overflow: hidden; background: var(--color-background); margin-left: calc(var(--quadern-sidebar-width) + 24px); }
 
+/* Mode fosc: aclarir lleugerament el fons de la zona de contingut (Estudi) */
+
+
 /* =============================
    FOOTER DEL QUADERN
    ============================= */
@@ -773,6 +776,13 @@ body.quadern-layout {
   cursor: pointer;
 }
 .footer-icon-btn:hover { background-color: transparent; border-color: var(--quadern-accent); color: var(--quadern-accent); }
+
+/* Mode fosc: hover neutre per icones del peu de pàgina */
+.quadern-layout[data-theme='dark'] .footer-icon-btn:hover {
+  background-color: #444;
+  border-color: #666;
+  color: var(--color-text);
+}
 
 /* Responsive (ocultar sidebar en pantallas pequeñas) */
 @media (max-width: 900px) {
